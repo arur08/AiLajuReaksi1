@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReaksiKu — Dashboard Siswa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple:#a78bfa; --purple-light:#ede9fe; --purple-dark:#6d28d9; --purple-mid:#8b5cf6;
+      --mint:#6ee7b7; --mint-light:#d1fae5; --mint-dark:#065f46;
+      --pink:#f9a8d4; --pink-light:#fce7f3;
+      --yellow:#fde68a; --yellow-light:#fffbeb;
+      --orange-light:#fff7ed;
+      --blue-light:#dbeafe;
+      --bg:#faf8ff; --white:#ffffff;
+      --text:#1e1b4b; --text-muted:#6b7280;
+      --border:#e5e7eb;
+      --radius:16px; --radius-sm:10px;
+      --shadow:0 4px 24px rgba(167,139,250,0.12);
+      --shadow-hover:0 8px 32px rgba(167,139,250,0.22);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* SIDEBAR */
+    .sidebar{
+      position:fixed;top:0;left:0;width:258px;height:100vh;
+      background:white;border-right:1.5px solid #f0eaff;
+      display:flex;flex-direction:column;z-index:200;
+      transition:transform .3s ease;overflow-y:auto;
+    }
+    .sb-logo{display:flex;align-items:center;gap:10px;padding:1.1rem 1.2rem;border-bottom:1px solid #f0eaff;}
+    .sb-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--purple-dark),var(--purple-mid));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+    .sb-logo-text{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.05rem;color:var(--purple-dark);}
+    .sb-logo-sub{font-size:0.68rem;color:var(--text-muted);font-weight:600;}
+
+    .sb-profile{padding:.9rem 1.2rem;border-bottom:1px solid #f0eaff;background:var(--purple-light);}
+    .sb-profile .greet{font-size:.72rem;color:var(--purple-dark);font-weight:700;}
+    .sb-profile .sname{font-weight:800;font-size:.92rem;color:var(--text);}
+    .sb-profile .sinfo{font-size:.72rem;color:var(--text-muted);margin-top:1px;}
+
+    .sb-nav{flex:1;padding:.7rem .6rem;}
+    .nav-grp{font-size:.66rem;font-weight:700;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;padding:.3rem .6rem .4rem;}
+    .nav-item{
+      display:flex;align-items:center;gap:9px;
+      padding:9px 11px;border-radius:var(--radius-sm);
+      cursor:pointer;transition:all .2s;margin-bottom:2px;
+      text-decoration:none;color:var(--text-muted);
+      font-weight:600;font-size:.86rem;
+    }
+    .nav-item:hover{background:var(--purple-light);color:var(--purple-dark);}
+    .nav-item.active{background:linear-gradient(135deg,var(--purple-dark),var(--purple-mid));color:white;}
+    .nav-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+    .nav-item:not(.active) .nav-icon{background:var(--purple-light);}
+    .nav-item.active .nav-icon{background:rgba(255,255,255,.2);}
+    .nav-badge{margin-left:auto;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:99px;}
+    .done-b{background:var(--mint-light);color:var(--mint-dark);}
+    .lock-b{background:#f3f4f6;color:#9ca3af;}
+    .cur-b{background:var(--yellow-light);color:#92400e;}
+
+    .sb-footer{padding:.7rem .9rem;border-top:1px solid #f0eaff;}
+    .btn-logout{width:100%;display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:white;color:var(--text-muted);font-family:'Nunito',sans-serif;font-weight:700;font-size:.83rem;cursor:pointer;transition:all .2s;}
+    .btn-logout:hover{border-color:#ef4444;color:#ef4444;background:#fff5f5;}
+
+    .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:190;}
+    .sb-overlay.show{display:block;}
+
+    /* MAIN */
+    .main{margin-left:258px;min-height:100vh;display:flex;flex-direction:column;}
+
+    .topbar{
+      background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+      border-bottom:1px solid #f0eaff;height:58px;padding:0 1.4rem;
+      display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:100;
+    }
+    .topbar-left{display:flex;align-items:center;gap:11px;}
+    .menu-tog{display:none;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text);}
+    .topbar-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:.97rem;color:var(--text);}
+    .tb-badge{background:var(--purple-light);color:var(--purple-dark);font-size:.73rem;font-weight:700;padding:3px 11px;border-radius:99px;}
+
+    /* CONTENT */
+    .content{flex:1;padding:1.4rem;}
+    .panel{display:none;}
+    .panel.active{display:block;animation:fadeIn .3s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    /* WELCOME BANNER */
+    .welcome-banner{
+      background:linear-gradient(135deg,var(--purple-dark) 0%,#8b5cf6 50%,#ec4899 100%);
+      border-radius:var(--radius);padding:1.6rem 1.8rem;color:white;
+      margin-bottom:1.4rem;position:relative;overflow:hidden;
+    }
+    .welcome-banner::after{content:'⚗️';position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-size:3.5rem;opacity:.18;}
+    .welcome-banner h2{font-family:'Poppins',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:.35rem;}
+    .welcome-banner p{opacity:.88;font-size:.88rem;line-height:1.55;}
+    .xp-wrap{margin-top:.9rem;background:rgba(255,255,255,.2);border-radius:99px;height:7px;overflow:hidden;}
+    .xp-fill{height:100%;border-radius:99px;background:var(--yellow);transition:width .8s ease;}
+    .xp-lbl{font-size:.73rem;opacity:.85;margin-top:4px;}
+
+    /* STATS */
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:1.4rem;}
+    .stat-card{background:white;border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow);border:1.5px solid #f0eaff;}
+    .stat-card .si{font-size:1.5rem;margin-bottom:.4rem;}
+    .stat-card .sv{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.4rem;color:var(--purple-dark);}
+    .stat-card .sl{font-size:.76rem;color:var(--text-muted);font-weight:600;}
+
+    /* JOURNEY */
+    .journey{background:white;border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow);border:1.5px solid #f0eaff;margin-bottom:1.4rem;overflow-x:auto;}
+    .journey-inner{display:flex;align-items:center;min-width:360px;}
+    .jstep{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;}
+    .jdot{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;border:2.5px solid var(--border);background:white;transition:all .3s;}
+    .jdot.done{background:var(--mint-light);border-color:var(--mint);}
+    .jdot.cur{background:var(--purple-light);border-color:var(--purple-dark);box-shadow:0 0 0 4px rgba(109,40,217,.12);}
+    .jline{width:38px;height:2px;background:var(--border);flex-shrink:0;margin-bottom:19px;}
+    .jline.done{background:var(--mint);}
+    .jstep span{font-size:.65rem;font-weight:700;color:var(--text-muted);text-align:center;max-width:58px;}
+
+    /* MODULE GRID */
+    .sec-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:.97rem;color:var(--text);margin-bottom:.9rem;}
+    .mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem;margin-bottom:1.4rem;}
+    .mod-card{background:white;border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow);border:1.5px solid #f0eaff;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+    .mod-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);}
+    .mod-card.locked{opacity:.6;cursor:not-allowed;}
+    .mod-card.locked:hover{transform:none;box-shadow:var(--shadow);}
+    .mod-stripe{position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--radius) var(--radius) 0 0;}
+    .mod-icon{font-size:1.8rem;margin-bottom:.6rem;}
+    .mod-card h3{font-family:'Poppins',sans-serif;font-weight:600;font-size:.92rem;margin-bottom:.25rem;}
+    .mod-card p{font-size:.78rem;color:var(--text-muted);line-height:1.5;}
+    .mod-status{display:inline-flex;align-items:center;gap:4px;margin-top:.7rem;font-size:.71rem;font-weight:700;padding:3px 9px;border-radius:99px;}
+    .s-done{background:var(--mint-light);color:var(--mint-dark);}
+    .s-todo{background:var(--purple-light);color:var(--purple-dark);}
+    .s-lock{background:#f3f4f6;color:#9ca3af;}
+    .s-cur{background:var(--yellow-light);color:#92400e;}
+
+    /* MODULE INNER HEADER */
+    .mod-header{display:flex;align-items:center;gap:11px;margin-bottom:1.4rem;padding-bottom:.9rem;border-bottom:1.5px solid #f0eaff;}
+    .mh-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+    .mod-header h2{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.1rem;}
+    .mod-header p{font-size:.82rem;color:var(--text-muted);}
+
+    /* NAV BOTTOM */
+    .nav-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:.9rem;border-top:1.5px solid #f0eaff;flex-wrap:wrap;gap:10px;}
+    .btn-nav{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;text-decoration:none;transition:all .2s;}
+    .btn-back{background:white;color:var(--text-muted);border:1.5px solid var(--border);}
+    .btn-back:hover{border-color:var(--purple);color:var(--purple-dark);}
+    .btn-next{background:linear-gradient(135deg,var(--purple-dark),var(--purple-mid));color:white;border:none;box-shadow:0 3px 12px rgba(109,40,217,.22);}
+    .btn-next:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(109,40,217,.32);}
+
+    /* PLACEHOLDER */
+    .ph-box{background:white;border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);border:1.5px solid #f0eaff;text-align:center;}
+    .ph-box .pe{font-size:3.5rem;margin-bottom:.9rem;}
+    .ph-box h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:.4rem;}
+    .ph-box p{color:var(--text-muted);font-size:.88rem;}
+    .btn-goto{display:inline-flex;align-items:center;gap:7px;margin-top:1.1rem;padding:10px 22px;background:linear-gradient(135deg,var(--purple-dark),var(--purple-mid));color:white;border-radius:var(--radius-sm);font-weight:700;font-size:.88rem;text-decoration:none;transition:all .2s;}
+    .btn-goto:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(109,40,217,.3);}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:white;padding:9px 22px;border-radius:99px;font-weight:600;font-size:.84rem;z-index:9999;transition:transform .3s ease;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
+    .toast.success{background:#10b981;}
+
+    /* MODAL */
+    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:9000;align-items:center;justify-content:center;}
+    .modal-bg.show{display:flex;}
+    .modal-box{background:white;border-radius:var(--radius);padding:2.2rem;max-width:400px;width:90%;text-align:center;animation:fadeIn .3s ease;}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .sidebar{transform:translateX(-100%);}
+      .sidebar.open{transform:translateX(0);}
+      .main{margin-left:0;}
+      .menu-tog{display:block;}
+      .mod-grid{grid-template-columns:1fr 1fr;}
+    }
+    @media(max-width:460px){
+      .mod-grid{grid-template-columns:1fr;}
+      .stats-row{grid-template-columns:1fr 1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">⚗️</div>
+    <div>
+      <div class="sb-logo-text">ReaksiKu</div>
+      <div class="sb-logo-sub">Mode Siswa</div>
+    </div>
+  </div>
+  <div class="sb-profile">
+    <div class="greet">👋 Halo,</div>
+    <div class="sname" id="sb-nama">Siswa</div>
+    <div class="sinfo" id="sb-info">Kelas • Absen</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-grp">Menu Utama</div>
+    <a class="nav-item active" id="ni-beranda" onclick="goPanel('beranda')">
+      <div class="nav-icon">🏠</div><span>Beranda</span>
+    </a>
+    <div class="nav-grp" style="margin-top:.4rem;">Modul Pembelajaran</div>
+    <a class="nav-item" id="ni-tujuan" onclick="tryModule('tujuan',0)">
+      <div class="nav-icon">🎯</div><span>Tujuan Pembelajaran</span>
+      <span class="nav-badge cur-b" id="nb-tujuan">1</span>
+    </a>
+    <a class="nav-item" id="ni-materi" onclick="tryModule('materi',1)">
+      <div class="nav-icon">📖</div><span>Materi</span>
+      <span class="nav-badge lock-b" id="nb-materi">2</span>
+    </a>
+    <a class="nav-item" id="ni-lab" onclick="tryModule('lab',2)">
+      <div class="nav-icon">🧪</div><span>Lab Virtual</span>
+      <span class="nav-badge lock-b" id="nb-lab">3</span>
+    </a>
+    <a class="nav-item" id="ni-soal" onclick="tryModule('soal',3)">
+      <div class="nav-icon">📝</div><span>Latihan Soal</span>
+      <span class="nav-badge lock-b" id="nb-soal">4</span>
+    </a>
+    <a class="nav-item" id="ni-refleksi" onclick="tryModule('refleksi',4)">
+      <div class="nav-icon">💭</div><span>Refleksi Diri</span>
+      <span class="nav-badge lock-b" id="nb-refleksi">5</span>
+    </a>
+  </nav>
+  <div class="sb-footer">
+    <button class="btn-logout" onclick="logout()">🚪 Keluar Akun</button>
+  </div>
+</aside>
+<div class="sb-overlay" id="sbOverlay" onclick="closeSB()"></div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="menu-tog" onclick="toggleSB()">☰</button>
+      <div class="topbar-title" id="tbTitle">Dashboard Siswa</div>
+    </div>
+    <div>
+      <span class="tb-badge" id="tbKelas">Kelas</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- PANEL BERANDA -->
+    <div class="panel active" id="panel-beranda">
+      <div class="welcome-banner">
+        <h2 id="wb-greet">Semangat belajar! 🔥</h2>
+        <p id="wb-desc">Yuk lanjutkan petualangan belajar Laju Reaksi kamu hari ini! ⚗️</p>
+        <div class="xp-wrap"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+        <div class="xp-lbl" id="xpLbl">Progres: 0 / 5 modul selesai</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="si">📚</div><div class="sv" id="st-mod">0/5</div><div class="sl">Modul Selesai</div></div>
+        <div class="stat-card"><div class="si">⏱️</div><div class="sv" id="st-mnt">0</div><div class="sl">Menit Belajar</div></div>
+        <div class="stat-card"><div class="si">🏆</div><div class="sv" id="st-skr">—</div><div class="sl">Skor Latihan</div></div>
+        <div class="stat-card"><div class="si">🔥</div><div class="sv" id="st-str">0</div><div class="sl">Hari Belajar</div></div>
+      </div>
+
+      <div class="sec-title">🗺️ Alur Pembelajaran</div>
+      <div class="journey"><div class="journey-inner" id="journey"></div></div>
+
+      <div class="sec-title">📦 Modul Pembelajaran</div>
+      <div class="mod-grid">
+        <div class="mod-card" id="mc-tujuan" onclick="tryModule('tujuan',0)">
+          <div class="mod-stripe" style="background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid))"></div>
+          <div class="mod-icon">🎯</div>
+          <h3>Tujuan Pembelajaran</h3>
+          <p>Peta konsep dan tujuan belajar Laju Reaksi.</p>
+          <div class="mod-status s-cur" id="ms-tujuan">▶ Mulai</div>
+        </div>
+        <div class="mod-card locked" id="mc-materi" onclick="tryModule('materi',1)">
+          <div class="mod-stripe" style="background:linear-gradient(90deg,#10b981,#6ee7b7)"></div>
+          <div class="mod-icon">📖</div>
+          <h3>Materi Laju Reaksi</h3>
+          <p>Uraian materi dengan animasi dan video interaktif.</p>
+          <div class="mod-status s-lock" id="ms-materi">🔒 Terkunci</div>
+        </div>
+        <div class="mod-card locked" id="mc-lab" onclick="tryModule('lab',2)">
+          <div class="mod-stripe" style="background:linear-gradient(90deg,#f59e0b,#fde68a)"></div>
+          <div class="mod-icon">🧪</div>
+          <h3>Lab Virtual Inkuiri</h3>
+          <p>Simulasi percobaan faktor-faktor laju reaksi.</p>
+          <div class="mod-status s-lock" id="ms-lab">🔒 Terkunci</div>
+        </div>
+        <div class="mod-card locked" id="mc-soal" onclick="tryModule('soal',3)">
+          <div class="mod-stripe" style="background:linear-gradient(90deg,#ec4899,#f9a8d4)"></div>
+          <div class="mod-icon">📝</div>
+          <h3>Latihan Soal HOTS</h3>
+          <p>10 pilgan + 5 uraian dengan umpan balik AI.</p>
+          <div class="mod-status s-lock" id="ms-soal">🔒 Terkunci</div>
+        </div>
+        <div class="mod-card locked" id="mc-refleksi" onclick="tryModule('refleksi',4)">
+          <div class="mod-stripe" style="background:linear-gradient(90deg,#3b82f6,#93c5fd)"></div>
+          <div class="mod-icon">💭</div>
+          <h3>Refleksi Diri</h3>
+          <p>Kesan-pesan dan suasana hati selama belajar.</p>
+          <div class="mod-status s-lock" id="ms-refleksi">🔒 Terkunci</div>
+        </div>
+      </div>
+
+      <div style="background:var(--mint-light);border-radius:var(--radius);padding:1.1rem 1.4rem;border-left:4px solid var(--mint);display:flex;gap:11px;align-items:flex-start;">
+        <span style="font-size:1.2rem;">💡</span>
+        <div>
+          <div style="font-weight:700;font-size:.87rem;color:var(--mint-dark);margin-bottom:2px;">Tips Belajar</div>
+          <p style="font-size:.82rem;color:#065f46;line-height:1.5;">Selesaikan modul secara berurutan untuk pengalaman inkuiri yang optimal. Klik tombol "Lanjut" di setiap modul untuk membuka modul berikutnya! 🚀</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL TUJUAN -->
+    <div class="panel" id="panel-tujuan">
+      <div class="mod-header">
+        <div class="mh-icon" style="background:var(--purple-light);">🎯</div>
+        <div><h2>Tujuan Pembelajaran & Peta Konsep</h2><p>Modul 1 dari 5 • Laju Reaksi</p></div>
+      </div>
+      <div class="ph-box">
+        <div class="pe">🎯</div>
+        <h3>Modul Tujuan Pembelajaran</h3>
+        <p>Pelajari tujuan pembelajaran dan peta konsep Laju Reaksi secara lengkap dan interaktif.</p>
+        <a href="tujuan.html" class="btn-goto">Buka Modul Lengkap →</a>
+      </div>
+      <div class="nav-bottom">
+        <button class="btn-nav btn-back" onclick="goPanel('beranda')">← Beranda</button>
+        <button class="btn-nav btn-next" onclick="markDone('tujuan'); tryModule('materi',1)">Lanjut ke Materi →</button>
+      </div>
+    </div>
+
+    <!-- PANEL MATERI -->
+    <div class="panel" id="panel-materi">
+      <div class="mod-header">
+        <div class="mh-icon" style="background:var(--mint-light);">📖</div>
+        <div><h2>Materi Laju Reaksi</h2><p>Modul 2 dari 5 • Animasi & Video</p></div>
+      </div>
+      <div class="ph-box">
+        <div class="pe">📖</div>
+        <h3>Materi Laju Reaksi Lengkap</h3>
+        <p>Uraian materi dilengkapi animasi faktor-faktor laju reaksi dan video penjelasan interaktif.</p>
+        <a href="materi.html" class="btn-goto">Buka Materi →</a>
+      </div>
+      <div class="nav-bottom">
+        <button class="btn-nav btn-back" onclick="goPanel('tujuan')">← Tujuan</button>
+        <button class="btn-nav btn-next" onclick="markDone('materi'); tryModule('lab',2)">Lanjut ke Lab Virtual →</button>
+      </div>
+    </div>
+
+    <!-- PANEL LAB -->
+    <div class="panel" id="panel-lab">
+      <div class="mod-header">
+        <div class="mh-icon" style="background:var(--yellow-light);">🧪</div>
+        <div><h2>Lab Virtual Inkuiri Terbimbing</h2><p>Modul 3 dari 5 • Simulasi Interaktif</p></div>
+      </div>
+      <div class="ph-box">
+        <div class="pe">🧪</div>
+        <h3>Lab Virtual Faktor Laju Reaksi</h3>
+        <p>Rancang percobaan, kumpulkan data, buat grafik, dan analisis orde reaksi secara inkuiri terbimbing!</p>
+        <a href="lab-virtual.html" class="btn-goto">Masuk Lab Virtual →</a>
+      </div>
+      <div class="nav-bottom">
+        <button class="btn-nav btn-back" onclick="goPanel('materi')">← Materi</button>
+        <button class="btn-nav btn-next" onclick="markDone('lab'); tryModule('soal',3)">Lanjut ke Latihan Soal →</button>
+      </div>
+    </div>
+
+    <!-- PANEL SOAL -->
+    <div class="panel" id="panel-soal">
+      <div class="mod-header">
+        <div class="mh-icon" style="background:var(--pink-light);">📝</div>
+        <div><h2>Latihan Soal HOTS + Feedback AI</h2><p>Modul 4 dari 5 • 10 Pilgan + 5 Uraian</p></div>
+      </div>
+      <div class="ph-box">
+        <div class="pe">📝</div>
+        <h3>Latihan Soal Laju Reaksi</h3>
+        <p>10 soal pilihan ganda HOTS dan 5 soal uraian. Langsung dapat umpan balik AI dan live tracking skor real-time!</p>
+        <a href="latihan-soal.html" class="btn-goto">Mulai Latihan Soal →</a>
+      </div>
+      <div class="nav-bottom">
+        <button class="btn-nav btn-back" onclick="goPanel('lab')">← Lab Virtual</button>
+        <button class="btn-nav btn-next" onclick="markDone('soal'); tryModule('refleksi',4)">Lanjut ke Refleksi →</button>
+      </div>
+    </div>
+
+    <!-- PANEL REFLEKSI -->
+    <div class="panel" id="panel-refleksi">
+      <div class="mod-header">
+        <div class="mh-icon" style="background:var(--blue-light);">💭</div>
+        <div><h2>Refleksi Diri</h2><p>Modul 5 dari 5 • Kesan Pesan & Suasana Hati</p></div>
+      </div>
+      <div class="ph-box">
+        <div class="pe">💭</div>
+        <h3>Refleksi Pengalaman Belajar</h3>
+        <p>Bagikan kesan-pesanmu dan suasana hatimu selama belajar Laju Reaksi bersama ReaksiKu! 💜</p>
+        <a href="refleksi.html" class="btn-goto">Tulis Refleksi →</a>
+      </div>
+      <div class="nav-bottom">
+        <button class="btn-nav btn-back" onclick="goPanel('soal')">← Latihan Soal</button>
+        <button class="btn-nav btn-next" onclick="markDone('refleksi'); showSelesai()">🎉 Selesaikan Semua Modul!</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL SELESAI -->
+<div class="modal-bg" id="modalSelesai">
+  <div class="modal-box">
+    <div style="font-size:3.5rem;margin-bottom:.9rem;">🎊</div>
+    <h2 style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.3rem;margin-bottom:.4rem;">Luar Biasa!</h2>
+    <p style="color:var(--text-muted);font-size:.88rem;line-height:1.6;margin-bottom:1.4rem;">
+      Kamu telah menyelesaikan semua modul pembelajaran Laju Reaksi! 🏆<br>
+      Rekap aktivitasmu akan dikirim ke email yang terdaftar.
+    </p>
+    <button onclick="document.getElementById('modalSelesai').classList.remove('show');goPanel('beranda')"
+      style="padding:11px 26px;background:linear-gradient(135deg,var(--purple-dark),var(--purple-mid));color:white;border:none;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;">
+      🏠 Kembali ke Beranda
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ===== DATA =====
+  let siswa = JSON.parse(localStorage.getItem('reaksiku_siswa') || '{}');
+  if (!siswa.progres) siswa.progres = {tujuan:false,materi:false,labVirtual:false,latihanSoal:false,refleksi:false};
+
+  const MODS = ['tujuan','materi','lab','soal','refleksi'];
+  const PKEYS = {tujuan:'tujuan', materi:'materi', lab:'labVirtual', soal:'latihanSoal', refleksi:'refleksi'};
+  const LABELS = {tujuan:'Tujuan Pembelajaran', materi:'Materi', lab:'Lab Virtual', soal:'Latihan Soal', refleksi:'Refleksi Diri'};
+  const EMOJIS = {tujuan:'🎯', materi:'📖', lab:'🧪', soal:'📝', refleksi:'💭'};
+
+  let startTime = Date.now();
+  let totalMenit = parseInt(localStorage.getItem('reaksiku_menit')||'0');
+
+  // ===== INIT =====
+  function init(){
+    // Profile
+    document.getElementById('sb-nama').textContent = siswa.nama || 'Siswa';
+    document.getElementById('sb-info').textContent = (siswa.kelas||'')+(siswa.absen?' • Absen '+siswa.absen:'');
+    document.getElementById('tbKelas').textContent = siswa.kelas || '';
+
+    // Greeting
+    const h = new Date().getHours();
+    const g = h<11?'Selamat Pagi':h<15?'Selamat Siang':h<18?'Selamat Sore':'Selamat Malam';
+    document.getElementById('wb-greet').textContent = `${g}, ${(siswa.nama||'Kamu').split(' ')[0]}! 🔥`;
+
+    // Streak
+    const today = new Date().toDateString();
+    const last = localStorage.getItem('reaksiku_last');
+    let streak = parseInt(localStorage.getItem('reaksiku_streak')||'0');
+    if(last!==today){
+      streak = last===new Date(Date.now()-86400000).toDateString() ? streak+1 : 1;
+      localStorage.setItem('reaksiku_streak',streak);
+      localStorage.setItem('reaksiku_last',today);
+    }
+
+    updateUI();
+    buildJourney();
+    document.getElementById('st-mnt').textContent = totalMenit;
+    document.getElementById('st-skr').textContent = siswa.skorPilgan!=null ? siswa.skorPilgan : '—';
+    document.getElementById('st-str').textContent = streak;
+  }
+
+  function countDone(){
+    return MODS.filter(k=>siswa.progres[PKEYS[k]]).length;
+  }
+
+  function updateUI(){
+    const done = countDone();
+    document.getElementById('xpFill').style.width = (done/5*100)+'%';
+    document.getElementById('xpLbl').textContent = `Progres: ${done} / 5 modul selesai`;
+    document.getElementById('st-mod').textContent = done+'/5';
+
+    MODS.forEach((k,i)=>{
+      const isDone = siswa.progres[PKEYS[k]];
+      const prevDone = i===0 || siswa.progres[PKEYS[MODS[i-1]]];
+      const mc = document.getElementById('mc-'+k);
+      const ms = document.getElementById('ms-'+k);
+      const nb = document.getElementById('nb-'+k);
+
+      if(isDone){
+        mc.classList.remove('locked');
+        ms.className='mod-status s-done'; ms.textContent='✅ Selesai';
+        nb.className='nav-badge done-b'; nb.textContent='✓';
+      } else if(prevDone){
+        mc.classList.remove('locked');
+        ms.className='mod-status s-cur'; ms.textContent='▶ Mulai';
+        nb.className='nav-badge cur-b'; nb.textContent=String(i+1);
+      } else {
+        mc.classList.add('locked');
+        ms.className='mod-status s-lock'; ms.textContent='🔒 Terkunci';
+        nb.className='nav-badge lock-b'; nb.textContent=String(i+1);
+      }
+    });
+  }
+
+  function buildJourney(){
+    const c = document.getElementById('journey');
+    c.innerHTML='';
+    MODS.forEach((k,i)=>{
+      const isDone = siswa.progres[PKEYS[k]];
+      const isCur = !isDone && (i===0||siswa.progres[PKEYS[MODS[i-1]]]);
+      const step = document.createElement('div');
+      step.className='jstep';
+      step.innerHTML=`<div class="jdot ${isDone?'done':isCur?'cur':''}">${EMOJIS[k]}</div><span>${LABELS[k]}</span>`;
+      c.appendChild(step);
+      if(i<MODS.length-1){
+        const l=document.createElement('div');
+        l.className='jline'+(isDone?' done':'');
+        c.appendChild(l);
+      }
+    });
+  }
+
+  // ===== NAVIGATION =====
+  let curPanel = 'beranda';
+  const panelTitles = {beranda:'Dashboard Siswa',tujuan:'Tujuan Pembelajaran',materi:'Materi Laju Reaksi',lab:'Lab Virtual',soal:'Latihan Soal',refleksi:'Refleksi Diri'};
+
+  function goPanel(id){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('panel-'+id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    const ni = document.getElementById('ni-'+id);
+    if(ni) ni.classList.add('active');
+    document.getElementById('tbTitle').textContent = panelTitles[id]||'Dashboard';
+    curPanel = id;
+    closeSB();
+    window.scrollTo(0,0);
+  }
+
+  function tryModule(id, idx){
+    if(idx===0){ goPanel(id); return; }
+    const prevKey = PKEYS[MODS[idx-1]];
+    if(!siswa.progres[prevKey]){
+      showToast(`⚠️ Selesaikan "${LABELS[MODS[idx-1]]}" dulu!`);
+      return;
+    }
+    goPanel(id);
+  }
+
+  function markDone(id){
+    const pk = PKEYS[id];
+    siswa.progres[pk] = true;
+    localStorage.setItem('reaksiku_siswa', JSON.stringify(siswa));
+    // Hitung waktu
+    totalMenit += Math.round((Date.now()-startTime)/60000);
+    localStorage.setItem('reaksiku_menit', totalMenit);
+    startTime = Date.now();
+    document.getElementById('st-mnt').textContent = totalMenit;
+    updateUI();
+    buildJourney();
+    showToast(`✅ "${LABELS[id]}" selesai!`, 'success');
+
+    // Kirim update progres ke Apps Script
+    sendProgres();
+  }
+
+  function sendProgres(){
+    const url = localStorage.getItem('reaksiku_script_url');
+    if(!url) return;
+    try {
+      fetch(url, {
+        method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'updateProgres', data:{
+          siswaId: siswa.id,
+          nama: siswa.nama,
+          kelas: siswa.kelas,
+          absen: siswa.absen,
+          email: siswa.email,
+          progres: siswa.progres,
+          skorPilgan: siswa.skorPilgan,
+          totalMenit: totalMenit,
+          lastUpdate: new Date().toISOString()
+        }})
+      });
+    } catch(e){}
+  }
+
+  function showSelesai(){
+    document.getElementById('modalSelesai').classList.add('show');
+  }
+
+  // ===== SIDEBAR =====
+  function toggleSB(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sbOverlay').classList.toggle('show'); }
+  function closeSB(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sbOverlay').classList.remove('show'); }
+
+  // ===== LOGOUT =====
+  function logout(){
+    if(confirm('Yakin keluar? Data belajarmu sudah tersimpan.')){
+      localStorage.removeItem('reaksiku_mode');
+      window.location.href='register.html';
+    }
+  }
+
+  // ===== TOAST =====
+  function showToast(msg, type=''){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.className='toast '+type;
+    setTimeout(()=>t.classList.add('show'),10);
+    setTimeout(()=>t.classList.remove('show'),3200);
+  }
+
+  // Auth guard
+  if(localStorage.getItem('reaksiku_mode')==='guru') window.location.href='dashboard-guru.html';
+
+  init();
+</script>
+</body>
+</html>
