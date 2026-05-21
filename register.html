@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReaksiKu — Buat Akun</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #a78bfa;
+      --purple-light: #ede9fe;
+      --purple-dark: #6d28d9;
+      --purple-mid: #8b5cf6;
+      --mint: #6ee7b7;
+      --mint-light: #d1fae5;
+      --mint-dark: #065f46;
+      --pink: #f9a8d4;
+      --pink-light: #fce7f3;
+      --yellow: #fde68a;
+      --yellow-light: #fffbeb;
+      --bg: #faf8ff;
+      --white: #ffffff;
+      --text: #1e1b4b;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(167,139,250,0.13);
+      --shadow-hover: 0 8px 32px rgba(167,139,250,0.22);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== TOPBAR ===== */
+    .topbar {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #ede9fe;
+      padding: 0 1.5rem;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-logo {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none;
+    }
+    .topbar-logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple-mid));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .topbar-logo-text {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700; font-size: 1.1rem;
+      color: var(--purple-dark);
+    }
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--text-muted); font-weight: 600; font-size: 0.85rem;
+      text-decoration: none;
+      padding: 7px 14px; border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: white;
+      transition: all 0.2s;
+    }
+    .back-btn:hover { border-color: var(--purple); color: var(--purple-dark); }
+
+    /* ===== LAYOUT ===== */
+    .page {
+      min-height: calc(100vh - 60px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start;
+      padding: 2rem 1rem 3rem;
+    }
+    .page-header {
+      text-align: center; margin-bottom: 2rem;
+    }
+    .page-header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700; color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .page-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* ===== MODE SELECTOR ===== */
+    .mode-selector {
+      display: flex; gap: 12px;
+      background: white;
+      border-radius: var(--radius);
+      padding: 8px;
+      box-shadow: var(--shadow);
+      border: 1.5px solid #f0eaff;
+      margin-bottom: 2rem;
+    }
+    .mode-btn {
+      flex: 1;
+      padding: 14px 28px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      color: var(--text-muted);
+    }
+    .mode-btn.active {
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple-mid));
+      color: white;
+      box-shadow: 0 4px 16px rgba(109,40,217,0.25);
+    }
+    .mode-btn:not(.active):hover {
+      background: var(--purple-light);
+      color: var(--purple-dark);
+    }
+
+    /* ===== FORMS ===== */
+    .form-card {
+      width: 100%; max-width: 500px;
+      background: white;
+      border-radius: var(--radius);
+      padding: 2rem 2rem;
+      box-shadow: var(--shadow);
+      border: 1.5px solid #f0eaff;
+      animation: slideUp 0.35s ease;
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(16px); }
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+
+    .form-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 1.8rem;
+    }
+    .form-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; flex-shrink: 0;
+    }
+    .form-header h2 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700; font-size: 1.15rem; color: var(--text);
+    }
+    .form-header p { color: var(--text-muted); font-size: 0.82rem; }
+
+    .field { margin-bottom: 1.1rem; }
+    .field label {
+      display: block;
+      font-weight: 700; font-size: 0.85rem;
+      color: var(--text); margin-bottom: 6px;
+    }
+    .field label span { color: #ef4444; margin-left: 2px; }
+    .field input, .field select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: white;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: auto;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--purple-mid);
+      box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+    }
+    .field input.error { border-color: #ef4444; }
+    .field .err-msg {
+      color: #ef4444; font-size: 0.78rem;
+      margin-top: 4px; display: none;
+    }
+    .field .hint {
+      color: var(--text-muted); font-size: 0.78rem;
+      margin-top: 4px;
+    }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .password-wrap { position: relative; }
+    .password-wrap input { padding-right: 42px; }
+    .toggle-pw {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      cursor: pointer; font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    /* Password strength */
+    .pw-strength {
+      margin-top: 6px;
+      display: flex; gap: 4px;
+    }
+    .pw-bar {
+      flex: 1; height: 4px; border-radius: 99px;
+      background: var(--border); transition: background 0.3s;
+    }
+    .pw-bar.weak { background: #ef4444; }
+    .pw-bar.medium { background: #f59e0b; }
+    .pw-bar.strong { background: #10b981; }
+    .pw-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* Divider */
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 1.2rem 0;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .divider span { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple-mid));
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      border: none; border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 4px 16px rgba(109,40,217,0.25);
+      margin-top: 0.5rem;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(109,40,217,0.35); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* Existing account login toggle */
+    .login-toggle {
+      text-align: center;
+      margin-top: 1.2rem;
+      font-size: 0.88rem; color: var(--text-muted);
+    }
+    .login-toggle a {
+      color: var(--purple-dark); font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .login-toggle a:hover { text-decoration: underline; }
+
+    /* ===== LOGIN FORM ===== */
+    #login-section {
+      display: none;
+      width: 100%; max-width: 500px;
+    }
+    #login-section.active { display: block; }
+
+    /* ===== SUCCESS STATE ===== */
+    .success-card {
+      width: 100%; max-width: 500px;
+      display: none;
+      text-align: center;
+      animation: slideUp 0.35s ease;
+    }
+    .success-card.active { display: block; }
+    .success-icon {
+      width: 80px; height: 80px;
+      background: var(--mint-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 1.5rem;
+      border: 3px solid var(--mint);
+    }
+    .success-card h2 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700; font-size: 1.4rem;
+      margin-bottom: 0.5rem; color: var(--text);
+    }
+    .success-card p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.92rem; line-height: 1.6; }
+    .btn-go {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple-mid));
+      color: white; font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      border: none; border-radius: var(--radius);
+      cursor: pointer; text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 4px 16px rgba(109,40,217,0.25);
+    }
+    .btn-go:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(109,40,217,0.35); }
+
+    /* Info box */
+    .info-box {
+      background: var(--purple-light);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem 1rem;
+      display: flex; gap: 10px; align-items: flex-start;
+      margin-bottom: 1.2rem;
+      border-left: 4px solid var(--purple-mid);
+    }
+    .info-box span { font-size: 1.1rem; flex-shrink: 0; }
+    .info-box p { font-size: 0.82rem; color: var(--purple-dark); line-height: 1.5; font-weight: 600; }
+
+    /* Loader */
+    .loader {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--text);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 99px;
+      font-weight: 600; font-size: 0.88rem;
+      z-index: 9999;
+      transition: transform 0.35s ease;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: #10b981; }
+    .toast.error { background: #ef4444; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 520px) {
+      .form-card { padding: 1.5rem 1.2rem; }
+      .mode-btn { padding: 12px 14px; font-size: 0.85rem; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <div class="topbar-logo-icon">⚗️</div>
+    <span class="topbar-logo-text">ReaksiKu</span>
+  </a>
+  <a href="index.html" class="back-btn">← Kembali</a>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+  <div class="page-header">
+    <h1>Selamat Datang! 👋</h1>
+    <p>Pilih mode kamu dan buat akun untuk mulai belajar</p>
+  </div>
+
+  <!-- MODE SELECTOR -->
+  <div class="mode-selector">
+    <button class="mode-btn active" id="btnSiswa" onclick="setMode('siswa')">👩‍🎓 Mode Siswa</button>
+    <button class="mode-btn" id="btnGuru" onclick="setMode('guru')">👨‍🏫 Mode Guru</button>
+  </div>
+
+  <!-- ===== FORM CONTAINER ===== -->
+  <div id="formContainer" style="width:100%;max-width:500px;">
+
+    <!-- REGISTER SISWA -->
+    <div class="form-card" id="reg-siswa">
+      <div class="form-header">
+        <div class="form-icon" style="background:var(--purple-light);">👩‍🎓</div>
+        <div>
+          <h2>Daftar Akun Siswa</h2>
+          <p>Isi data dirimu dengan lengkap dan benar</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span>💡</span>
+        <p>Pastikan email yang kamu masukkan aktif. Rekap aktivitas belajarmu akan dikirim ke email tersebut.</p>
+      </div>
+
+      <div class="field">
+        <label>Nama Lengkap <span>*</span></label>
+        <input type="text" id="s-nama" placeholder="Contoh: Aulia Rahmawati" oninput="clearErr('s-nama')"/>
+        <div class="err-msg" id="err-s-nama">Nama lengkap wajib diisi!</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Kelas <span>*</span></label>
+          <select id="s-kelas" onchange="clearErr('s-kelas')">
+            <option value="">-- Pilih Kelas --</option>
+            <option>XI MIPA 1</option>
+            <option>XI MIPA 2</option>
+            <option>XI MIPA 3</option>
+            <option>XI MIPA 4</option>
+            <option>XI MIPA 5</option>
+            <option>XI IPA 1</option>
+            <option>XI IPA 2</option>
+            <option>XI IPA 3</option>
+            <option>Lainnya</option>
+          </select>
+          <div class="err-msg" id="err-s-kelas">Kelas wajib dipilih!</div>
+        </div>
+        <div class="field">
+          <label>Nomor Absen <span>*</span></label>
+          <input type="number" id="s-absen" placeholder="Contoh: 15" min="1" max="40" oninput="clearErr('s-absen')"/>
+          <div class="err-msg" id="err-s-absen">Nomor absen wajib diisi!</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email Aktif <span>*</span></label>
+        <input type="email" id="s-email" placeholder="Contoh: aulia@gmail.com" oninput="clearErr('s-email')"/>
+        <div class="err-msg" id="err-s-email">Email tidak valid!</div>
+        <p class="hint">📧 Rekap aktivitas belajar akan dikirim ke email ini</p>
+      </div>
+
+      <div class="field">
+        <label>Nama Sekolah</label>
+        <input type="text" id="s-sekolah" placeholder="Contoh: SMAN 1 Malang"/>
+      </div>
+
+      <button class="btn-submit" id="btnRegSiswa" onclick="registerSiswa()">
+        <span id="loaderSiswa" class="loader"></span>
+        <span id="textRegSiswa">🚀 Buat Akun Siswa</span>
+      </button>
+
+      <div class="login-toggle">
+        Sudah punya akun? <a onclick="showLoginSiswa()">Masuk di sini</a>
+      </div>
+    </div>
+
+    <!-- LOGIN SISWA -->
+    <div class="form-card" id="login-siswa" style="display:none;">
+      <div class="form-header">
+        <div class="form-icon" style="background:var(--mint-light);">🔐</div>
+        <div>
+          <h2>Masuk Akun Siswa</h2>
+          <p>Masukkan email yang sudah kamu daftarkan</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email <span>*</span></label>
+        <input type="email" id="l-s-email" placeholder="Email yang sudah didaftarkan"/>
+      </div>
+
+      <button class="btn-submit" onclick="loginSiswa()">
+        🔓 Masuk
+      </button>
+      <div class="login-toggle">
+        Belum punya akun? <a onclick="showRegSiswa()">Daftar dulu</a>
+      </div>
+    </div>
+
+    <!-- REGISTER GURU -->
+    <div class="form-card" id="reg-guru" style="display:none;">
+      <div class="form-header">
+        <div class="form-icon" style="background:var(--yellow-light);">👨‍🏫</div>
+        <div>
+          <h2>Daftar Akun Guru</h2>
+          <p>Buat akun untuk memantau aktivitas siswa</p>
+        </div>
+      </div>
+
+      <div class="info-box" style="background:var(--yellow-light);border-left-color:#f59e0b;">
+        <span>🔒</span>
+        <p style="color:#92400e;">Simpan password dengan baik! Password digunakan untuk login ke dashboard monitoring siswa.</p>
+      </div>
+
+      <div class="field">
+        <label>Nama Guru <span>*</span></label>
+        <input type="text" id="g-nama" placeholder="Contoh: Dra. Siti Rahayu, M.Pd." oninput="clearErr('g-nama')"/>
+        <div class="err-msg" id="err-g-nama">Nama guru wajib diisi!</div>
+      </div>
+
+      <div class="field">
+        <label>Email Guru <span>*</span></label>
+        <input type="email" id="g-email" placeholder="Email aktif guru" oninput="clearErr('g-email')"/>
+        <div class="err-msg" id="err-g-email">Email tidak valid!</div>
+      </div>
+
+      <div class="field">
+        <label>Nama Sekolah <span>*</span></label>
+        <input type="text" id="g-sekolah" placeholder="Contoh: SMAN 1 Malang" oninput="clearErr('g-sekolah')"/>
+        <div class="err-msg" id="err-g-sekolah">Nama sekolah wajib diisi!</div>
+      </div>
+
+      <div class="field">
+        <label>Password <span>*</span></label>
+        <div class="password-wrap">
+          <input type="password" id="g-password" placeholder="Buat password minimal 6 karakter" oninput="checkStrength()" autocomplete="new-password"/>
+          <button class="toggle-pw" onclick="togglePw('g-password', this)" type="button">👁</button>
+        </div>
+        <div class="pw-strength">
+          <div class="pw-bar" id="pb1"></div>
+          <div class="pw-bar" id="pb2"></div>
+          <div class="pw-bar" id="pb3"></div>
+        </div>
+        <div class="pw-label" id="pwLabel">Masukkan password</div>
+        <div class="err-msg" id="err-g-password">Password minimal 6 karakter!</div>
+      </div>
+
+      <div class="field">
+        <label>Konfirmasi Password <span>*</span></label>
+        <div class="password-wrap">
+          <input type="password" id="g-password2" placeholder="Ulangi password" autocomplete="new-password"/>
+          <button class="toggle-pw" onclick="togglePw('g-password2', this)" type="button">👁</button>
+        </div>
+        <div class="err-msg" id="err-g-password2">Password tidak cocok!</div>
+      </div>
+
+      <button class="btn-submit" id="btnRegGuru" onclick="registerGuru()">
+        <span id="loaderGuru" class="loader"></span>
+        <span id="textRegGuru">🏫 Buat Akun Guru</span>
+      </button>
+
+      <div class="login-toggle">
+        Sudah punya akun guru? <a onclick="showLoginGuru()">Login di sini</a>
+      </div>
+    </div>
+
+    <!-- LOGIN GURU -->
+    <div class="form-card" id="login-guru" style="display:none;">
+      <div class="form-header">
+        <div class="form-icon" style="background:var(--yellow-light);">🔐</div>
+        <div>
+          <h2>Login Guru</h2>
+          <p>Masukkan email dan password guru</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email Guru <span>*</span></label>
+        <input type="email" id="l-g-email" placeholder="Email yang sudah didaftarkan"/>
+        <div class="err-msg" id="err-l-g-email">Email wajib diisi!</div>
+      </div>
+
+      <div class="field">
+        <label>Password <span>*</span></label>
+        <div class="password-wrap">
+          <input type="password" id="l-g-password" placeholder="Password akun guru"/>
+          <button class="toggle-pw" onclick="togglePw('l-g-password', this)" type="button">👁</button>
+        </div>
+        <div class="err-msg" id="err-l-g-password">Password wajib diisi!</div>
+      </div>
+
+      <button class="btn-submit" onclick="loginGuru()">🔓 Masuk Dashboard Guru</button>
+      <div class="login-toggle">
+        Belum punya akun? <a onclick="showRegGuru()">Daftar dulu</a>
+      </div>
+    </div>
+
+  </div><!-- end formContainer -->
+
+  <!-- SUCCESS SISWA -->
+  <div class="success-card" id="success-siswa">
+    <div class="success-icon">🎉</div>
+    <h2>Akun Berhasil Dibuat!</h2>
+    <p id="success-siswa-msg">Hore! Akun kamu sudah siap. Yuk mulai petualangan belajar Laju Reaksi bersama ReaksiKu! 🚀</p>
+    <a href="dashboard-siswa.html" class="btn-go">Masuk Dashboard Siswa →</a>
+  </div>
+
+  <!-- SUCCESS GURU -->
+  <div class="success-card" id="success-guru">
+    <div class="success-icon" style="background:var(--yellow-light);border-color:#f59e0b;">🏫</div>
+    <h2>Akun Guru Berhasil Dibuat!</h2>
+    <p id="success-guru-msg">Akun guru sudah siap. Kamu bisa mulai memantau aktivitas belajar siswamu sekarang!</p>
+    <a href="dashboard-guru.html" class="btn-go">Masuk Dashboard Guru →</a>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ===== APPS SCRIPT URL =====
+  // Ganti URL ini dengan URL Apps Script kamu setelah deploy
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+
+  // ===== MODE SWITCH =====
+  let currentMode = 'siswa';
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('btnSiswa').classList.toggle('active', mode === 'siswa');
+    document.getElementById('btnGuru').classList.toggle('active', mode === 'guru');
+    hideAll();
+    if (mode === 'siswa') {
+      document.getElementById('reg-siswa').style.display = 'block';
+    } else {
+      document.getElementById('reg-guru').style.display = 'block';
+    }
+    document.getElementById('success-siswa').classList.remove('active');
+    document.getElementById('success-guru').classList.remove('active');
+  }
+
+  function hideAll() {
+    ['reg-siswa','login-siswa','reg-guru','login-guru'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
+  }
+
+  function showLoginSiswa() { hideAll(); document.getElementById('login-siswa').style.display='block'; }
+  function showRegSiswa()   { hideAll(); document.getElementById('reg-siswa').style.display='block'; }
+  function showLoginGuru()  { hideAll(); document.getElementById('login-guru').style.display='block'; }
+  function showRegGuru()    { hideAll(); document.getElementById('reg-guru').style.display='block'; }
+
+  // ===== VALIDATION =====
+  function clearErr(id) {
+    const el = document.getElementById('err-' + id);
+    if (el) el.style.display = 'none';
+    const inp = document.getElementById(id);
+    if (inp) inp.classList.remove('error');
+  }
+  function showErr(id, msg) {
+    const el = document.getElementById('err-' + id);
+    const inp = document.getElementById(id);
+    if (el) { el.textContent = msg || el.textContent; el.style.display = 'block'; }
+    if (inp) inp.classList.add('error');
+  }
+  function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  // ===== PASSWORD STRENGTH =====
+  function checkStrength() {
+    const pw = document.getElementById('g-password').value;
+    const bars = [document.getElementById('pb1'), document.getElementById('pb2'), document.getElementById('pb3')];
+    const label = document.getElementById('pwLabel');
+    bars.forEach(b => b.className = 'pw-bar');
+    if (!pw) { label.textContent = 'Masukkan password'; return; }
+    let score = 0;
+    if (pw.length >= 6) score++;
+    if (pw.length >= 10) score++;
+    if (/[A-Z]/.test(pw) && /[0-9]/.test(pw)) score++;
+    const cls = ['weak','medium','strong'][score-1] || 'weak';
+    const lbl = ['Lemah 😬','Sedang 🙂','Kuat 💪'][score-1] || 'Lemah 😬';
+    for (let i = 0; i < score; i++) bars[i].classList.add(cls);
+    label.textContent = 'Kekuatan: ' + lbl;
+  }
+
+  // ===== TOGGLE PASSWORD =====
+  function togglePw(id, btn) {
+    const inp = document.getElementById(id);
+    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+    else { inp.type = 'password'; btn.textContent = '👁'; }
+  }
+
+  // ===== TOAST =====
+  function showToast(msg, type='') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ===== REGISTER SISWA =====
+  async function registerSiswa() {
+    let ok = true;
+    const nama = document.getElementById('s-nama').value.trim();
+    const kelas = document.getElementById('s-kelas').value;
+    const absen = document.getElementById('s-absen').value;
+    const email = document.getElementById('s-email').value.trim();
+    const sekolah = document.getElementById('s-sekolah').value.trim();
+
+    if (!nama) { showErr('s-nama'); ok = false; }
+    if (!kelas) { showErr('s-kelas'); ok = false; }
+    if (!absen || absen < 1 || absen > 40) { showErr('s-absen', 'Nomor absen tidak valid!'); ok = false; }
+    if (!email || !isEmail(email)) { showErr('s-email', 'Masukkan email yang valid!'); ok = false; }
+    if (!ok) return;
+
+    // Save to localStorage
+    const siswaData = {
+      nama, kelas, absen, email, sekolah,
+      id: 'siswa_' + Date.now(),
+      tanggalDaftar: new Date().toISOString(),
+      progres: { tujuan: false, materi: false, labVirtual: false, latihanSoal: false, refleksi: false },
+      skorPilgan: null, jawabUraiaan: []
+    };
+    localStorage.setItem('reaksiku_siswa', JSON.stringify(siswaData));
+    localStorage.setItem('reaksiku_mode', 'siswa');
+
+    // Show loading
+    document.getElementById('loaderSiswa').style.display = 'block';
+    document.getElementById('textRegSiswa').textContent = 'Menyimpan data...';
+    document.getElementById('btnRegSiswa').disabled = true;
+
+    // Kirim ke Apps Script (opsional, jalankan saja kalau URL sudah diset)
+    try {
+      if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec') {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ action: 'registerSiswa', data: siswaData })
+        });
+      }
+    } catch(e) { /* offline mode, data di localStorage */ }
+
+    setTimeout(() => {
+      document.getElementById('loaderSiswa').style.display = 'none';
+      document.getElementById('btnRegSiswa').disabled = false;
+      document.getElementById('textRegSiswa').textContent = '🚀 Buat Akun Siswa';
+      document.getElementById('formContainer').style.display = 'none';
+      const sc = document.getElementById('success-siswa');
+      sc.classList.add('active');
+      document.getElementById('success-siswa-msg').textContent =
+        `Hore, ${nama}! Akunmu sudah siap. Yuk mulai petualangan belajar Laju Reaksi! 🚀`;
+    }, 1200);
+  }
+
+  // ===== LOGIN SISWA =====
+  function loginSiswa() {
+    const email = document.getElementById('l-s-email').value.trim();
+    if (!email || !isEmail(email)) { showToast('⚠️ Masukkan email yang valid!', 'error'); return; }
+    const data = JSON.parse(localStorage.getItem('reaksiku_siswa') || 'null');
+    if (!data) { showToast('❌ Akun tidak ditemukan. Silakan daftar dulu!', 'error'); return; }
+    if (data.email.toLowerCase() !== email.toLowerCase()) {
+      showToast('❌ Email tidak cocok dengan data yang tersimpan!', 'error'); return;
+    }
+    localStorage.setItem('reaksiku_mode', 'siswa');
+    showToast('✅ Berhasil masuk! Mengarahkan...', 'success');
+    setTimeout(() => { window.location.href = 'dashboard-siswa.html'; }, 1200);
+  }
+
+  // ===== REGISTER GURU =====
+  async function registerGuru() {
+    let ok = true;
+    const nama = document.getElementById('g-nama').value.trim();
+    const email = document.getElementById('g-email').value.trim();
+    const sekolah = document.getElementById('g-sekolah').value.trim();
+    const pw = document.getElementById('g-password').value;
+    const pw2 = document.getElementById('g-password2').value;
+
+    if (!nama) { showErr('g-nama'); ok = false; }
+    if (!email || !isEmail(email)) { showErr('g-email', 'Masukkan email yang valid!'); ok = false; }
+    if (!sekolah) { showErr('g-sekolah'); ok = false; }
+    if (!pw || pw.length < 6) { showErr('g-password', 'Password minimal 6 karakter!'); ok = false; }
+    if (pw !== pw2) { showErr('g-password2', 'Password tidak cocok!'); ok = false; }
+    if (!ok) return;
+
+    const guruData = {
+      nama, email, sekolah,
+      passwordHash: btoa(pw), // simple encoding (bukan enkripsi nyata)
+      id: 'guru_' + Date.now(),
+      tanggalDaftar: new Date().toISOString()
+    };
+    localStorage.setItem('reaksiku_guru', JSON.stringify(guruData));
+    localStorage.setItem('reaksiku_mode', 'guru');
+
+    document.getElementById('loaderGuru').style.display = 'block';
+    document.getElementById('textRegGuru').textContent = 'Menyimpan data...';
+    document.getElementById('btnRegGuru').disabled = true;
+
+    try {
+      if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec') {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ action: 'registerGuru', data: { ...guruData, passwordHash: undefined } })
+        });
+      }
+    } catch(e) {}
+
+    setTimeout(() => {
+      document.getElementById('loaderGuru').style.display = 'none';
+      document.getElementById('btnRegGuru').disabled = false;
+      document.getElementById('textRegGuru').textContent = '🏫 Buat Akun Guru';
+      document.getElementById('formContainer').style.display = 'none';
+      document.getElementById('success-guru').classList.add('active');
+      document.getElementById('success-guru-msg').textContent =
+        `Selamat, ${nama}! Akun guru berhasil dibuat. Dashboard monitoring siap digunakan.`;
+    }, 1200);
+  }
+
+  // ===== LOGIN GURU =====
+  function loginGuru() {
+    const email = document.getElementById('l-g-email').value.trim();
+    const pw = document.getElementById('l-g-password').value;
+    if (!email) { showErr('l-g-email', 'Email wajib diisi!'); return; }
+    if (!pw) { showErr('l-g-password', 'Password wajib diisi!'); return; }
+
+    const data = JSON.parse(localStorage.getItem('reaksiku_guru') || 'null');
+    if (!data) { showToast('❌ Akun guru tidak ditemukan. Silakan daftar!', 'error'); return; }
+    if (data.email.toLowerCase() !== email.toLowerCase()) {
+      showToast('❌ Email tidak cocok!', 'error'); return;
+    }
+    if (data.passwordHash !== btoa(pw)) {
+      showToast('❌ Password salah!', 'error'); return;
+    }
+    localStorage.setItem('reaksiku_mode', 'guru');
+    showToast('✅ Berhasil masuk! Mengarahkan...', 'success');
+    setTimeout(() => { window.location.href = 'dashboard-guru.html'; }, 1200);
+  }
+</script>
+</body>
+</html>

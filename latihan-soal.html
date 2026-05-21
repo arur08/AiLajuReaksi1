@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReaksiKu — Latihan Soal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --pd:#6d28d9;--pm:#8b5cf6;--pl:#ede9fe;--purple:#a78bfa;
+      --md:#065f46;--ml:#d1fae5;--mint:#6ee7b7;
+      --yellow:#fde68a;--yl:#fffbeb;--ya:#d97706;
+      --pink:#f9a8d4;--pkl:#fce7f3;
+      --blue:#93c5fd;--bl:#dbeafe;--bd:#1e40af;
+      --ol:#fff7ed;--orange:#fdba74;
+      --red:#ef4444;--rl:#fee2e2;
+      --green:#10b981;--gl:#dcfce7;
+      --bg:#faf8ff;--white:#fff;
+      --text:#1e1b4b;--tm:#6b7280;
+      --bdr:#e5e7eb;
+      --r:16px;--rs:10px;
+      --sh:0 4px 24px rgba(167,139,250,.11);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* TOPBAR */
+    .topbar{background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-bottom:1.5px solid #f0eaff;height:56px;padding:0 1.3rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .tl{display:flex;align-items:center;gap:8px;text-decoration:none;}
+    .tl-i{width:33px;height:33px;background:linear-gradient(135deg,var(--pd),var(--pm));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+    .tl-t{font-family:'Poppins',sans-serif;font-weight:700;font-size:.97rem;color:var(--pd);}
+    .tr{display:flex;align-items:center;gap:7px;}
+    .tb-b{background:var(--pl);color:var(--pd);font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:99px;}
+    .btn-db{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid var(--bdr);border-radius:8px;background:#fff;color:var(--tm);font-family:'Nunito',sans-serif;font-weight:700;font-size:.76rem;text-decoration:none;transition:all .2s;}
+    .btn-db:hover{border-color:var(--purple);color:var(--pd);}
+
+    /* PROGRESS NAV */
+    .pnav{background:#fff;border-bottom:1.5px solid #f0eaff;padding:.6rem 1.3rem;display:flex;align-items:center;gap:0;overflow-x:auto;}
+    .ps{display:flex;align-items:center;gap:5px;flex-shrink:0;text-decoration:none;}
+    .psd{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;border:2px solid var(--bdr);background:#fff;color:var(--tm);}
+    .psd.done{background:var(--ml);border-color:var(--mint);color:var(--md);}
+    .psd.active{background:var(--pd);border-color:var(--pd);color:#fff;}
+    .psl{font-size:.7rem;font-weight:700;color:var(--tm);white-space:nowrap;}
+    .psl.active{color:var(--pd);}
+    .pline{width:22px;height:2px;background:var(--bdr);flex-shrink:0;margin:0 3px;}
+    .pline.done{background:var(--mint);}
+
+    /* LAYOUT */
+    .page{max-width:860px;margin:0 auto;padding:1.4rem 1.2rem 3rem;}
+
+    /* SECTION TABS */
+    .sec-tabs{display:flex;gap:5px;background:#fff;border-radius:var(--r);padding:5px;box-shadow:var(--sh);border:1.5px solid #f0eaff;margin-bottom:1.5rem;}
+    .stab{flex:1;padding:10px 8px;border-radius:10px;border:none;background:transparent;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;color:var(--tm);cursor:pointer;transition:all .22s;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .stab.active{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;box-shadow:0 3px 12px rgba(109,40,217,.22);}
+    .stab:not(.active):hover{background:var(--pl);color:var(--pd);}
+    .stab .stab-badge{background:rgba(255,255,255,.25);color:#fff;font-size:.68rem;padding:1px 7px;border-radius:99px;margin-left:3px;}
+    .stab:not(.active) .stab-badge{background:var(--pl);color:var(--pd);}
+
+    /* PANEL */
+    .panel{display:none;}
+    .panel.active{display:block;animation:fi .3s ease;}
+    @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    /* TIMER */
+    .timer-bar{background:#fff;border-radius:var(--r);padding:.9rem 1.3rem;box-shadow:var(--sh);border:1.5px solid #f0eaff;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:8px;}
+    .timer-left{display:flex;align-items:center;gap:12px;}
+    .timer-clock{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.4rem;color:var(--pd);}
+    .timer-clock.warn{color:var(--ya);}
+    .timer-clock.danger{color:var(--red);}
+    .timer-info{font-size:.78rem;color:var(--tm);}
+    .timer-info strong{color:var(--text);}
+    .prog-mini{display:flex;gap:4px;flex-wrap:wrap;}
+    .dot-q{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--bdr);background:#fff;font-size:.6rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-weight:700;}
+    .dot-q.answered{background:var(--pm);border-color:var(--pm);color:#fff;}
+    .dot-q.current{border-color:var(--pd);color:var(--pd);font-weight:800;}
+    .dot-q.correct{background:var(--green);border-color:var(--green);color:#fff;}
+    .dot-q.wrong{background:var(--red);border-color:var(--red);color:#fff;}
+
+    /* SOAL CARD */
+    .soal-card{background:#fff;border-radius:var(--r);padding:1.3rem 1.4rem;box-shadow:var(--sh);border:1.5px solid #f0eaff;margin-bottom:1.1rem;}
+    .soal-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.8rem;gap:10px;}
+    .soal-num{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.8rem;padding:4px 12px;border-radius:99px;flex-shrink:0;}
+    .soal-level{font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--yl);color:var(--ya);flex-shrink:0;}
+    .soal-text{font-size:.9rem;line-height:1.7;margin-bottom:1rem;color:var(--text);}
+    .soal-text strong{color:var(--pd);}
+
+    /* OPSI PILGAN */
+    .options{display:grid;gap:.55rem;}
+    .opt{display:flex;align-items:flex-start;gap:10px;padding:.75rem 1rem;border:1.5px solid var(--bdr);border-radius:var(--rs);cursor:pointer;transition:all .2s;font-size:.86rem;line-height:1.5;background:#fff;}
+    .opt:hover:not(.disabled){border-color:var(--purple);background:var(--pl);}
+    .opt.selected{border-color:var(--pm);background:var(--pl);}
+    .opt.correct{border-color:var(--green);background:var(--gl);color:var(--md);}
+    .opt.wrong{border-color:var(--red);background:var(--rl);color:#b91c1c;}
+    .opt.reveal-correct{border-color:var(--green);background:var(--gl);color:var(--md);}
+    .opt.disabled{cursor:not-allowed;}
+    .opt-label{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;background:var(--pl);color:var(--pd);}
+    .opt.correct .opt-label,.opt.reveal-correct .opt-label{background:var(--green);color:#fff;border-color:var(--green);}
+    .opt.wrong .opt-label{background:var(--red);color:#fff;border-color:var(--red);}
+
+    /* FEEDBACK BOX */
+    .feedback-box{border-radius:var(--rs);padding:.9rem 1.1rem;margin-top:.8rem;display:none;font-size:.84rem;line-height:1.6;}
+    .feedback-box.show{display:block;animation:fi .3s ease;}
+    .feedback-box.correct{background:var(--gl);border-left:4px solid var(--green);color:var(--md);}
+    .feedback-box.wrong{background:var(--rl);border-left:4px solid var(--red);color:#b91c1c;}
+    .feedback-box .fb-title{font-weight:800;font-size:.87rem;margin-bottom:.3rem;}
+    .fb-ai{background:linear-gradient(135deg,#f5f3ff,var(--pl));border:1px solid var(--purple);border-radius:var(--rs);padding:.6rem .9rem;margin-top:.6rem;font-size:.81rem;color:var(--pd);display:flex;gap:8px;align-items:flex-start;}
+    .fb-ai .fbi{flex-shrink:0;font-size:1rem;}
+
+    /* SOAL NAV */
+    .soal-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;flex-wrap:wrap;gap:8px;}
+    .btn-soal{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:700;font-size:.86rem;cursor:pointer;transition:all .2s;border:none;}
+    .bs-prev{background:#fff;color:var(--tm);border:1.5px solid var(--bdr)!important;}
+    .bs-prev:hover{border-color:var(--purple)!important;color:var(--pd);}
+    .bs-next{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;box-shadow:0 3px 12px rgba(109,40,217,.2);}
+    .bs-next:hover{transform:translateY(-1px);}
+    .bs-submit{background:linear-gradient(135deg,var(--green),#059669);color:#fff;box-shadow:0 3px 12px rgba(16,185,129,.25);}
+    .bs-submit:hover{transform:translateY(-1px);}
+
+    /* URAIAN */
+    .uraian-card{background:#fff;border-radius:var(--r);padding:1.3rem 1.4rem;box-shadow:var(--sh);border:1.5px solid #f0eaff;margin-bottom:1.1rem;}
+    .uraian-card .uc-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;}
+    .uraian-card .uc-num{background:linear-gradient(135deg,#ec4899,#f9a8d4);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.78rem;padding:4px 12px;border-radius:99px;}
+    .uraian-card .uc-pts{font-size:.73rem;font-weight:700;color:var(--tm);}
+    .uraian-card .uc-text{font-size:.9rem;line-height:1.7;margin-bottom:.9rem;}
+    .uraian-card textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bdr);border-radius:var(--rs);font-family:'Nunito',sans-serif;font-size:.86rem;resize:vertical;min-height:100px;outline:none;transition:border-color .2s;color:var(--text);}
+    .uraian-card textarea:focus{border-color:var(--pm);}
+    .char-count{font-size:.72rem;color:var(--tm);margin-top:3px;text-align:right;}
+    .ai-uraian-btn{margin-top:.6rem;padding:7px 14px;background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;border:none;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+    .ai-uraian-btn:hover{transform:translateY(-1px);}
+    .ai-uraian-feedback{background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;border-radius:var(--rs);padding:.8rem 1rem;margin-top:.7rem;font-size:.82rem;line-height:1.6;display:none;}
+    .ai-uraian-feedback.show{display:block;animation:fi .3s ease;}
+
+    /* LIVE TRACKING */
+    .live-track{background:linear-gradient(135deg,var(--pd),var(--pm));border-radius:var(--r);padding:1.3rem 1.5rem;color:#fff;margin-bottom:1.2rem;}
+    .live-track h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.9rem;display:flex;align-items:center;gap:8px;}
+    .lt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.8rem;margin-bottom:.9rem;}
+    .lt-stat{background:rgba(255,255,255,.15);border-radius:var(--rs);padding:.7rem .9rem;text-align:center;}
+    .lt-stat .lts-val{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.5rem;}
+    .lt-stat .lts-lbl{font-size:.72rem;opacity:.85;}
+    .score-bar-wrap{background:rgba(255,255,255,.2);border-radius:99px;height:10px;overflow:hidden;margin-top:.4rem;}
+    .score-bar-fill{height:100%;border-radius:99px;background:var(--yellow);transition:width 1s ease;}
+    .score-grade{font-size:.8rem;opacity:.9;margin-top:.4rem;text-align:center;}
+
+    /* HASIL SECTION */
+    .hasil-card{background:#fff;border-radius:var(--r);padding:1.4rem;box-shadow:var(--sh);border:1.5px solid #f0eaff;text-align:center;margin-bottom:1.2rem;}
+    .hasil-emoji{font-size:3.5rem;margin-bottom:.7rem;}
+    .hasil-card h2{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.3rem;margin-bottom:.4rem;}
+    .hasil-card p{color:var(--tm);font-size:.88rem;line-height:1.6;}
+    .skor-besar{font-family:'Poppins',sans-serif;font-weight:700;font-size:3rem;color:var(--pd);line-height:1;}
+    .review-grid{display:grid;gap:.6rem;margin-top:1rem;}
+    .review-item{display:flex;gap:10px;align-items:center;padding:.6rem .9rem;border-radius:var(--rs);font-size:.82rem;}
+    .review-item.benar{background:var(--gl);color:var(--md);}
+    .review-item.salah{background:var(--rl);color:#b91c1c;}
+    .review-item .ri-num{font-weight:800;font-size:.85rem;width:24px;flex-shrink:0;}
+
+    /* SUBMIT BTN */
+    .btn-submit-all{width:100%;padding:13px;background:linear-gradient(135deg,var(--green),#059669);color:#fff;border:none;border-radius:var(--r);font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(16,185,129,.3);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:.5rem;}
+    .btn-submit-all:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(16,185,129,.4);}
+
+    /* NAV BOTTOM */
+    .nav-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:.9rem;border-top:1.5px solid #f0eaff;flex-wrap:wrap;gap:9px;}
+    .bn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;text-decoration:none;transition:all .2s;border:none;}
+    .bb{background:#fff;color:var(--tm);border:1.5px solid var(--bdr)!important;}
+    .bb:hover{border-color:var(--purple)!important;color:var(--pd);}
+    .bfwd{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;box-shadow:0 3px 12px rgba(109,40,217,.22);}
+    .bfwd:hover{transform:translateY(-1px);}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:#fff;padding:8px 18px;border-radius:99px;font-weight:600;font-size:.81rem;z-index:9999;transition:transform .3s ease;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
+    .toast.success{background:var(--green);}
+    .toast.error{background:var(--red);}
+
+    /* LOADING SPINNER */
+    .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @media(max-width:580px){
+      .stab{font-size:.78rem;padding:8px 5px;}
+      .prog-mini{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="dashboard-siswa.html" class="tl">
+    <div class="tl-i">⚗️</div>
+    <span class="tl-t">ReaksiKu</span>
+  </a>
+  <div class="tr">
+    <span class="tb-b" id="tbNama">Siswa</span>
+    <a href="dashboard-siswa.html" class="btn-db">🏠 Dashboard</a>
+  </div>
+</div>
+
+<!-- PROGRESS NAV -->
+<div class="pnav">
+  <a class="ps" href="tujuan.html"><div class="psd done">🎯</div><span class="psl">Tujuan</span></a>
+  <div class="pline done"></div>
+  <a class="ps" href="materi.html"><div class="psd done">📖</div><span class="psl">Materi</span></a>
+  <div class="pline done"></div>
+  <a class="ps" href="lab-virtual.html"><div class="psd done">🧪</div><span class="psl">Lab Virtual</span></a>
+  <div class="pline done"></div>
+  <a class="ps" href="latihan-soal.html"><div class="psd active">📝</div><span class="psl active">Latihan Soal</span></a>
+  <div class="pline"></div>
+  <a class="ps" href="refleksi.html"><div class="psd">💭</div><span class="psl">Refleksi</span></a>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <div style="text-align:center;margin-bottom:1.5rem;">
+    <div style="display:inline-block;background:var(--pl);color:var(--pd);font-weight:700;font-size:.73rem;padding:4px 12px;border-radius:99px;margin-bottom:.6rem;">📝 Modul 4 dari 5</div>
+    <h2 style="font-family:'Poppins',sans-serif;font-size:clamp(1.3rem,4vw,1.8rem);font-weight:700;margin-bottom:.4rem;">Latihan Soal Laju Reaksi</h2>
+    <p style="color:var(--tm);font-size:.88rem;">10 soal pilihan ganda HOTS + 5 soal uraian. Setiap jawaban mendapat umpan balik langsung dari AI! 🤖</p>
+  </div>
+
+  <!-- SECTION TABS -->
+  <div class="sec-tabs">
+    <button class="stab active" id="stab-pg" onclick="switchSection('pg')">
+      📝 Pilihan Ganda <span class="stab-badge" id="pg-badge">0/10</span>
+    </button>
+    <button class="stab" id="stab-uraian" onclick="switchSection('uraian')">
+      ✍️ Soal Uraian <span class="stab-badge" id="ur-badge">0/5</span>
+    </button>
+    <button class="stab" id="stab-hasil" onclick="switchSection('hasil')">
+      🏆 Hasil & Tracking <span class="stab-badge" id="hs-badge">—</span>
+    </button>
+  </div>
+
+  <!-- =================== PANEL PILGAN =================== -->
+  <div class="panel active" id="panel-pg">
+
+    <!-- TIMER & PROGRESS -->
+    <div class="timer-bar">
+      <div class="timer-left">
+        <div>
+          <div class="timer-clock" id="timerDisplay">30:00</div>
+          <div class="timer-info">Sisa waktu | Soal <strong id="soalCur">1</strong> dari <strong>10</strong></div>
+        </div>
+      </div>
+      <div class="prog-mini" id="dotProgress"></div>
+    </div>
+
+    <!-- SOAL CONTAINER (rendered by JS) -->
+    <div id="soalContainer"></div>
+
+    <!-- SOAL NAV -->
+    <div class="soal-nav">
+      <button class="btn-soal bs-prev" id="btnPrev" onclick="navSoal(-1)">← Sebelumnya</button>
+      <div style="display:flex;gap:6px;">
+        <button class="btn-soal bs-next" id="btnNext" onclick="navSoal(1)">Berikutnya →</button>
+        <button class="btn-soal bs-submit" id="btnSubmitPG" onclick="submitPilgan()" style="display:none;">Submit Pilgan ✓</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- =================== PANEL URAIAN =================== -->
+  <div class="panel" id="panel-uraian">
+    <div style="background:var(--pkl);border-radius:var(--r);padding:1rem 1.3rem;border-left:4px solid var(--pink);margin-bottom:1.2rem;display:flex;gap:10px;align-items:flex-start;">
+      <span style="font-size:1.15rem;">✍️</span>
+      <div>
+        <p style="font-weight:700;font-size:.87rem;color:#be185d;margin-bottom:2px;">Soal Uraian (5 soal, masing-masing 20 poin)</p>
+        <p style="font-size:.8rem;color:#9d174d;">Jawablah dengan lengkap dan sistematis. Setiap soal bisa mendapat umpan balik dari AI sebelum dikumpulkan ke guru.</p>
+      </div>
+    </div>
+
+    <!-- 5 soal uraian (rendered by JS) -->
+    <div id="uraianContainer"></div>
+
+    <button class="btn-submit-all" onclick="submitUraian()">
+      <span>📤 Kumpulkan Semua Jawaban Uraian ke Guru</span>
+    </button>
+
+    <div class="nav-bottom">
+      <button class="bn bb" onclick="switchSection('pg')">← Pilihan Ganda</button>
+      <button class="bn bfwd" onclick="switchSection('hasil')">Lihat Hasil & Tracking →</button>
+    </div>
+  </div>
+
+  <!-- =================== PANEL HASIL =================== -->
+  <div class="panel" id="panel-hasil">
+
+    <!-- LIVE TRACKING -->
+    <div class="live-track">
+      <h3>📊 Live Tracking Skormu</h3>
+      <div class="lt-stats">
+        <div class="lt-stat"><div class="lts-val" id="lt-skor">—</div><div class="lts-lbl">Skor Pilgan</div></div>
+        <div class="lt-stat"><div class="lts-val" id="lt-benar">—</div><div class="lts-lbl">Benar</div></div>
+        <div class="lt-stat"><div class="lts-val" id="lt-salah">—</div><div class="lts-lbl">Salah</div></div>
+        <div class="lt-stat"><div class="lts-val" id="lt-waktu">—</div><div class="lts-lbl">Waktu (menit)</div></div>
+      </div>
+      <div class="score-bar-wrap"><div class="score-bar-fill" id="scoreBarFill" style="width:0%"></div></div>
+      <div class="score-grade" id="scoreGrade">Submit soal pilgan terlebih dahulu!</div>
+    </div>
+
+    <!-- HASIL PILGAN -->
+    <div class="hasil-card" id="hasilCard" style="display:none;">
+      <div class="hasil-emoji" id="hasilEmoji">🏆</div>
+      <h2 id="hasilTitle">Luar Biasa!</h2>
+      <div class="skor-besar" id="hasilSkor" style="margin:.6rem 0;">—</div>
+      <p id="hasilDesc"></p>
+      <div class="review-grid" id="reviewGrid"></div>
+    </div>
+
+    <!-- URAIAN STATUS -->
+    <div class="hasil-card" id="uraianStatus">
+      <div style="font-size:2rem;margin-bottom:.6rem;">✍️</div>
+      <h2 style="font-size:1rem;margin-bottom:.4rem;">Status Soal Uraian</h2>
+      <p style="font-size:.84rem;color:var(--tm);" id="uraianStatusText">Jawaban uraian menunggu dikoreksi oleh guru. Skor akan ditampilkan setelah dikoreksi.</p>
+    </div>
+
+    <div class="nav-bottom">
+      <button class="bn bb" onclick="switchSection('uraian')">← Soal Uraian</button>
+      <a href="refleksi.html" class="bn bfwd" onclick="selesai()">Lanjut ke Refleksi →</a>
+    </div>
+  </div>
+
+</div><!-- end page -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ======================================================
+//  DATA SOAL PILGAN (10 soal HOTS)
+// ======================================================
+const PILGAN = [
+  {
+    id:1, level:'C4 — Analisis',
+    soal: 'Pada reaksi 2NO(g) + O₂(g) → 2NO₂(g), diperoleh data percobaan:\n• Perc. 1: [NO]=0,1 M, [O₂]=0,1 M, v = 1,2×10⁻⁴ M/s\n• Perc. 2: [NO]=0,2 M, [O₂]=0,1 M, v = 4,8×10⁻⁴ M/s\n• Perc. 3: [NO]=0,2 M, [O₂]=0,2 M, v = 9,6×10⁻⁴ M/s\nPersamaan laju reaksinya adalah...',
+    opsi:['A. v = k[NO][O₂]','B. v = k[NO]²[O₂]','C. v = k[NO][O₂]²','D. v = k[NO]²[O₂]²'],
+    jawaban: 1,
+    pembahasan: 'Dari perc. 1→2: [NO] naik 2×, v naik 4× → orde NO = 2. Dari perc. 2→3: [O₂] naik 2×, v naik 2× → orde O₂ = 1. Jadi v = k[NO]²[O₂].'
+  },
+  {
+    id:2, level:'C4 — Analisis',
+    soal: 'Suatu reaksi pada suhu 25°C berlangsung dengan tetapan laju k = 0,02 s⁻¹. Jika energi aktivasi reaksi tersebut adalah 50 kJ/mol dan suhu dinaikkan menjadi 75°C, perkiraan nilai k pada suhu baru (menggunakan aturan Van\'t Hoff) adalah...',
+    opsi:['A. 0,02 s⁻¹','B. 0,32 s⁻¹','C. 0,64 s⁻¹','D. 1,28 s⁻¹'],
+    jawaban: 2,
+    pembahasan: 'Kenaikan suhu = 75-25 = 50°C = 5 × 10°C. Menggunakan aturan Van\'t Hoff (laju ≈ 2× per 10°C): k baru = 0,02 × 2⁵ = 0,02 × 32 = 0,64 s⁻¹.'
+  },
+  {
+    id:3, level:'C5 — Evaluasi',
+    soal: 'Seorang ilmuwan meneliti penguraian gas N₂O₅ dan membuat tiga grafik: (1) [N₂O₅] vs t, (2) ln[N₂O₅] vs t, (3) 1/[N₂O₅] vs t. Ternyata hanya grafik (2) yang menghasilkan garis lurus. Berdasarkan data ini, pernyataan yang BENAR adalah...',
+    opsi:['A. Reaksi berorde nol karena konsentrasi berkurang linear','B. Reaksi berorde satu dengan waktu paruh konstan tidak bergantung [N₂O₅]₀','C. Reaksi berorde dua dengan waktu paruh bergantung konsentrasi awal','D. Tidak dapat ditentukan orde reaksinya dari data tersebut'],
+    jawaban: 1,
+    pembahasan: 'Grafik ln[A] vs t yang linier menunjukkan reaksi orde 1. Pada orde 1: t₁/₂ = ln2/k = 0,693/k, konstan dan tidak bergantung pada [N₂O₅]₀.'
+  },
+  {
+    id:4, level:'C4 — Analisis',
+    soal: 'Dua percobaan reaksi A + B → C dilakukan pada suhu berbeda:\n• Suhu 27°C: v = 0,040 M/s saat [A]=[B]=0,5 M\n• Suhu 47°C: v = 0,160 M/s saat [A]=[B]=0,5 M\nJika orde reaksi total adalah 2, berapakah perbandingan k₄₇/k₂₇?',
+    opsi:['A. 2','B. 4','C. 8','D. 16'],
+    jawaban: 1,
+    pembahasan: 'Karena [A] dan [B] sama pada kedua percobaan, perbandingan v sama dengan perbandingan k: k₄₇/k₂₇ = v₄₇/v₂₇ = 0,160/0,040 = 4. Kenaikan suhu 20°C (2×10°C) menyebabkan k meningkat 2² = 4 kali.'
+  },
+  {
+    id:5, level:'C5 — Evaluasi',
+    soal: 'Perhatikan diagram energi dua reaksi:\n• Reaksi A: Ea = 80 kJ/mol, ΔH = -50 kJ/mol\n• Reaksi B: Ea = 40 kJ/mol, ΔH = -50 kJ/mol\nPernyataan yang TEPAT untuk membandingkan kedua reaksi ini pada suhu dan konsentrasi yang sama adalah...',
+    opsi:['A. Reaksi A lebih lambat karena Ea lebih tinggi, namun lebih eksoterm','B. Reaksi B lebih cepat karena Ea lebih rendah; kedua reaksi sama eksoterm','C. Reaksi A lebih cepat karena energi aktivasinya lebih besar','D. Laju kedua reaksi sama karena nilai ΔH-nya sama'],
+    jawaban: 1,
+    pembahasan: 'Laju reaksi ditentukan oleh Ea, bukan ΔH. Reaksi B dengan Ea lebih rendah (40 kJ/mol) akan berlangsung lebih cepat. Keduanya memiliki ΔH yang sama sehingga sama-sama eksoterm dengan tingkat yang sama.'
+  },
+  {
+    id:6, level:'C4 — Analisis',
+    soal: 'Reaksi penguraian H₂O₂: 2H₂O₂(aq) → 2H₂O(l) + O₂(g) diamati menggunakan empat kondisi:\n(1) H₂O₂ 0,5 M tanpa katalis, 25°C\n(2) H₂O₂ 1,0 M tanpa katalis, 25°C\n(3) H₂O₂ 0,5 M + MnO₂, 25°C\n(4) H₂O₂ 0,5 M tanpa katalis, 45°C\nUrutan dari laju reaksi terkecil ke terbesar adalah...',
+    opsi:['A. 1 < 2 < 4 < 3','B. 1 < 4 < 2 < 3','C. 2 < 1 < 4 < 3','D. 1 < 2 < 3 < 4'],
+    jawaban: 0,
+    pembahasan: 'Kondisi 1 (dasar) < 2 (konsentrasi 2×, laju naik) < 4 (suhu naik 20°C ≈ 4× lebih cepat dari kondisi 1, namun bergantung Ea) < 3 (katalis MnO₂ paling efektif menurunkan Ea secara drastis). Urutan: 1 < 2 < 4 < 3.'
+  },
+  {
+    id:7, level:'C5 — Evaluasi',
+    soal: 'Industri pembuatan amonia (Haber-Bosch) menggunakan suhu 400-500°C dan katalis Fe meskipun secara termodinamika reaksi lebih menguntungkan pada suhu rendah. Alasan yang paling tepat untuk pilihan kondisi ini adalah...',
+    opsi:['A. Pada suhu rendah, kesetimbangan menguntungkan namun laju terlalu lambat; katalis dan suhu tinggi diperlukan untuk laju yang ekonomis','B. Fe hanya aktif sebagai katalis pada suhu di atas 400°C','C. Suhu tinggi meningkatkan nilai K kesetimbangan sehingga lebih banyak amonia terbentuk','D. Tekanan tinggi tidak bisa digunakan bersamaan dengan suhu rendah'],
+    jawaban: 0,
+    pembahasan: 'Ini adalah trade-off klasik: suhu rendah menguntungkan secara kesetimbangan (K besar) tetapi laju reaksi sangat lambat. Penggunaan suhu 400-500°C + katalis Fe adalah kompromi optimal: laju cukup cepat secara industri meski yield tidak maksimum.'
+  },
+  {
+    id:8, level:'C4 — Analisis',
+    soal: 'Reaksi: A → produk memiliki data berikut:\n• t = 0: [A] = 1,00 M\n• t = 100 s: [A] = 0,50 M\n• t = 200 s: [A] = 0,25 M\n• t = 300 s: [A] = 0,125 M\nBerdasarkan data ini, orde reaksi dan nilai tetapan laju (k) adalah...',
+    opsi:['A. Orde 0; k = 0,005 M/s','B. Orde 1; k = 6,93×10⁻³ s⁻¹','C. Orde 2; k = 0,01 M⁻¹s⁻¹','D. Orde 1; k = 5,00×10⁻³ s⁻¹'],
+    jawaban: 1,
+    pembahasan: 'Waktu paruh konstan (100 s) → orde 1. Untuk orde 1: t₁/₂ = ln2/k → k = ln2/t₁/₂ = 0,693/100 = 6,93×10⁻³ s⁻¹.'
+  },
+  {
+    id:9, level:'C4 — Analisis',
+    soal: 'Serbuk pualam (CaCO₃) sebanyak 5 gram direaksikan dengan 50 mL HCl 1 M. Percobaan diulang dengan:\n(I) Pualam bongkahan 5 gram + HCl 1 M 50 mL\n(II) Serbuk pualam 5 gram + HCl 0,5 M 50 mL\n(III) Serbuk pualam 5 gram + HCl 1 M 50 mL pada 40°C\nUrutan laju reaksi dari yang terkecil adalah...',
+    opsi:['A. III < I < II','B. I < II < III','C. II < I < III','D. I < III < II'],
+    jawaban: 1,
+    pembahasan: 'I: bongkahan (luas permukaan kecil) → paling lambat. II: serbuk tapi konsentrasi HCl lebih rendah → sedang. III: serbuk + suhu lebih tinggi → paling cepat. Urutan: I < II < III.'
+  },
+  {
+    id:10, level:'C5 — Evaluasi',
+    soal: 'Seorang peneliti mengamati bahwa reaksi antara zat X dan Y berlangsung sangat cepat pada suhu kamar tanpa katalis, bahkan lebih cepat daripada reaksi lain yang menggunakan katalis. Interpretasi yang paling logis berdasarkan teori tumbukan adalah...',
+    opsi:['A. Energi aktivasi reaksi X+Y sangat rendah sehingga hampir semua tumbukan efektif','B. Konsentrasi X dan Y sangat tinggi sehingga frekuensi tumbukan maksimum','C. Reaksi X+Y bersifat eksoterm sehingga menghasilkan energi sendiri','D. Faktor orientasi molekul tidak berpengaruh pada reaksi X+Y'],
+    jawaban: 0,
+    pembahasan: 'Reaksi berlangsung sangat cepat tanpa katalis mengindikasikan Ea yang sangat rendah. Katalis hanya menurunkan Ea; jika tanpa katalis sudah cepat, berarti Ea memang kecil sehingga fraksi molekul dengan E≥Ea sudah sangat besar pada suhu kamar.'
+  }
+];
+
+// ======================================================
+//  DATA SOAL URAIAN (5 soal)
+// ======================================================
+const URAIAN = [
+  {
+    id:1,
+    soal:'Jelaskan mengapa peningkatan suhu dapat mempercepat laju reaksi! Gunakan konsep teori tumbukan dan distribusi energi Maxwell-Boltzmann dalam penjelasanmu. Sertakan pula persamaan Arrhenius dan interpretasinya.',
+    pts:20, minChar:150
+  },
+  {
+    id:2,
+    soal:'Reaksi A + 2B → C + D memiliki data percobaan berikut:\n• Perc 1: [A]=0,20 M, [B]=0,10 M, v=5,0×10⁻³ M/s\n• Perc 2: [A]=0,20 M, [B]=0,20 M, v=2,0×10⁻² M/s\n• Perc 3: [A]=0,40 M, [B]=0,10 M, v=5,0×10⁻³ M/s\n\nTentukan: (a) orde reaksi terhadap A, (b) orde reaksi terhadap B, (c) orde reaksi total, (d) persamaan laju, dan (e) nilai k beserta satuannya!',
+    pts:20, minChar:200
+  },
+  {
+    id:3,
+    soal:'Katalis MnO₂ ditambahkan ke dalam larutan H₂O₂ dan reaksi penguraian berlangsung lebih cepat. Setelah reaksi selesai, MnO₂ diperoleh kembali dalam jumlah yang sama.\n\nJelaskan: (a) mengapa katalis dapat mempercepat reaksi menggunakan diagram energi, (b) perbedaan katalis homogen dan heterogen beserta contohnya, dan (c) mengapa enzim disebut biokatalis yang sangat efisien!',
+    pts:20, minChar:180
+  },
+  {
+    id:4,
+    soal:'Dalam kehidupan sehari-hari, kita menyimpan makanan di lemari es untuk memperlambat pembusukan, dan menggunakan panci presto untuk mempercepat memasak.\n\nAnalisis kedua situasi tersebut menggunakan konsep laju reaksi! Jelaskan faktor apa yang berperan, bagaimana pengaruhnya terhadap laju reaksi, dan hubungkan dengan rumus/persamaan yang relevan.',
+    pts:20, minChar:180
+  },
+  {
+    id:5,
+    soal:'Seorang siswa melakukan percobaan menentukan orde reaksi Na₂S₂O₃ dengan HCl menggunakan metode waktu-keruh. Namun ia mendapatkan hasil yang tidak konsisten di beberapa pengulangan percobaan.\n\nIdentifikasi minimal 4 faktor kesalahan eksperimen yang mungkin terjadi, jelaskan bagaimana setiap faktor tersebut mempengaruhi hasil, dan sarankan cara mengatasinya!',
+    pts:20, minChar:200
+  }
+];
+
+// ======================================================
+//  STATE
+// ======================================================
+const siswa = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+document.getElementById('tbNama').textContent = (siswa.nama||'Siswa').split(' ')[0];
+
+let curSoal = 0;
+let jawabanPG = new Array(10).fill(null); // index jawaban
+let pgSubmitted = false;
+let startTime = Date.now();
+let timerInterval = null;
+let timeLeft = 30 * 60; // 30 menit
+const POINTS_PER = 10;
+
+// Load saved
+const saved = JSON.parse(localStorage.getItem('latihan_pg')||'null');
+if(saved) {
+  jawabanPG = saved.jawaban || new Array(10).fill(null);
+  pgSubmitted = saved.submitted || false;
+}
+
+// ======================================================
+//  RENDER SOAL
+// ======================================================
+function renderSoal(idx) {
+  const s = PILGAN[idx];
+  const answered = jawabanPG[idx] !== null;
+  const container = document.getElementById('soalContainer');
+
+  document.getElementById('soalCur').textContent = idx + 1;
+
+  container.innerHTML = `
+    <div class="soal-card">
+      <div class="soal-hdr">
+        <span class="soal-num">Soal ${s.id} dari 10</span>
+        <span class="soal-level">${s.level}</span>
+      </div>
+      <div class="soal-text">${s.soal.replace(/\n/g,'<br>').replace(/(v = [^<]+|r = [^<]+|\[[^\]]+\]|[A-Z]₂[A-Z]?[₃-₆]?)/g,'<strong>$1</strong>')}</div>
+      <div class="options" id="opts-${idx}">
+        ${s.opsi.map((o,i) => `
+          <div class="opt ${pgSubmitted ? (i===s.jawaban?'reveal-correct':'') : (jawabanPG[idx]===i?'selected':'')} ${pgSubmitted&&jawabanPG[idx]===i&&i!==s.jawaban?'wrong':''} ${pgSubmitted?'disabled':''}"
+            onclick="${pgSubmitted?'':'selectOpt('+idx+','+i+')'}">
+            <div class="opt-label">${String.fromCharCode(65+i)}</div>
+            <div>${o.substring(3)}</div>
+          </div>
+        `).join('')}
+      </div>
+      ${pgSubmitted ? `
+        <div class="feedback-box ${jawabanPG[idx]===s.jawaban?'correct':'wrong'} show">
+          <div class="fb-title">${jawabanPG[idx]===s.jawaban?'✅ Jawaban Benar!':'❌ Jawaban Salah'}</div>
+          <p>${s.pembahasan}</p>
+          <div class="fb-ai">
+            <span class="fbi">🤖</span>
+            <span id="ai-fb-${idx}">Memuat penjelasan AI...</span>
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+
+  // Update nav
+  document.getElementById('btnPrev').style.display = idx === 0 ? 'none' : '';
+  const isLast = idx === 9;
+  document.getElementById('btnNext').style.display = isLast ? 'none' : '';
+  document.getElementById('btnSubmitPG').style.display = isLast && !pgSubmitted ? '' : 'none';
+
+  updateDots();
+
+  // Load AI feedback if submitted
+  if(pgSubmitted) loadAIFeedback(idx);
+}
+
+function selectOpt(soalIdx, optIdx) {
+  if(pgSubmitted) return;
+  jawabanPG[soalIdx] = optIdx;
+  localStorage.setItem('latihan_pg', JSON.stringify({jawaban:jawabanPG, submitted:pgSubmitted}));
+  renderSoal(soalIdx);
+  updateBadge();
+}
+
+function navSoal(dir) {
+  const next = curSoal + dir;
+  if(next < 0 || next > 9) return;
+  curSoal = next;
+  renderSoal(curSoal);
+}
+
+function updateDots() {
+  const wrap = document.getElementById('dotProgress');
+  wrap.innerHTML = PILGAN.map((s,i) => {
+    let cls = 'dot-q';
+    if(pgSubmitted) cls += jawabanPG[i]===s.jawaban?' correct':' wrong';
+    else if(jawabanPG[i]!==null) cls += ' answered';
+    if(i===curSoal) cls += ' current';
+    return `<div class="${cls}" onclick="curSoal=${i};renderSoal(${i})">${i+1}</div>`;
+  }).join('');
+}
+
+function updateBadge() {
+  const answered = jawabanPG.filter(j=>j!==null).length;
+  document.getElementById('pg-badge').textContent = answered+'/10';
+}
+
+// ======================================================
+//  TIMER
+// ======================================================
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+    const s = (timeLeft%60).toString().padStart(2,'0');
+    const el = document.getElementById('timerDisplay');
+    el.textContent = m+':'+s;
+    el.className = 'timer-clock' + (timeLeft<300?' warn':'') + (timeLeft<60?' danger':'');
+    if(timeLeft <= 0) { clearInterval(timerInterval); submitPilgan(); }
+  }, 1000);
+}
+
+// ======================================================
+//  SUBMIT PILGAN
+// ======================================================
+function submitPilgan() {
+  if(pgSubmitted) { switchSection('hasil'); return; }
+  const answered = jawabanPG.filter(j=>j!==null).length;
+  if(answered < 10) {
+    if(!confirm(`Masih ada ${10-answered} soal yang belum dijawab. Submit sekarang?`)) return;
+  }
+  clearInterval(timerInterval);
+  pgSubmitted = true;
+  localStorage.setItem('latihan_pg', JSON.stringify({jawaban:jawabanPG, submitted:true}));
+
+  // Hitung skor
+  const benar = jawabanPG.filter((j,i)=>j===PILGAN[i].jawaban).length;
+  const skor = benar * POINTS_PER;
+  const waktuMenit = Math.round((Date.now()-startTime)/60000);
+
+  // Simpan ke siswa
+  const s = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+  s.skorPilgan = skor;
+  s.waktuPG = waktuMenit;
+  if(!s.progres) s.progres={};
+  localStorage.setItem('reaksiku_siswa', JSON.stringify(s));
+
+  renderSoal(curSoal);
+  updateDots();
+  updateHasil(benar, skor, waktuMenit);
+  showToast(`✅ Submit berhasil! Skor: ${skor}/100`,'success');
+  document.getElementById('btnSubmitPG').style.display = 'none';
+}
+
+// ======================================================
+//  AI FEEDBACK PG
+// ======================================================
+async function loadAIFeedback(idx) {
+  const el = document.getElementById('ai-fb-'+idx);
+  if(!el || el.dataset.loaded) return;
+  el.dataset.loaded = 'true';
+
+  const s = PILGAN[idx];
+  const benar = jawabanPG[idx] === s.jawaban;
+  const pilihanSiswa = s.opsi[jawabanPG[idx]] || 'tidak menjawab';
+
+  const prompt = `Kamu adalah tutor kimia SMA yang ramah dan membantu. Seorang siswa ${benar?'menjawab BENAR':'menjawab SALAH'} soal berikut:
+
+Soal: ${s.soal}
+Jawaban siswa: ${pilihanSiswa}
+Jawaban benar: ${s.opsi[s.jawaban]}
+Pembahasan: ${s.pembahasan}
+
+Berikan komentar singkat (2-3 kalimat) yang:
+${benar 
+  ? '- Apresiasi siswa dan perkuat pemahaman konsep yang digunakan'
+  : '- Jelaskan letak kesalahan konsep siswa secara spesifik dan beri petunjuk berpikir yang benar'}
+Gunakan bahasa Indonesia yang ramah dan mudah dipahami siswa SMA. Jangan ulangi pembahasan yang sudah ada.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:150,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await resp.json();
+    el.textContent = data.content?.map(c=>c.text||'').join('') || (benar?'Bagus! Pemahaman konsepmu sudah tepat.':'Pelajari kembali bagian ini ya!');
+  } catch(e) {
+    el.textContent = benar
+      ? '✨ Konsep yang kamu gunakan sudah tepat! Pertahankan pemahaman ini.'
+      : '💡 Coba baca kembali pembahasan di atas dan kaitkan dengan materi teori tumbukan atau hukum laju reaksi.';
+  }
+}
+
+// ======================================================
+//  RENDER URAIAN
+// ======================================================
+function renderUraian() {
+  const container = document.getElementById('uraianContainer');
+  container.innerHTML = URAIAN.map(s => `
+    <div class="uraian-card">
+      <div class="uc-hdr">
+        <span class="uc-num">Uraian ${s.id} dari 5</span>
+        <span class="uc-pts">Skor maks: ${s.pts} poin</span>
+      </div>
+      <div class="uc-text">${s.soal.replace(/\n/g,'<br>')}</div>
+      <textarea id="uraian-${s.id}" placeholder="Tuliskan jawabanmu di sini... (minimal ${s.minChar} karakter)"
+        oninput="updateCharCount(${s.id},this.value)"
+        onblur="saveUraian()">${localStorage.getItem('uraian_'+s.id)||''}</textarea>
+      <div class="char-count" id="cc-${s.id}">0 / ${s.minChar} karakter minimum</div>
+      <button class="ai-uraian-btn" onclick="getAIUraian(${s.id})">
+        <span id="ai-spin-${s.id}" style="display:none;" class="spin"></span>
+        🤖 Minta Petunjuk AI
+      </button>
+      <div class="ai-uraian-feedback" id="ai-ur-${s.id}"></div>
+    </div>
+  `).join('');
+
+  // Update char counts
+  URAIAN.forEach(s => {
+    const saved = localStorage.getItem('uraian_'+s.id)||'';
+    if(saved) updateCharCount(s.id, saved);
+  });
+}
+
+function updateCharCount(id, val) {
+  const s = URAIAN.find(u=>u.id===id);
+  const el = document.getElementById('cc-'+id);
+  const len = val.length;
+  const enough = len >= s.minChar;
+  el.textContent = len + ' / ' + s.minChar + ' karakter minimum';
+  el.style.color = enough ? 'var(--md)' : 'var(--tm)';
+}
+
+function saveUraian() {
+  URAIAN.forEach(s => {
+    const el = document.getElementById('uraian-'+s.id);
+    if(el) localStorage.setItem('uraian_'+s.id, el.value);
+  });
+  updateUrBadge();
+}
+
+function updateUrBadge() {
+  const filled = URAIAN.filter(s => (localStorage.getItem('uraian_'+s.id)||'').length > 20).length;
+  document.getElementById('ur-badge').textContent = filled+'/5';
+}
+
+async function getAIUraian(id) {
+  const jawab = document.getElementById('uraian-'+id)?.value.trim();
+  const s = URAIAN.find(u=>u.id===id);
+  if(!jawab || jawab.length < 20) { showToast('⚠️ Tulis jawaban dulu minimal 20 karakter!','error'); return; }
+
+  const spin = document.getElementById('ai-spin-'+id);
+  const fbEl = document.getElementById('ai-ur-'+id);
+  spin.style.display='inline-block';
+  fbEl.className='ai-uraian-feedback show';
+  fbEl.textContent='⏳ AI sedang menganalisis jawabanmu...';
+
+  const prompt = `Kamu adalah tutor kimia SMA yang membantu siswa belajar dengan metode scaffolding (bukan memberi jawaban langsung).
+
+Soal: ${s.soal}
+
+Jawaban siswa saat ini: "${jawab}"
+
+Berikan umpan balik scaffolding yang:
+1. Identifikasi aspek yang sudah benar dari jawaban siswa (1-2 kalimat)
+2. Tunjukkan satu aspek yang perlu diperbaiki/dilengkapi (tanpa memberi jawaban langsung)
+3. Ajukan 1 pertanyaan pemandu agar siswa berpikir lebih dalam
+4. Skor estimasi sementara (0-${s.pts}) dengan penjelasan singkat
+
+Gunakan bahasa Indonesia yang ramah dan mendukung. Maksimum 6 kalimat.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:300,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await resp.json();
+    fbEl.textContent = data.content?.map(c=>c.text||'').join('') || 'Jawaban kamu sudah ada. Coba lengkapi dengan konsep teori tumbukan!';
+  } catch(e) {
+    fbEl.textContent = '💡 Pastikan jawabanmu mencakup: (1) konsep dasar yang relevan, (2) penjelasan mekanisme/proses, (3) contoh konkret jika diminta. Coba kembangkan jawabanmu lebih lanjut!';
+  }
+  spin.style.display='none';
+}
+
+// ======================================================
+//  SUBMIT URAIAN
+// ======================================================
+function submitUraian() {
+  saveUraian();
+  const jawabUraian = URAIAN.map(s => ({
+    no: s.id,
+    soal: s.soal.substring(0,80)+'...',
+    jawab: localStorage.getItem('uraian_'+s.id)||'',
+    skor: null
+  }));
+
+  const s = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+  s.jawabUraian = jawabUraian;
+  if(!s.progres) s.progres={};
+  localStorage.setItem('reaksiku_siswa', JSON.stringify(s));
+
+  document.getElementById('uraianStatusText').textContent = '✅ Jawaban uraian sudah terkirim ke guru dan tersimpan. Menunggu koreksi dari guru.';
+  showToast('✅ Jawaban uraian berhasil dikumpulkan ke guru!','success');
+  updateUrBadge();
+}
+
+// ======================================================
+//  HASIL & TRACKING
+// ======================================================
+function updateHasil(benar, skor, waktu) {
+  document.getElementById('lt-skor').textContent = skor;
+  document.getElementById('lt-benar').textContent = benar;
+  document.getElementById('lt-salah').textContent = 10-benar;
+  document.getElementById('lt-waktu').textContent = waktu;
+  document.getElementById('scoreBarFill').style.width = skor+'%';
+
+  let grade, emoji, desc;
+  if(skor >= 90) { grade='A (Sangat Baik)'; emoji='🏆'; desc='Luar biasa! Pemahamanmu tentang laju reaksi sudah sangat baik. Pertahankan!'; }
+  else if(skor >= 80) { grade='B (Baik)'; emoji='⭐'; desc='Bagus sekali! Ada beberapa konsep yang perlu diperdalam. Cek soal yang salah ya!'; }
+  else if(skor >= 70) { grade='C (Cukup)'; emoji='👍'; desc='Lumayan! Pelajari kembali materi teori tumbukan dan hukum laju untuk nilai yang lebih baik.'; }
+  else if(skor >= 60) { grade='D (Perlu Latihan)'; emoji='📚'; desc='Jangan menyerah! Review kembali materi dan coba pahami pembahasan setiap soal.'; }
+  else { grade='E (Perlu Bimbingan)'; emoji='💪'; desc='Semangat! Kembali ke materi dan baca pembahasan setiap soal dengan teliti.'; }
+
+  document.getElementById('scoreGrade').textContent = 'Nilai: ' + grade;
+  document.getElementById('hasilCard').style.display='block';
+  document.getElementById('hasilEmoji').textContent = emoji;
+  document.getElementById('hasilTitle').textContent = skor>=80?'Luar Biasa!':skor>=60?'Terus Semangat!':'Jangan Menyerah!';
+  document.getElementById('hasilSkor').textContent = skor+'/100';
+  document.getElementById('hasilDesc').textContent = desc;
+  document.getElementById('hs-badge').textContent = skor;
+
+  // Review grid
+  document.getElementById('reviewGrid').innerHTML = PILGAN.map((s,i)=>{
+    const benarItem = jawabanPG[i]===s.jawaban;
+    return `<div class="review-item ${benarItem?'benar':'salah'}">
+      <div class="ri-num">${i+1}.</div>
+      <div style="flex:1;">${benarItem?'✅ Benar':'❌ Salah — '+s.opsi[s.jawaban].substring(3,50)+'...'}</div>
+      <div>${benarItem?'+10':'0'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ======================================================
+//  SECTION SWITCH
+// ======================================================
+function switchSection(id) {
+  ['pg','uraian','hasil'].forEach(s => {
+    document.getElementById('panel-'+s).classList.toggle('active', s===id);
+    document.getElementById('stab-'+s).classList.toggle('active', s===id);
+  });
+  if(id==='uraian') renderUraian();
+  if(id==='hasil') loadHasil();
+}
+
+function loadHasil() {
+  const s = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+  if(s.skorPilgan != null) {
+    const benar = jawabanPG.filter((j,i)=>j===PILGAN[i].jawaban).length;
+    updateHasil(benar, s.skorPilgan, s.waktuPG||0);
+  }
+}
+
+// ======================================================
+//  SELESAI
+// ======================================================
+function selesai() {
+  const s = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+  if(!s.progres) s.progres={};
+  s.progres.latihanSoal = true;
+  localStorage.setItem('reaksiku_siswa', JSON.stringify(s));
+}
+
+// ======================================================
+//  UTILS
+// ======================================================
+function showToast(msg, type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type;
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ======================================================
+//  INIT
+// ======================================================
+window.addEventListener('load', () => {
+  renderSoal(0);
+  updateBadge();
+  updateUrBadge();
+
+  // Restore hasil jika sudah pernah submit
+  if(pgSubmitted) {
+    const s = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+    if(s.skorPilgan != null) {
+      const benar = jawabanPG.filter((j,i)=>j===PILGAN[i].jawaban).length;
+      updateHasil(benar, s.skorPilgan, s.waktuPG||0);
+    }
+    document.getElementById('btnSubmitPG').style.display='none';
+  } else {
+    startTimer();
+  }
+
+  // Load uraian status
+  const siswaSaved = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+  if(siswaSaved.jawabUraian?.length > 0) {
+    document.getElementById('uraianStatusText').textContent = '✅ Jawaban uraian sudah terkirim ke guru dan tersimpan. Menunggu koreksi dari guru.';
+  }
+});
+</script>
+</body>
+</html>

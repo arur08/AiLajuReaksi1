@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReaksiKu — Materi Laju Reaksi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --pd:#6d28d9;--pm:#8b5cf6;--pl:#ede9fe;--purple:#a78bfa;
+      --md:#065f46;--ml:#d1fae5;--mint:#6ee7b7;
+      --yellow:#fde68a;--yl:#fffbeb;
+      --pink:#f9a8d4;--pkl:#fce7f3;
+      --blue:#93c5fd;--bl:#dbeafe;--bd:#1e40af;
+      --orange:#fdba74;--ol:#fff7ed;
+      --red:#ef4444;--rl:#fee2e2;
+      --bg:#faf8ff;--white:#fff;
+      --text:#1e1b4b;--tm:#6b7280;
+      --bdr:#e5e7eb;
+      --r:16px;--rs:10px;
+      --sh:0 4px 24px rgba(167,139,250,.11);
+      --shh:0 8px 32px rgba(167,139,250,.20);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* TOPBAR */
+    .topbar{background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-bottom:1.5px solid #f0eaff;height:56px;padding:0 1.3rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .tl{display:flex;align-items:center;gap:8px;text-decoration:none;}
+    .tl-i{width:33px;height:33px;background:linear-gradient(135deg,var(--pd),var(--pm));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+    .tl-t{font-family:'Poppins',sans-serif;font-weight:700;font-size:.97rem;color:var(--pd);}
+    .tr{display:flex;align-items:center;gap:7px;}
+    .tb-b{background:var(--pl);color:var(--pd);font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:99px;}
+    .btn-db{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid var(--bdr);border-radius:8px;background:#fff;color:var(--tm);font-family:'Nunito',sans-serif;font-weight:700;font-size:.76rem;text-decoration:none;transition:all .2s;}
+    .btn-db:hover{border-color:var(--purple);color:var(--pd);}
+
+    /* PROGRESS NAV */
+    .pnav{background:#fff;border-bottom:1.5px solid #f0eaff;padding:.6rem 1.3rem;display:flex;align-items:center;gap:0;overflow-x:auto;}
+    .ps{display:flex;align-items:center;gap:5px;flex-shrink:0;cursor:pointer;text-decoration:none;}
+    .psd{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;border:2px solid var(--bdr);background:#fff;color:var(--tm);}
+    .psd.done{background:var(--ml);border-color:var(--mint);color:var(--md);}
+    .psd.active{background:var(--pd);border-color:var(--pd);color:#fff;}
+    .psl{font-size:.7rem;font-weight:700;color:var(--tm);white-space:nowrap;}
+    .psl.active{color:var(--pd);}
+    .pline{width:22px;height:2px;background:var(--bdr);flex-shrink:0;margin:0 3px;}
+    .pline.done{background:var(--mint);}
+
+    /* LAYOUT */
+    .layout{display:flex;max-width:1060px;margin:0 auto;gap:0;}
+    
+    /* SIDEBAR MATERI */
+    .mat-sidebar{width:220px;flex-shrink:0;padding:1.2rem .8rem 2rem;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;border-right:1.5px solid #f0eaff;background:#fff;}
+    .mat-sidebar h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:.8rem;color:var(--tm);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.7rem;padding:0 .4rem;}
+    .mat-nav a{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:8px;text-decoration:none;font-size:.82rem;font-weight:600;color:var(--tm);transition:all .2s;margin-bottom:2px;}
+    .mat-nav a:hover{background:var(--pl);color:var(--pd);}
+    .mat-nav a.active{background:var(--pl);color:var(--pd);font-weight:700;}
+    .mat-nav a .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+    .mat-nav a.done .dot{background:var(--mint);}
+    .mat-nav a:not(.done) .dot{background:var(--bdr);}
+    .mat-nav a.active .dot{background:var(--pm);}
+    .prog-wrap{margin:.9rem .4rem 0;background:#f3f4f6;border-radius:99px;height:5px;overflow:hidden;}
+    .prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pd),var(--pm));transition:width .5s ease;}
+    .prog-lbl{font-size:.7rem;color:var(--tm);margin-top:4px;padding:0 .4rem;}
+
+    /* CONTENT */
+    .mat-content{flex:1;padding:1.4rem 1.5rem 3rem;min-width:0;}
+
+    /* SECTION */
+    .section{display:none;animation:fi .3s ease;}
+    .section.active{display:block;}
+    @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    .sec-badge{display:inline-flex;align-items:center;gap:6px;background:var(--pl);color:var(--pd);font-weight:700;font-size:.73rem;padding:4px 12px;border-radius:99px;margin-bottom:.8rem;}
+    .sec-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.3rem;margin-bottom:.5rem;}
+    .sec-sub{color:var(--tm);font-size:.88rem;line-height:1.6;margin-bottom:1.3rem;}
+
+    /* CONTENT CARD */
+    .cc{background:#fff;border-radius:var(--r);padding:1.3rem 1.4rem;box-shadow:var(--sh);border:1.5px solid #f0eaff;margin-bottom:1.2rem;}
+    .cc h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:.7rem;display:flex;align-items:center;gap:7px;}
+    .cc p{font-size:.87rem;color:var(--tm);line-height:1.7;margin-bottom:.7rem;}
+    .cc p:last-child{margin-bottom:0;}
+
+    /* FORMULA BOX */
+    .formula{background:linear-gradient(135deg,var(--pl),#f5f3ff);border:1.5px solid var(--purple);border-radius:var(--rs);padding:1rem 1.3rem;margin:1rem 0;text-align:center;}
+    .formula .f-main{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.2rem;color:var(--pd);margin-bottom:.3rem;}
+    .formula .f-sub{font-size:.8rem;color:var(--pm);}
+
+    /* HIGHLIGHT BOX */
+    .hbox{border-radius:var(--rs);padding:.9rem 1.1rem;display:flex;gap:10px;align-items:flex-start;margin:1rem 0;}
+    .hbox .hi{font-size:1.15rem;flex-shrink:0;}
+    .hbox p{font-size:.84rem;line-height:1.6;}
+
+    /* TABLE */
+    .mat-table{width:100%;border-collapse:collapse;font-size:.83rem;margin:1rem 0;}
+    .mat-table th{background:var(--pl);color:var(--pd);font-weight:700;font-size:.75rem;padding:8px 10px;text-align:left;border-bottom:1.5px solid #d8b4fe;}
+    .mat-table td{padding:8px 10px;border-bottom:1px solid #f0eaff;color:var(--tm);vertical-align:top;}
+    .mat-table tr:hover td{background:#faf5ff;}
+    .mat-table tr:last-child td{border-bottom:none;}
+
+    /* ======= ANIMASI FAKTOR ======= */
+    .anim-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem;}
+    .atab{padding:7px 14px;border-radius:99px;border:1.5px solid var(--bdr);background:#fff;color:var(--tm);font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;transition:all .2s;}
+    .atab.active{background:var(--pd);color:#fff;border-color:var(--pd);}
+    .atab:not(.active):hover{background:var(--pl);color:var(--pd);border-color:var(--purple);}
+
+    .anim-panel{display:none;}
+    .anim-panel.active{display:block;animation:fi .3s ease;}
+    .anim-box{background:#f8f6ff;border-radius:var(--r);padding:1rem;border:1.5px solid #f0eaff;overflow:hidden;}
+    .anim-box svg{width:100%;max-width:560px;display:block;margin:0 auto;}
+    .anim-caption{text-align:center;font-size:.8rem;color:var(--tm);margin-top:.6rem;font-style:italic;}
+
+    /* Animasi molekul (CSS) */
+    @keyframes moveRight{0%{transform:translateX(0)}50%{transform:translateX(30px)}100%{transform:translateX(0)}}
+    @keyframes moveLeft{0%{transform:translateX(0)}50%{transform:translateX(-30px)}100%{transform:translateX(0)}}
+    @keyframes pulse{0%,100%{r:8px}50%{r:11px}}
+    @keyframes fadeInOut{0%,100%{opacity:0}30%,70%{opacity:1}}
+    @keyframes rise{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-40px);opacity:0}}
+    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .mol-slow{animation:moveRight 4s ease-in-out infinite;}
+    .mol-fast{animation:moveRight 1.5s ease-in-out infinite;}
+    .mol-l-slow{animation:moveLeft 4s ease-in-out infinite;}
+    .mol-l-fast{animation:moveLeft 1.5s ease-in-out infinite;}
+    .bubble{animation:rise 2.5s ease-in-out infinite;}
+    .bubble2{animation:rise 2.5s ease-in-out infinite;animation-delay:.8s;}
+    .bubble3{animation:rise 2.5s ease-in-out infinite;animation-delay:1.6s;}
+    .pulse-circle{animation:pulse 1.8s ease-in-out infinite;}
+    .blink-text{animation:blink 1.5s ease infinite;}
+    .spin-mol{animation:spin 6s linear infinite;transform-origin:center;}
+
+    /* KONTROL SIMULASI */
+    .sim-ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--pl);border-radius:var(--rs);padding:.8rem 1rem;margin-bottom:1rem;}
+    .sim-label{font-size:.8rem;font-weight:700;color:var(--pd);}
+    .sim-slider{-webkit-appearance:none;width:120px;height:5px;border-radius:99px;background:#d8b4fe;outline:none;cursor:pointer;}
+    .sim-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--pd);cursor:pointer;}
+    .sim-val{font-size:.8rem;font-weight:700;color:var(--pd);min-width:32px;}
+
+    /* VIDEO EMBED PLACEHOLDER */
+    .video-card{background:var(--text);border-radius:var(--r);overflow:hidden;margin-bottom:1.2rem;position:relative;}
+    .video-placeholder{padding:2.5rem 1rem;text-align:center;color:#fff;}
+    .video-placeholder .vp-icon{font-size:3rem;margin-bottom:.6rem;}
+    .video-placeholder p{font-size:.85rem;opacity:.8;margin-bottom:.9rem;}
+    .video-placeholder .vp-url{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);border-radius:8px;padding:8px 14px;font-size:.78rem;font-family:'Nunito',sans-serif;font-weight:600;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+
+    /* ACCORDION */
+    .accord{background:#fff;border-radius:var(--r);box-shadow:var(--sh);border:1.5px solid #f0eaff;overflow:hidden;margin-bottom:.8rem;}
+    .accord-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;cursor:pointer;user-select:none;}
+    .accord-hdr:hover{background:#faf5ff;}
+    .accord-hdr h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px;}
+    .accord-icon{font-size:1rem;transition:transform .3s;}
+    .accord-icon.open{transform:rotate(180deg);}
+    .accord-body{display:none;padding:0 1.2rem 1.1rem;font-size:.85rem;color:var(--tm);line-height:1.7;}
+    .accord-body.open{display:block;animation:fi .2s ease;}
+
+    /* CONTOH SOAL */
+    .cs-box{background:var(--yl);border-radius:var(--rs);padding:1rem 1.1rem;border-left:4px solid var(--yellow);margin:1rem 0;}
+    .cs-box .cs-q{font-weight:700;font-size:.86rem;margin-bottom:.5rem;}
+    .cs-box .cs-a{font-size:.83rem;color:var(--tm);line-height:1.6;}
+
+    /* QUIZ MINI */
+    .quiz-mini{background:var(--pl);border-radius:var(--r);padding:1.1rem 1.2rem;margin-top:1.2rem;}
+    .quiz-mini h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.8rem;color:var(--pd);}
+    .qm-opts{display:grid;gap:.5rem;}
+    .qm-opt{padding:9px 13px;background:#fff;border:1.5px solid var(--bdr);border-radius:var(--rs);font-size:.84rem;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;font-weight:600;text-align:left;}
+    .qm-opt:hover{border-color:var(--purple);color:var(--pd);}
+    .qm-opt.correct{background:var(--ml);border-color:var(--mint);color:var(--md);}
+    .qm-opt.wrong{background:var(--rl);border-color:var(--red);color:var(--red);}
+    .qm-feedback{margin-top:.7rem;padding:.7rem .9rem;border-radius:var(--rs);font-size:.82rem;display:none;line-height:1.5;}
+    .qm-feedback.show{display:block;}
+    .qm-feedback.correct{background:var(--ml);color:var(--md);}
+    .qm-feedback.wrong{background:var(--rl);color:#b91c1c;}
+
+    /* READ PROGRESS */
+    .read-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--pd),var(--pm),var(--mint));z-index:9999;transition:width .2s ease;}
+
+    /* NAV BOTTOM */
+    .nav-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:.9rem;border-top:1.5px solid #f0eaff;flex-wrap:wrap;gap:9px;}
+    .bn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;text-decoration:none;transition:all .2s;border:none;}
+    .bb{background:#fff;color:var(--tm);border:1.5px solid var(--bdr)!important;}
+    .bb:hover{border-color:var(--purple)!important;color:var(--pd);}
+    .bfwd{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;box-shadow:0 3px 12px rgba(109,40,217,.22);}
+    .bfwd:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(109,40,217,.32);}
+
+    /* DONE BANNER */
+    .done-b{background:var(--ml);border:1.5px solid var(--mint);border-radius:var(--rs);padding:.7rem 1rem;display:none;align-items:center;gap:9px;margin-bottom:1.1rem;}
+    .done-b.show{display:flex;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:#fff;padding:8px 18px;border-radius:99px;font-weight:600;font-size:.81rem;z-index:9999;transition:transform .3s ease;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
+    .toast.success{background:#10b981;}
+
+    @media(max-width:720px){
+      .mat-sidebar{display:none;}
+      .mat-content{padding:1.1rem .9rem 3rem;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- READ PROGRESS BAR -->
+<div class="read-bar" id="readBar" style="width:0%"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="dashboard-siswa.html" class="tl">
+    <div class="tl-i">⚗️</div>
+    <span class="tl-t">ReaksiKu</span>
+  </a>
+  <div class="tr">
+    <span class="tb-b" id="tbNama">Siswa</span>
+    <a href="dashboard-siswa.html" class="btn-db">🏠 Dashboard</a>
+  </div>
+</div>
+
+<!-- PROGRESS NAV -->
+<div class="pnav">
+  <a class="ps" href="tujuan.html"><div class="psd done" id="pn1">🎯</div><span class="psl">Tujuan</span></a>
+  <div class="pline done"></div>
+  <a class="ps" href="materi.html"><div class="psd active" id="pn2">📖</div><span class="psl active">Materi</span></a>
+  <div class="pline"></div>
+  <a class="ps" href="lab-virtual.html"><div class="psd" id="pn3">🧪</div><span class="psl">Lab Virtual</span></a>
+  <div class="pline"></div>
+  <a class="ps" href="latihan-soal.html"><div class="psd" id="pn4">📝</div><span class="psl">Latihan Soal</span></a>
+  <div class="pline"></div>
+  <a class="ps" href="refleksi.html"><div class="psd" id="pn5">💭</div><span class="psl">Refleksi</span></a>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR MATERI -->
+  <aside class="mat-sidebar">
+    <h3>📖 Daftar Materi</h3>
+    <nav class="mat-nav">
+      <a id="snav-1" onclick="goSec(1)" class="active"><div class="dot"></div>1. Pengertian Laju Reaksi</a>
+      <a id="snav-2" onclick="goSec(2)"><div class="dot"></div>2. Pengukuran Laju Reaksi</a>
+      <a id="snav-3" onclick="goSec(3)"><div class="dot"></div>3. Faktor-Faktor Laju Reaksi</a>
+      <a id="snav-4" onclick="goSec(4)"><div class="dot"></div>4. Teori Tumbukan</a>
+      <a id="snav-5" onclick="goSec(5)"><div class="dot"></div>5. Hukum Laju Reaksi</a>
+      <a id="snav-6" onclick="goSec(6)"><div class="dot"></div>6. Orde Reaksi</a>
+      <a id="snav-7" onclick="goSec(7)"><div class="dot"></div>7. Penerapan dalam Kehidupan</a>
+    </nav>
+    <div class="prog-wrap"><div class="prog-fill" id="sideProgFill" style="width:14%"></div></div>
+    <div class="prog-lbl" id="sideProgLbl">1 / 7 materi</div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="mat-content">
+
+    <div class="done-b" id="doneB">
+      <span style="font-size:1.2rem;">✅</span>
+      <p style="font-size:.83rem;font-weight:700;color:var(--md);">Materi ini sudah kamu pelajari! Kamu bisa melanjutkan ke Lab Virtual.</p>
+    </div>
+
+    <!-- ==============================
+         SEKSI 1: PENGERTIAN
+    ============================== -->
+    <div class="section active" id="sec-1">
+      <div class="sec-badge">📖 Materi 1 dari 7</div>
+      <div class="sec-title">Pengertian Laju Reaksi</div>
+      <p class="sec-sub">Apa sebenarnya yang dimaksud dengan laju reaksi? Yuk kenali konsep dasarnya!</p>
+
+      <div class="cc">
+        <h3>⚗️ Definisi Laju Reaksi</h3>
+        <p>Laju reaksi adalah <strong>perubahan konsentrasi reaktan atau produk per satuan waktu</strong>. Dengan kata lain, laju reaksi menggambarkan seberapa cepat suatu zat dikonsumsi (reaktan) atau dihasilkan (produk) dalam suatu reaksi kimia.</p>
+        <p>Untuk reaksi umum <strong>A → B</strong>, laju reaksi dapat dinyatakan sebagai:</p>
+        <div class="formula">
+          <div class="f-main">v = −Δ[A]/Δt = +Δ[B]/Δt</div>
+          <div class="f-sub">v = laju reaksi (mol/L·s) | [A] = konsentrasi A (mol/L) | Δt = selang waktu (s)</div>
+        </div>
+        <p>Tanda negatif (−) untuk reaktan menunjukkan bahwa konsentrasi reaktan <strong>berkurang</strong> seiring waktu, sedangkan tanda positif (+) untuk produk menunjukkan konsentrasi produk <strong>bertambah</strong>.</p>
+      </div>
+
+      <div class="cc">
+        <h3>🔢 Laju Reaksi untuk Reaksi Umum</h3>
+        <p>Untuk reaksi: <strong>aA + bB → cC + dD</strong></p>
+        <div class="formula">
+          <div class="f-main">v = −(1/a)Δ[A]/Δt = −(1/b)Δ[B]/Δt = +(1/c)Δ[C]/Δt = +(1/d)Δ[D]/Δt</div>
+          <div class="f-sub">a, b, c, d = koefisien stoikiometri dalam persamaan reaksi setara</div>
+        </div>
+      </div>
+
+      <div class="hbox" style="background:var(--bl);border-left:4px solid var(--blue);">
+        <div class="hi">💡</div>
+        <div>
+          <p style="font-weight:700;color:var(--bd);margin-bottom:3px;">Contoh Nyata dalam Kehidupan Sehari-hari</p>
+          <p>Makanan yang membusuk, besi yang berkarat, kertas yang terbakar, dan ledakan — semua adalah contoh reaksi kimia dengan laju yang berbeda-beda. Memahami laju reaksi membantu kita mengontrol dan memanfaatkan reaksi kimia tersebut!</p>
+        </div>
+      </div>
+
+      <!-- Quiz mini 1 -->
+      <div class="quiz-mini">
+        <h4>🧠 Uji Pemahamanmu!</h4>
+        <p style="font-size:.83rem;color:var(--pd);margin-bottom:.8rem;">Untuk reaksi 2H₂ + O₂ → 2H₂O, bagaimana hubungan laju konsumsi H₂ dengan laju pembentukan H₂O?</p>
+        <div class="qm-opts">
+          <button class="qm-opt" onclick="checkQ(this, false, 'q1')">A. v(H₂) = v(H₂O)</button>
+          <button class="qm-opt" onclick="checkQ(this, true, 'q1')">B. v(H₂) = v(H₂O) (keduanya berkoefisien 2, jadi sama)</button>
+          <button class="qm-opt" onclick="checkQ(this, false, 'q1')">C. v(H₂) = 2 × v(H₂O)</button>
+          <button class="qm-opt" onclick="checkQ(this, false, 'q1')">D. v(H₂) = ½ × v(O₂)</button>
+        </div>
+        <div class="qm-feedback" id="q1-fb"></div>
+      </div>
+
+      <div class="nav-bottom">
+        <a href="tujuan.html" class="bn bb">← Kembali ke Tujuan</a>
+        <button class="bn bfwd" onclick="goSec(2)">Materi 2: Pengukuran →</button>
+      </div>
+    </div>
+
+    <!-- ==============================
+         SEKSI 2: PENGUKURAN
+    ============================== -->
+    <div class="section" id="sec-2">
+      <div class="sec-badge">📖 Materi 2 dari 7</div>
+      <div class="sec-title">Pengukuran Laju Reaksi</div>
+      <p class="sec-sub">Bagaimana cara kita mengukur seberapa cepat suatu reaksi kimia berlangsung?</p>
+
+      <div class="cc">
+        <h3>📏 Cara Mengukur Laju Reaksi</h3>
+        <p>Laju reaksi dapat diukur dengan memantau perubahan berbagai sifat fisika atau kimia seiring waktu. Metode yang digunakan bergantung pada jenis reaksi dan zat yang terlibat.</p>
+        <table class="mat-table">
+          <thead><tr><th>Metode Pengukuran</th><th>Yang Diukur</th><th>Contoh Reaksi</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Volume gas</strong></td><td>Volume gas yang dihasilkan per satuan waktu</td><td>CaCO₃ + HCl → CO₂ + ...</td></tr>
+            <tr><td><strong>Massa zat</strong></td><td>Penurunan massa (gas keluar) per satuan waktu</td><td>Besi bereaksi dengan asam</td></tr>
+            <tr><td><strong>Absorbansi</strong></td><td>Perubahan warna larutan (spektrofotometri)</td><td>Reaksi yang menghasilkan zat berwarna</td></tr>
+            <tr><td><strong>Konduktivitas</strong></td><td>Perubahan konduktivitas listrik larutan</td><td>Reaksi ionik dalam larutan</td></tr>
+            <tr><td><strong>Tekanan</strong></td><td>Perubahan tekanan gas dalam sistem tertutup</td><td>Reaksi gas fase homogen</td></tr>
+            <tr><td><strong>Waktu perubahan</strong></td><td>Waktu hingga perubahan teramati (metode jam)</td><td>Reaksi iodin dengan tiosulfat</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cc">
+        <h3>🔬 Laju Sesaat vs Laju Rata-Rata</h3>
+        <p><strong>Laju rata-rata</strong> adalah perubahan konsentrasi dibagi selang waktu tertentu: v̄ = Δ[C]/Δt</p>
+        <p><strong>Laju sesaat</strong> adalah laju pada saat tertentu, merupakan turunan dari fungsi konsentrasi terhadap waktu: v = d[C]/dt</p>
+        <div class="hbox" style="background:var(--yl);border-left:4px solid var(--yellow);">
+          <div class="hi">📐</div>
+          <p>Secara grafik, laju rata-rata adalah <strong>kemiringan garis sekan</strong> pada kurva [C] vs t, sedangkan laju sesaat adalah <strong>kemiringan garis singgung (tangen)</strong> pada titik tersebut.</p>
+        </div>
+      </div>
+
+      <div class="cs-box">
+        <div class="cs-q">📌 Contoh Soal: Menghitung Laju Rata-Rata</div>
+        <div class="cs-a">
+          Konsentrasi N₂O₅ berubah dari 0,160 M menjadi 0,080 M dalam 50 detik. Hitunglah laju rata-rata pengurangan N₂O₅!<br><br>
+          <strong>Penyelesaian:</strong><br>
+          v = −Δ[N₂O₅]/Δt = −(0,080 − 0,160)/50<br>
+          v = −(−0,080)/50 = 0,0016 M/s = 1,6 × 10⁻³ M/s
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button class="bn bb" onclick="goSec(1)">← Materi 1</button>
+        <button class="bn bfwd" onclick="goSec(3)">Materi 3: Faktor-Faktor →</button>
+      </div>
+    </div>
+
+    <!-- ==============================
+         SEKSI 3: FAKTOR-FAKTOR
+    ============================== -->
+    <div class="section" id="sec-3">
+      <div class="sec-badge">📖 Materi 3 dari 7</div>
+      <div class="sec-title">Faktor-Faktor yang Mempengaruhi Laju Reaksi</div>
+      <p class="sec-sub">Ada 4 faktor utama yang mempengaruhi seberapa cepat reaksi berlangsung. Pilih tab untuk melihat animasinya!</p>
+
+      <!-- ANIMASI TABS -->
+      <div class="anim-tabs">
+        <button class="atab active" onclick="showAnim('konsentrasi',this)">💧 Konsentrasi</button>
+        <button class="atab" onclick="showAnim('suhu',this)">🌡️ Suhu</button>
+        <button class="atab" onclick="showAnim('luas',this)">📦 Luas Permukaan</button>
+        <button class="atab" onclick="showAnim('katalis',this)">⚡ Katalis</button>
+      </div>
+
+      <!-- ANIMASI: KONSENTRASI -->
+      <div class="anim-panel active" id="anim-konsentrasi">
+        <div class="sim-ctrl">
+          <span class="sim-label">Konsentrasi:</span>
+          <input type="range" class="sim-slider" id="sl-konsentrasi" min="1" max="3" value="2" oninput="updateKonsentrasi(this.value)"/>
+          <span class="sim-val" id="val-konsentrasi">Sedang</span>
+        </div>
+        <div class="anim-box">
+          <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Wadah -->
+            <rect x="10" y="30" width="220" height="150" rx="4" fill="#ede9fe" stroke="#a78bfa" stroke-width="2"/>
+            <text x="120" y="20" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="Nunito,sans-serif" font-weight="700">Konsentrasi Rendah</text>
+            <!-- molekul sedikit -->
+            <circle cx="50" cy="80" r="10" fill="#8b5cf6" opacity=".7" class="mol-slow"/>
+            <circle cx="100" cy="120" r="10" fill="#8b5cf6" opacity=".7" class="mol-l-slow"/>
+            <circle cx="160" cy="90" r="10" fill="#a78bfa" opacity=".7" class="mol-slow"/>
+            <circle cx="80" cy="150" r="10" fill="#8b5cf6" opacity=".6" class="mol-l-slow"/>
+            <text x="120" y="185" text-anchor="middle" font-size="10" fill="#6d28d9" font-family="Nunito,sans-serif">4 partikel → sedikit tumbukan</text>
+
+            <text x="280" y="105" text-anchor="middle" font-size="22" fill="#d97706" font-family="Nunito,sans-serif" font-weight="800">→</text>
+
+            <rect x="300" y="30" width="210" height="150" rx="4" fill="#ede9fe" stroke="#a78bfa" stroke-width="2"/>
+            <text x="405" y="20" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="Nunito,sans-serif" font-weight="700">Konsentrasi Tinggi</text>
+            <!-- molekul banyak -->
+            <circle cx="330" cy="65" r="9" fill="#7c3aed" opacity=".8" class="mol-fast"/>
+            <circle cx="360" cy="100" r="9" fill="#7c3aed" opacity=".8" class="mol-l-fast"/>
+            <circle cx="390" cy="70" r="9" fill="#8b5cf6" opacity=".8" class="mol-fast"/>
+            <circle cx="420" cy="110" r="9" fill="#7c3aed" opacity=".7" class="mol-l-fast"/>
+            <circle cx="350" cy="140" r="9" fill="#8b5cf6" opacity=".7" class="mol-fast"/>
+            <circle cx="390" cy="140" r="9" fill="#6d28d9" opacity=".7" class="mol-l-fast"/>
+            <circle cx="440" cy="80" r="9" fill="#7c3aed" opacity=".8" class="mol-fast"/>
+            <circle cx="320" cy="110" r="9" fill="#8b5cf6" opacity=".7" class="mol-fast"/>
+            <!-- tumbukan -->
+            <text x="375" y="60" text-anchor="middle" font-size="14" fill="#ef4444" class="blink-text">💥</text>
+            <text x="405" y="185" text-anchor="middle" font-size="10" fill="#6d28d9" font-family="Nunito,sans-serif">8 partikel → banyak tumbukan!</text>
+          </svg>
+        </div>
+        <div class="anim-caption">Semakin tinggi konsentrasi → semakin rapat partikel → frekuensi tumbukan meningkat → laju reaksi meningkat</div>
+        <div class="cc" style="margin-top:1rem;">
+          <h3>💧 Pengaruh Konsentrasi</h3>
+          <p>Semakin tinggi konsentrasi reaktan, semakin banyak partikel per satuan volume. Hal ini menyebabkan frekuensi tumbukan antar partikel meningkat, sehingga peluang terjadinya reaksi juga meningkat.</p>
+          <p>Hubungan kuantitatif antara konsentrasi dan laju reaksi dinyatakan dalam <strong>hukum laju reaksi</strong>: r = k[A]ᵐ[B]ⁿ</p>
+        </div>
+      </div>
+
+      <!-- ANIMASI: SUHU -->
+      <div class="anim-panel" id="anim-suhu">
+        <div class="anim-box">
+          <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Suhu rendah -->
+            <rect x="10" y="30" width="220" height="150" rx="4" fill="#dbeafe" stroke="#93c5fd" stroke-width="2"/>
+            <text x="120" y="20" text-anchor="middle" font-size="11" fill="#1e40af" font-family="Nunito,sans-serif" font-weight="700">Suhu Rendah (25°C)</text>
+            <circle cx="60" cy="90" r="11" fill="#3b82f6" opacity=".7" class="mol-slow"/>
+            <circle cx="110" cy="130" r="11" fill="#60a5fa" opacity=".7" class="mol-l-slow"/>
+            <circle cx="170" cy="85" r="11" fill="#3b82f6" opacity=".7" class="mol-slow"/>
+            <circle cx="90" cy="155" r="11" fill="#60a5fa" opacity=".6" class="mol-l-slow"/>
+            <text x="120" y="188" text-anchor="middle" font-size="9.5" fill="#1e40af" font-family="Nunito,sans-serif">Energi kinetik rendah</text>
+            <text x="120" y="198" text-anchor="middle" font-size="9.5" fill="#1e40af" font-family="Nunito,sans-serif">sedikit partikel yang punya E ≥ Ea</text>
+
+            <text x="276" y="108" text-anchor="middle" font-size="20" fill="#d97706" font-family="Nunito,sans-serif" font-weight="800">🔥</text>
+
+            <!-- Suhu tinggi -->
+            <rect x="300" y="30" width="210" height="150" rx="4" fill="#fee2e2" stroke="#fca5a5" stroke-width="2"/>
+            <text x="405" y="20" text-anchor="middle" font-size="11" fill="#991b1b" font-family="Nunito,sans-serif" font-weight="700">Suhu Tinggi (65°C)</text>
+            <circle cx="330" cy="60" r="12" fill="#ef4444" opacity=".8" class="mol-fast"/>
+            <circle cx="365" cy="105" r="12" fill="#dc2626" opacity=".8" class="mol-l-fast"/>
+            <circle cx="400" cy="65" r="12" fill="#ef4444" opacity=".8" class="mol-fast"/>
+            <circle cx="435" cy="100" r="12" fill="#b91c1c" opacity=".8" class="mol-l-fast"/>
+            <circle cx="355" cy="145" r="12" fill="#dc2626" opacity=".7" class="mol-fast"/>
+            <circle cx="410" cy="145" r="12" fill="#ef4444" opacity=".7" class="mol-l-fast"/>
+            <text x="390" y="55" font-size="13" fill="#f59e0b" class="blink-text">💥💥</text>
+            <text x="405" y="188" text-anchor="middle" font-size="9.5" fill="#991b1b" font-family="Nunito,sans-serif">Energi kinetik tinggi</text>
+            <text x="405" y="198" text-anchor="middle" font-size="9.5" fill="#991b1b" font-family="Nunito,sans-serif">banyak partikel yang punya E ≥ Ea</text>
+          </svg>
+        </div>
+        <div class="anim-caption">Suhu lebih tinggi → partikel bergerak lebih cepat → lebih banyak yang memiliki energi ≥ Ea → laju reaksi meningkat drastis</div>
+        <div class="cc" style="margin-top:1rem;">
+          <h3>🌡️ Pengaruh Suhu</h3>
+          <p>Kenaikan suhu menyebabkan energi kinetik rata-rata partikel meningkat. Akibatnya, lebih banyak partikel yang memiliki energi cukup untuk melampaui energi aktivasi (Ea), sehingga laju reaksi meningkat.</p>
+          <div class="formula">
+            <div class="f-main">Aturan Van't Hoff: T naik 10°C → laju ≈ 2× lipat</div>
+            <div class="f-sub">Persamaan Arrhenius: k = A · e^(−Ea/RT)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANIMASI: LUAS PERMUKAAN -->
+      <div class="anim-panel" id="anim-luas">
+        <div class="anim-box">
+          <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Bongkahan besar -->
+            <rect x="30" y="50" width="170" height="120" rx="3" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+            <text x="115" y="25" text-anchor="middle" font-size="11" fill="#92400e" font-family="Nunito,sans-serif" font-weight="700">Bongkahan (luas kecil)</text>
+            <text x="115" y="125" text-anchor="middle" font-size="11" fill="#92400e" font-family="Nunito,sans-serif" font-weight="600">CaCO₃</text>
+            <text x="115" y="142" text-anchor="middle" font-size="9" fill="#92400e" font-family="Nunito,sans-serif">Luas bidang sentuh: kecil</text>
+            <text x="115" y="188" text-anchor="middle" font-size="9.5" fill="#92400e" font-family="Nunito,sans-serif">Laju reaksi: lambat 🐢</text>
+
+            <text x="276" y="108" text-anchor="middle" font-size="18" fill="#d97706" font-family="Nunito,sans-serif" font-weight="800">vs</text>
+
+            <!-- Serbuk -->
+            <text x="405" y="25" text-anchor="middle" font-size="11" fill="#92400e" font-family="Nunito,sans-serif" font-weight="700">Serbuk (luas besar)</text>
+            <rect x="298" y="52" width="44" height="44" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+            <rect x="350" y="52" width="44" height="44" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+            <rect x="403" y="52" width="44" height="44" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+            <rect x="456" y="52" width="44" height="44" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+            <rect x="298" y="104" width="44" height="44" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+            <rect x="350" y="104" width="44" height="44" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+            <rect x="403" y="104" width="44" height="44" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+            <rect x="456" y="104" width="44" height="44" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+            <text x="405" y="170" text-anchor="middle" font-size="9" fill="#92400e" font-family="Nunito,sans-serif">Luas bidang sentuh: jauh lebih besar</text>
+            <text x="405" y="183" text-anchor="middle" font-size="9.5" fill="#92400e" font-family="Nunito,sans-serif">Laju reaksi: cepat ⚡</text>
+            <!-- gelembung reaksi -->
+            <text x="322" y="80" font-size="10" fill="#ef4444" class="blink-text">💥</text>
+            <text x="374" y="128" font-size="10" fill="#ef4444" class="blink-text" style="animation-delay:.4s">💥</text>
+            <text x="427" y="80" font-size="10" fill="#ef4444" class="blink-text" style="animation-delay:.8s">💥</text>
+            <text x="480" y="128" font-size="10" fill="#ef4444" class="blink-text" style="animation-delay:1.2s">💥</text>
+          </svg>
+        </div>
+        <div class="anim-caption">Luas permukaan lebih besar → lebih banyak partikel yang dapat bersentuhan → tumbukan lebih sering → laju reaksi meningkat</div>
+        <div class="cc" style="margin-top:1rem;">
+          <h3>📦 Pengaruh Luas Permukaan</h3>
+          <p>Semakin besar luas permukaan bidang sentuh zat padat, semakin banyak partikel reaktan yang dapat berinteraksi. Itulah mengapa gula halus lebih cepat larut daripada gula batu, dan serbuk lebih reaktif daripada bongkahan.</p>
+          <p>Contoh industri: penggunaan katalis berbentuk serbuk/pellet halus untuk memperbesar luas permukaan kontak.</p>
+        </div>
+      </div>
+
+      <!-- ANIMASI: KATALIS -->
+      <div class="anim-panel" id="anim-katalis">
+        <div class="anim-box">
+          <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Diagram energi tanpa katalis -->
+            <text x="130" y="15" text-anchor="middle" font-size="11" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Tanpa Katalis</text>
+            <!-- Kurva energi -->
+            <path d="M20,160 Q60,160 80,80 Q100,20 120,20 Q140,20 160,80 Q180,160 220,160" stroke="#6d28d9" stroke-width="2.5" fill="none"/>
+            <line x1="20" y1="160" x2="220" y2="160" stroke="#9ca3af" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="20" y1="120" x2="220" y2="120" stroke="#9ca3af" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="120" y1="18" x2="220" y2="18" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <!-- Labels -->
+            <text x="25" y="158" font-size="8.5" fill="#374151" font-family="Nunito,sans-serif">Reaktan</text>
+            <text x="170" y="158" font-size="8.5" fill="#374151" font-family="Nunito,sans-serif">Produk</text>
+            <text x="125" y="14" font-size="8" fill="#ef4444" font-family="Nunito,sans-serif">Ea tinggi</text>
+            <line x1="115" y1="20" x2="115" y2="122" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2,2"/>
+            <text x="118" y="75" font-size="8" fill="#ef4444" font-family="Nunito,sans-serif" transform="rotate(-90,118,75)">Ea</text>
+
+            <text x="270" y="105" text-anchor="middle" font-size="20" fill="#10b981">⚡</text>
+
+            <!-- Diagram energi dengan katalis -->
+            <text x="410" y="15" text-anchor="middle" font-size="11" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Dengan Katalis</text>
+            <path d="M300,160 Q340,160 355,105 Q370,60 390,60 Q410,60 430,100 Q445,160 500,160" stroke="#10b981" stroke-width="2.5" fill="none"/>
+            <line x1="300" y1="160" x2="500" y2="160" stroke="#9ca3af" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="300" y1="120" x2="500" y2="120" stroke="#9ca3af" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="390" y1="58" x2="500" y2="58" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="390" y1="18" x2="500" y2="18" stroke="#6d28d9" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="304" y="158" font-size="8.5" fill="#374151" font-family="Nunito,sans-serif">Reaktan</text>
+            <text x="450" y="158" font-size="8.5" fill="#374151" font-family="Nunito,sans-serif">Produk</text>
+            <text x="395" y="55" font-size="8" fill="#ef4444" font-family="Nunito,sans-serif">Ea' rendah</text>
+            <text x="395" y="15" font-size="8" fill="#6d28d9" font-family="Nunito,sans-serif">Ea tanpa katalis</text>
+            <line x1="388" y1="60" x2="388" y2="122" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2,2"/>
+            <text x="391" y="95" font-size="8" fill="#ef4444" font-family="Nunito,sans-serif" transform="rotate(-90,391,95)">Ea'</text>
+          </svg>
+        </div>
+        <div class="anim-caption">Katalis menurunkan energi aktivasi (Ea) → jalur reaksi alternatif yang lebih mudah → lebih banyak partikel yang bereaksi → laju meningkat</div>
+        <div class="cc" style="margin-top:1rem;">
+          <h3>⚡ Pengaruh Katalis</h3>
+          <p>Katalis adalah zat yang mempercepat laju reaksi <strong>tanpa ikut dikonsumsi</strong> secara permanen dalam reaksi. Katalis bekerja dengan menyediakan jalur reaksi alternatif yang memiliki energi aktivasi lebih rendah.</p>
+          <table class="mat-table" style="margin-top:.7rem;">
+            <thead><tr><th>Jenis Katalis</th><th>Penjelasan</th><th>Contoh</th></tr></thead>
+            <tbody>
+              <tr><td>Katalis homogen</td><td>Fase sama dengan reaktan</td><td>H⁺ dalam reaksi ester</td></tr>
+              <tr><td>Katalis heterogen</td><td>Fase berbeda dengan reaktan</td><td>Pt, Fe₂O₃ (padat) + gas</td></tr>
+              <tr><td>Enzim (biokatalis)</td><td>Protein sebagai katalis biologis</td><td>Amilase, lipase, protease</td></tr>
+              <tr><td>Inhibitor</td><td>Memperlambat laju reaksi</td><td>Pengawet makanan</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button class="bn bb" onclick="goSec(2)">← Materi 2</button>
+        <button class="bn bfwd" onclick="goSec(4)">Materi 4: Teori Tumbukan →</button>
+      </div>
+    </div>
+
+    <!-- ==============================
+         SEKSI 4: TEORI TUMBUKAN
+    ============================== -->
+    <div class="section" id="sec-4">
+      <div class="sec-badge">📖 Materi 4 dari 7</div>
+      <div class="sec-title">Teori Tumbukan</div>
+      <p class="sec-sub">Mengapa tidak semua tumbukan menghasilkan reaksi? Teori tumbukan menjawab pertanyaan ini!</p>
+
+      <div class="cc">
+        <h3>💥 Syarat Tumbukan Efektif</h3>
+        <p>Teori tumbukan menyatakan bahwa reaksi kimia terjadi ketika partikel-partikel reaktan saling bertumbukan. Namun, <strong>tidak semua tumbukan menghasilkan reaksi</strong>. Tumbukan yang menghasilkan reaksi disebut <strong>tumbukan efektif</strong>, dengan syarat:</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.8rem 0;">
+          <div class="hbox" style="background:var(--ml);border-left:4px solid var(--mint);">
+            <div class="hi">⚡</div>
+            <div><p><strong>Syarat 1: Energi ≥ Ea</strong><br/>Partikel harus memiliki energi kinetik minimal sama dengan energi aktivasi (Ea).</p></div>
+          </div>
+          <div class="hbox" style="background:var(--bl);border-left:4px solid var(--blue);">
+            <div class="hi">🎯</div>
+            <div><p><strong>Syarat 2: Orientasi Tepat</strong><br/>Partikel harus bertumbukan dengan orientasi (arah) yang benar agar ikatan dapat terbentuk.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cc">
+        <h3>📊 Distribusi Energi Maxwell-Boltzmann</h3>
+        <p>Tidak semua partikel dalam suatu zat memiliki energi yang sama. Distribusi energi digambarkan dengan kurva Maxwell-Boltzmann:</p>
+        <!-- SVG distribusi energi -->
+        <div class="anim-box" style="margin-top:.8rem;">
+          <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Sumbu -->
+            <line x1="40" y1="20" x2="40" y2="170" stroke="#374151" stroke-width="1.5"/>
+            <line x1="40" y1="170" x2="480" y2="170" stroke="#374151" stroke-width="1.5"/>
+            <text x="15" y="100" font-size="9" fill="#374151" font-family="Nunito,sans-serif" transform="rotate(-90,15,100)">Jumlah Partikel</text>
+            <text x="270" y="188" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif">Energi Kinetik →</text>
+            <!-- Kurva suhu rendah (biru) -->
+            <path d="M50,165 Q80,165 110,120 Q140,70 170,55 Q200,45 230,60 Q260,80 290,120 Q320,150 360,165 Q400,165 460,165" stroke="#3b82f6" stroke-width="2.5" fill="rgba(59,130,246,.12)"/>
+            <!-- Kurva suhu tinggi (merah) -->
+            <path d="M50,165 Q90,165 130,140 Q170,110 200,90 Q230,75 270,75 Q310,78 350,105 Q390,140 440,165" stroke="#ef4444" stroke-width="2.5" fill="rgba(239,68,68,.08)" stroke-dasharray="6,3"/>
+            <!-- Ea line -->
+            <line x1="290" y1="20" x2="290" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3"/>
+            <text x="292" y="35" font-size="8.5" fill="#d97706" font-family="Nunito,sans-serif" font-weight="700">Ea</text>
+            <!-- Shaded area (partikel yang punya E≥Ea) -->
+            <path d="M290,120 Q320,80 380,165 L290,165 Z" fill="rgba(239,68,68,.2)"/>
+            <path d="M290,165 Q350,165 420,165 Q400,100 370,80 Q340,65 310,78 L290,120 Z" fill="rgba(239,68,68,.15)"/>
+            <!-- Labels -->
+            <text x="200" y="40" font-size="9" fill="#1d4ed8" font-family="Nunito,sans-serif">Suhu Rendah (T₁)</text>
+            <text x="340" y="68" font-size="9" fill="#ef4444" font-family="Nunito,sans-serif" font-style="italic">Suhu Tinggi (T₂)</text>
+            <text x="380" y="140" font-size="8.5" fill="#ef4444" font-family="Nunito,sans-serif">Partikel dengan</text>
+            <text x="380" y="152" font-size="8.5" fill="#ef4444" font-family="Nunito,sans-serif">E ≥ Ea (lebih banyak)</text>
+          </svg>
+        </div>
+        <p style="font-size:.82rem;color:var(--tm);text-align:center;margin-top:.4rem;">Pada suhu tinggi (T₂), kurva bergeser ke kanan → lebih banyak partikel dengan E ≥ Ea</p>
+      </div>
+
+      <div class="nav-bottom">
+        <button class="bn bb" onclick="goSec(3)">← Materi 3</button>
+        <button class="bn bfwd" onclick="goSec(5)">Materi 5: Hukum Laju →</button>
+      </div>
+    </div>
+
+    <!-- ==============================
+         SEKSI 5: HUKUM LAJU
+    ============================== -->
+    <div class="section" id="sec-5">
+      <div class="sec-badge">📖 Materi 5 dari 7</div>
+      <div class="sec-title">Hukum Laju Reaksi</div>
+      <p class="sec-sub">Persamaan matematis yang menghubungkan laju reaksi dengan konsentrasi reaktan.</p>
+
+      <div class="cc">
+        <h3>📐 Persamaan Hukum Laju</h3>
+        <p>Hukum laju reaksi menyatakan hubungan kuantitatif antara laju reaksi dengan konsentrasi reaktan. Untuk reaksi: <strong>aA + bB → produk</strong></p>
+        <div class="formula">
+          <div class="f-main">r = k [A]ᵐ [B]ⁿ</div>
+          <div class="f-sub">r = laju reaksi | k = tetapan laju | m, n = orde reaksi terhadap A dan B</div>
+        </div>
+        <div class="hbox" style="background:var(--rl);border-left:4px solid var(--red);">
+          <div class="hi">⚠️</div>
+          <p><strong>Penting!</strong> Orde reaksi (m dan n) <strong>TIDAK</strong> bisa ditentukan dari koefisien reaksi setara. Orde reaksi harus ditentukan secara eksperimen dari data percobaan!</p>
+        </div>
+      </div>
+
+      <div class="cc">
+        <h3>🔑 Tetapan Laju Reaksi (k)</h3>
+        <p>Nilai k adalah tetapan laju yang bergantung pada suhu dan jenis reaksi. Satuan k bergantung pada orde reaksi total:</p>
+        <table class="mat-table">
+          <thead><tr><th>Orde Total (m+n)</th><th>Satuan k</th></tr></thead>
+          <tbody>
+            <tr><td>Orde 0</td><td>mol/L·s atau M/s</td></tr>
+            <tr><td>Orde 1</td><td>s⁻¹</td></tr>
+            <tr><td>Orde 2</td><td>L/mol·s atau M⁻¹s⁻¹</td></tr>
+            <tr><td>Orde n</td><td>M^(1-n) · s⁻¹</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cs-box">
+        <div class="cs-q">📌 Cara Menentukan Hukum Laju dari Data Eksperimen</div>
+        <div class="cs-a">
+          Reaksi: A + B → C. Data percobaan:<br>
+          • Perc. 1: [A]=0,1 M, [B]=0,1 M, v=2×10⁻³ M/s<br>
+          • Perc. 2: [A]=0,2 M, [B]=0,1 M, v=4×10⁻³ M/s<br>
+          • Perc. 3: [A]=0,2 M, [B]=0,3 M, v=3,6×10⁻² M/s<br><br>
+          <strong>Langkah:</strong><br>
+          1. Bandingkan perc. 1 & 2 ([B] tetap): v₂/v₁ = (0,2/0,1)ᵐ → 2 = 2ᵐ → m = 1<br>
+          2. Bandingkan perc. 2 & 3 ([A] tetap): v₃/v₂ = (0,3/0,1)ⁿ → 9 = 3ⁿ → n = 2<br>
+          3. Persamaan laju: r = k[A]¹[B]²<br>
+          4. Hitung k: k = v/([A][B]²) = 2×10⁻³/(0,1×0,01) = <strong>2 L²/mol²·s</strong>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button class="bn bb" onclick="goSec(4)">← Materi 4</button>
+        <button class="bn bfwd" onclick="goSec(6)">Materi 6: Orde Reaksi →</button>
+      </div>
+    </div>
+
+    <!-- ==============================
+         SEKSI 6: ORDE REAKSI
+    ============================== -->
+    <div class="section" id="sec-6">
+      <div class="sec-badge">📖 Materi 6 dari 7</div>
+      <div class="sec-title">Orde Reaksi</div>
+      <p class="sec-sub">Orde reaksi menggambarkan bagaimana konsentrasi reaktan mempengaruhi laju reaksi secara kuantitatif.</p>
+
+      <!-- Accordion orde 0, 1, 2 -->
+      <div class="accord">
+        <div class="accord-hdr" onclick="toggleAccord(this)">
+          <h4><span>0️⃣</span> Reaksi Orde Nol (m = 0)</h4>
+          <span class="accord-icon">▼</span>
+        </div>
+        <div class="accord-body">
+          <p><strong>Laju tidak bergantung pada konsentrasi reaktan.</strong></p>
+          <div class="formula" style="margin:.6rem 0;">
+            <div class="f-main">r = k [A]⁰ = k</div>
+            <div class="f-sub">Graf [A] vs t: garis lurus menurun | Satuan k: M/s</div>
+          </div>
+          <p>Contoh: reaksi yang berlangsung pada permukaan katalis jenuh, atau reaksi fotokimia pada intensitas cahaya konstan.</p>
+          <p>Waktu paruh (t₁/₂) = [A]₀ / 2k</p>
+        </div>
+      </div>
+
+      <div class="accord">
+        <div class="accord-hdr" onclick="toggleAccord(this)">
+          <h4><span>1️⃣</span> Reaksi Orde Satu (m = 1)</h4>
+          <span class="accord-icon">▼</span>
+        </div>
+        <div class="accord-body">
+          <p><strong>Laju berbanding lurus dengan konsentrasi reaktan.</strong></p>
+          <div class="formula" style="margin:.6rem 0;">
+            <div class="f-main">r = k [A]¹</div>
+            <div class="f-sub">Graf ln[A] vs t: garis lurus | Satuan k: s⁻¹</div>
+          </div>
+          <p>Contoh: peluruhan radioaktif, dekomposisi N₂O₅, banyak reaksi biologis.</p>
+          <p>Waktu paruh (t₁/₂) = ln2/k = 0,693/k (konstan, tidak bergantung [A]₀)</p>
+        </div>
+      </div>
+
+      <div class="accord">
+        <div class="accord-hdr" onclick="toggleAccord(this)">
+          <h4><span>2️⃣</span> Reaksi Orde Dua (m = 2)</h4>
+          <span class="accord-icon">▼</span>
+        </div>
+        <div class="accord-body">
+          <p><strong>Laju berbanding dengan kuadrat konsentrasi reaktan.</strong></p>
+          <div class="formula" style="margin:.6rem 0;">
+            <div class="f-main">r = k [A]²</div>
+            <div class="f-sub">Graf 1/[A] vs t: garis lurus | Satuan k: L/mol·s</div>
+          </div>
+          <p>Contoh: 2NO₂ → 2NO + O₂, beberapa reaksi organik.</p>
+          <p>Waktu paruh (t₁/₂) = 1/(k[A]₀) (bergantung konsentrasi awal)</p>
+        </div>
+      </div>
+
+      <!-- Grafik perbandingan orde -->
+      <div class="cc">
+        <h3>📈 Grafik Identifikasi Orde Reaksi</h3>
+        <div class="anim-box">
+          <svg viewBox="0 0 520 170" xmlns="http://www.w3.org/2000/svg">
+            <text x="260" y="12" text-anchor="middle" font-size="10" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Cara Menentukan Orde dari Grafik (lihat kurva yang linier!)</text>
+            <!-- Orde 0: [A] vs t linear -->
+            <g transform="translate(10,25)">
+              <rect x="0" y="0" width="148" height="120" rx="6" fill="#f8f6ff" stroke="#e5e7eb" stroke-width="1"/>
+              <text x="74" y="13" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Orde 0: [A] vs t</text>
+              <line x1="15" y1="18" x2="15" y2="108" stroke="#374151" stroke-width="1.2"/>
+              <line x1="15" y1="108" x2="138" y2="108" stroke="#374151" stroke-width="1.2"/>
+              <text x="8" y="22" font-size="7" fill="#374151" font-family="Nunito,sans-serif">[A]</text>
+              <text x="118" y="115" font-size="7" fill="#374151" font-family="Nunito,sans-serif">t</text>
+              <line x1="20" y1="25" x2="130" y2="100" stroke="#6d28d9" stroke-width="2"/>
+              <text x="74" y="128" text-anchor="middle" font-size="8" fill="#10b981" font-family="Nunito,sans-serif" font-weight="700">✓ Garis lurus!</text>
+            </g>
+            <!-- Orde 1: ln[A] vs t linear -->
+            <g transform="translate(186,25)">
+              <rect x="0" y="0" width="148" height="120" rx="6" fill="#f8f6ff" stroke="#e5e7eb" stroke-width="1"/>
+              <text x="74" y="13" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Orde 1: ln[A] vs t</text>
+              <line x1="15" y1="18" x2="15" y2="108" stroke="#374151" stroke-width="1.2"/>
+              <line x1="15" y1="108" x2="138" y2="108" stroke="#374151" stroke-width="1.2"/>
+              <text x="4" y="22" font-size="7" fill="#374151" font-family="Nunito,sans-serif">ln[A]</text>
+              <text x="118" y="115" font-size="7" fill="#374151" font-family="Nunito,sans-serif">t</text>
+              <line x1="20" y1="25" x2="130" y2="100" stroke="#10b981" stroke-width="2"/>
+              <text x="74" y="128" text-anchor="middle" font-size="8" fill="#10b981" font-family="Nunito,sans-serif" font-weight="700">✓ Garis lurus!</text>
+            </g>
+            <!-- Orde 2: 1/[A] vs t linear -->
+            <g transform="translate(362,25)">
+              <rect x="0" y="0" width="148" height="120" rx="6" fill="#f8f6ff" stroke="#e5e7eb" stroke-width="1"/>
+              <text x="74" y="13" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Orde 2: 1/[A] vs t</text>
+              <line x1="15" y1="18" x2="15" y2="108" stroke="#374151" stroke-width="1.2"/>
+              <line x1="15" y1="108" x2="138" y2="108" stroke="#374151" stroke-width="1.2"/>
+              <text x="4" y="22" font-size="7" fill="#374151" font-family="Nunito,sans-serif">1/[A]</text>
+              <text x="118" y="115" font-size="7" fill="#374151" font-family="Nunito,sans-serif">t</text>
+              <line x1="20" y1="95" x2="130" y2="25" stroke="#ef4444" stroke-width="2"/>
+              <text x="74" y="128" text-anchor="middle" font-size="8" fill="#10b981" font-family="Nunito,sans-serif" font-weight="700">✓ Garis lurus!</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button class="bn bb" onclick="goSec(5)">← Materi 5</button>
+        <button class="bn bfwd" onclick="goSec(7)">Materi 7: Penerapan →</button>
+      </div>
+    </div>
+
+    <!-- ==============================
+         SEKSI 7: PENERAPAN
+    ============================== -->
+    <div class="section" id="sec-7">
+      <div class="sec-badge">📖 Materi 7 dari 7</div>
+      <div class="sec-title">Penerapan Laju Reaksi dalam Kehidupan</div>
+      <p class="sec-sub">Konsep laju reaksi bukan sekadar teori — ada di mana-mana dalam kehidupan dan industri!</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem;margin-bottom:1.2rem;">
+        <div class="cc" style="border-top:4px solid var(--mint);">
+          <h3>🍎 Pengawetan Makanan</h3>
+          <p>Menyimpan makanan di kulkas menurunkan suhu → laju reaksi pembusukan dan oksidasi melambat → makanan lebih awet. Prinsip: suhu rendah → k kecil → laju reaksi kecil.</p>
+        </div>
+        <div class="cc" style="border-top:4px solid var(--yellow);">
+          <h3>🏭 Industri Haber-Bosch</h3>
+          <p>Pembuatan amonia: N₂ + 3H₂ ⇌ 2NH₃. Menggunakan katalis Fe, suhu 400–500°C, dan tekanan 150–300 atm untuk memaksimalkan laju reaksi secara ekonomis.</p>
+        </div>
+        <div class="cc" style="border-top:4px solid var(--pink);">
+          <h3>🚗 Konverter Katalitik</h3>
+          <p>Menggunakan katalis Pt dan Pd untuk mengubah gas buang berbahaya (CO, NOx) menjadi CO₂, N₂, H₂O. Katalis heterogen mempercepat reaksi pada suhu rendah.</p>
+        </div>
+        <div class="cc" style="border-top:4px solid var(--blue);">
+          <h3>🧬 Enzim dalam Tubuh</h3>
+          <p>Enzim adalah biokatalis protein. Amilase memecah pati, lipase memecah lemak, protease memecah protein. Spesifik, efisien, bekerja optimal pada suhu & pH tertentu.</p>
+        </div>
+        <div class="cc" style="border-top:4px solid var(--orange);">
+          <h3>🍳 Panci Presto</h3>
+          <p>Tekanan tinggi → titik didih air meningkat → suhu memasak lebih tinggi → laju reaksi pemecahan protein daging meningkat → masak lebih cepat!</p>
+        </div>
+        <div class="cc" style="border-top:4px solid var(--purple);">
+          <h3>💊 Farmakokinetik</h3>
+          <p>Laju absorpsi, distribusi, metabolisme, dan ekskresi obat dalam tubuh mengikuti prinsip kinetika kimia (umumnya orde pertama). Mempengaruhi dosis dan frekuensi pemberian obat.</p>
+        </div>
+      </div>
+
+      <!-- Quiz akhir -->
+      <div class="quiz-mini">
+        <h4>🏆 Quiz Akhir Materi</h4>
+        <p style="font-size:.83rem;color:var(--pd);margin-bottom:.8rem;">Seorang ilmuwan menemukan bahwa jika suhu reaksi dinaikkan dari 25°C menjadi 75°C, laju reaksi menjadi 32 kali lebih cepat. Berapa kali laju reaksi meningkat setiap kenaikan 10°C?</p>
+        <div class="qm-opts" id="qfin">
+          <button class="qm-opt" onclick="checkQ(this,false,'qfin')">A. 1,5 kali</button>
+          <button class="qm-opt" onclick="checkQ(this,true,'qfin')">B. 2 kali</button>
+          <button class="qm-opt" onclick="checkQ(this,false,'qfin')">C. 4 kali</button>
+          <button class="qm-opt" onclick="checkQ(this,false,'qfin')">D. 8 kali</button>
+        </div>
+        <div class="qm-feedback" id="qfin-fb"></div>
+      </div>
+
+      <div class="nav-bottom">
+        <button class="bn bb" onclick="goSec(6)">← Materi 6</button>
+        <button class="bn bfwd" onclick="selesai()">✅ Selesai & Lanjut ke Lab Virtual →</button>
+      </div>
+    </div>
+
+  </div><!-- end mat-content -->
+</div><!-- end layout -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Data siswa
+  const siswa = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+  document.getElementById('tbNama').textContent = (siswa.nama||'Siswa').split(' ')[0];
+  if(siswa.progres?.materi) document.getElementById('doneB').classList.add('show');
+
+  // Progress nav state
+  if(siswa.progres?.tujuan) document.getElementById('pn1').className='psd done';
+
+  // SECTION NAVIGATION
+  let curSec = 1;
+  const TOTAL = 7;
+  const readSecs = new Set([1]);
+
+  function goSec(n) {
+    document.getElementById('sec-'+curSec).classList.remove('active');
+    document.getElementById('snav-'+curSec).classList.remove('active');
+    curSec = n;
+    document.getElementById('sec-'+n).classList.add('active');
+    document.getElementById('snav-'+n).classList.add('active');
+    readSecs.add(n);
+    updateSideProgress();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function updateSideProgress(){
+    const pct = Math.round(readSecs.size / TOTAL * 100);
+    document.getElementById('sideProgFill').style.width = pct + '%';
+    document.getElementById('sideProgLbl').textContent = readSecs.size + ' / ' + TOTAL + ' materi';
+    // Update read bar
+    document.getElementById('readBar').style.width = pct + '%';
+    // Mark sidebar nav
+    document.querySelectorAll('.mat-nav a').forEach((a,i)=>{
+      if(readSecs.has(i+1)) a.classList.add('done');
+    });
+  }
+
+  // ANIM TABS
+  function showAnim(id, btn){
+    document.querySelectorAll('.anim-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.atab').forEach(t=>t.classList.remove('active'));
+    document.getElementById('anim-'+id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ACCORDION
+  function toggleAccord(hdr){
+    const body = hdr.nextElementSibling;
+    const icon = hdr.querySelector('.accord-icon');
+    body.classList.toggle('open');
+    icon.classList.toggle('open');
+  }
+
+  // QUIZ
+  const FB = {
+    'q1': {
+      true: '✅ Benar! Karena koefisien H₂ dan H₂O sama-sama 2, maka −(1/2)Δ[H₂]/Δt = +(1/2)Δ[H₂O]/Δt, sehingga v(H₂) = v(H₂O).',
+      false: '❌ Perhatikan hubungan stoikiometri: v = −(1/a)Δ[A]/Δt. Karena koefisien H₂ dan H₂O sama (2), maka lajunya pun sama.'
+    },
+    'qfin': {
+      true: '✅ Tepat! Kenaikan suhu = 75−25 = 50°C = 5 × 10°C. Jika tiap 10°C laju naik x kali, maka x⁵ = 32 → x = ⁵√32 = 2. Jadi laju naik 2 kali setiap 10°C!',
+      false: '❌ Coba lagi! Kenaikan suhu = 50°C = 5×10°C. Jika laju naik x kali per 10°C, maka: x⁵ = 32, sehingga x = 2 (Aturan Van\'t Hoff).'
+    }
+  };
+
+  function checkQ(btn, isCorrect, qid){
+    const opts = btn.parentElement.querySelectorAll('.qm-opt');
+    opts.forEach(o=>o.disabled=true);
+    btn.classList.add(isCorrect ? 'correct' : 'wrong');
+    const fb = document.getElementById(qid+'-fb');
+    fb.textContent = FB[qid]?.[isCorrect] || (isCorrect ? '✅ Benar!' : '❌ Coba lagi!');
+    fb.className = 'qm-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  }
+
+  // READ PROGRESS BAR (scroll)
+  window.addEventListener('scroll', ()=>{
+    const scrolled = window.scrollY;
+    const total = document.body.scrollHeight - window.innerHeight;
+    if(total > 0) document.getElementById('readBar').style.width = (scrolled/total*100)+'%';
+  });
+
+  // SELESAI
+  function selesai(){
+    const s = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+    if(!s.progres) s.progres={};
+    s.progres.materi = true;
+    localStorage.setItem('reaksiku_siswa', JSON.stringify(s));
+    toast('✅ Materi selesai! Menuju Lab Virtual...','success');
+    setTimeout(()=>window.location.href='lab-virtual.html', 1400);
+  }
+
+  function toast(msg, type=''){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.className='toast '+type;
+    setTimeout(()=>t.classList.add('show'),10);
+    setTimeout(()=>t.classList.remove('show'),3200);
+  }
+
+  updateSideProgress();
+</script>
+</body>
+</html>

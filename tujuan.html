@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReaksiKu — Tujuan Pembelajaran</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --purple:#a78bfa;--pl:#ede9fe;--pd:#6d28d9;--pm:#8b5cf6;
+      --mint:#6ee7b7;--ml:#d1fae5;--md:#065f46;
+      --pink:#f9a8d4;--pkl:#fce7f3;
+      --yellow:#fde68a;--yl:#fffbeb;
+      --orange:#fdba74;--ol:#fff7ed;
+      --blue:#93c5fd;--bl:#dbeafe;--bd:#1e40af;
+      --bg:#faf8ff;--white:#fff;
+      --text:#1e1b4b;--tm:#6b7280;
+      --bdr:#e5e7eb;
+      --r:16px;--rs:10px;
+      --sh:0 4px 24px rgba(167,139,250,.12);
+      --shh:0 8px 32px rgba(167,139,250,.22);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* TOPBAR */
+    .topbar{background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1.5px solid #f0eaff;height:56px;padding:0 1.3rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .tl{display:flex;align-items:center;gap:8px;text-decoration:none;}
+    .tl-i{width:33px;height:33px;background:linear-gradient(135deg,var(--pd),var(--pm));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+    .tl-t{font-family:'Poppins',sans-serif;font-weight:700;font-size:.97rem;color:var(--pd);}
+    .tr{display:flex;align-items:center;gap:7px;}
+    .tb-b{background:var(--pl);color:var(--pd);font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:99px;}
+    .btn-db{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid var(--bdr);border-radius:8px;background:#fff;color:var(--tm);font-family:'Nunito',sans-serif;font-weight:700;font-size:.76rem;text-decoration:none;transition:all .2s;}
+    .btn-db:hover{border-color:var(--purple);color:var(--pd);}
+
+    /* PROGRESS NAV */
+    .pnav{background:#fff;border-bottom:1.5px solid #f0eaff;padding:.6rem 1.3rem;display:flex;align-items:center;gap:0;overflow-x:auto;}
+    .ps{display:flex;align-items:center;gap:5px;flex-shrink:0;cursor:pointer;text-decoration:none;}
+    .psd{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;border:2px solid var(--bdr);background:#fff;transition:all .2s;color:var(--tm);}
+    .psd.active{background:var(--pd);border-color:var(--pd);color:#fff;}
+    .psd.done{background:var(--ml);border-color:var(--mint);color:var(--md);}
+    .psl{font-size:.7rem;font-weight:700;color:var(--tm);white-space:nowrap;}
+    .psl.active{color:var(--pd);}
+    .pl{width:22px;height:2px;background:var(--bdr);flex-shrink:0;margin:0 3px;}
+    .pl.done{background:var(--mint);}
+
+    /* PAGE */
+    .page{max-width:880px;margin:0 auto;padding:1.4rem 1.1rem 3rem;}
+
+    /* SEC HDR */
+    .shdr{text-align:center;margin-bottom:1.8rem;}
+    .pill{display:inline-block;background:var(--pl);color:var(--pd);font-weight:700;font-size:.73rem;padding:3px 13px;border-radius:99px;margin-bottom:.6rem;}
+    .shdr h2{font-family:'Poppins',sans-serif;font-size:clamp(1.35rem,4vw,1.85rem);font-weight:700;margin-bottom:.35rem;}
+    .shdr p{color:var(--tm);font-size:.88rem;line-height:1.6;}
+
+    /* DONE BANNER */
+    .done-b{background:var(--ml);border:1.5px solid var(--mint);border-radius:var(--rs);padding:.7rem 1rem;display:none;align-items:center;gap:9px;margin-bottom:1.1rem;}
+    .done-b.show{display:flex;}
+    .done-b p{font-size:.83rem;font-weight:700;color:var(--md);}
+
+    /* TABS */
+    .tabs{display:flex;gap:5px;background:#fff;border-radius:var(--r);padding:5px;box-shadow:var(--sh);border:1.5px solid #f0eaff;margin-bottom:1.6rem;flex-wrap:wrap;}
+    .tab{flex:1;min-width:110px;padding:9px 14px;border-radius:10px;border:none;background:transparent;font-family:'Nunito',sans-serif;font-weight:700;font-size:.84rem;color:var(--tm);cursor:pointer;transition:all .22s;display:flex;align-items:center;justify-content:center;gap:5px;}
+    .tab.active{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;box-shadow:0 3px 12px rgba(109,40,217,.22);}
+    .tab:not(.active):hover{background:var(--pl);color:var(--pd);}
+
+    /* TAB PANELS */
+    .tp{display:none;}
+    .tp.active{display:block;animation:fi .3s ease;}
+    @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ====== PETA KONSEP ====== */
+    .peta-card{background:#fff;border-radius:var(--r);padding:1.3rem;box-shadow:var(--sh);border:1.5px solid #f0eaff;overflow-x:auto;}
+    .svgwrap{min-width:540px;}
+    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:.8rem;}
+    .li{display:flex;align-items:center;gap:5px;font-size:.73rem;font-weight:700;color:var(--tm);}
+    .ld{width:11px;height:11px;border-radius:3px;}
+
+    /* Tooltip */
+    .tooltip{position:fixed;background:#1e1b4b;color:#fff;padding:7px 12px;border-radius:9px;font-size:.77rem;pointer-events:none;z-index:500;max-width:210px;line-height:1.55;display:none;box-shadow:0 4px 16px rgba(0,0,0,.22);white-space:pre-line;}
+
+    /* Info cards */
+    .info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.85rem;margin-top:1.1rem;}
+    .ic{background:#fff;border-radius:var(--rs);padding:.9rem;box-shadow:var(--sh);border-left:4px solid;}
+    .ic .ie{font-size:1.2rem;margin-bottom:.35rem;}
+    .ic h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:.25rem;}
+    .ic p{font-size:.76rem;color:var(--tm);line-height:1.5;}
+
+    /* ====== TUJUAN ====== */
+    .tp-intro{background:linear-gradient(135deg,var(--pd),var(--pm));border-radius:var(--r);padding:1.2rem 1.5rem;color:#fff;margin-bottom:1.3rem;}
+    .tp-intro h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.3rem;}
+    .tp-intro p{opacity:.88;font-size:.84rem;line-height:1.6;}
+
+    .dom-hdr{display:flex;align-items:center;gap:9px;padding:.65rem .9rem;border-radius:var(--rs);border-left:4px solid;margin-bottom:.8rem;margin-top:1.3rem;}
+    .dom-hdr .de{font-size:1.2rem;}
+    .dom-hdr h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:.9rem;}
+    .dom-hdr p{font-size:.73rem;color:var(--tm);}
+
+    .tp-items{display:grid;gap:.6rem;}
+    .tpi{display:flex;gap:10px;align-items:flex-start;background:#fff;border-radius:var(--rs);padding:.85rem .95rem;box-shadow:0 2px 10px rgba(167,139,250,.07);border:1.5px solid #f0eaff;transition:all .2s;}
+    .tpi:hover{transform:translateX(3px);}
+    .tpn{width:27px;height:27px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;flex-shrink:0;}
+    .tpi p{font-size:.84rem;line-height:1.55;color:var(--tm);}
+    .tpi strong{color:var(--text);}
+    .bloom{display:inline-block;font-size:.64rem;font-weight:700;padding:2px 6px;border-radius:99px;margin-top:.3rem;}
+
+    /* ====== KD ====== */
+    .kd-card{background:#fff;border-radius:var(--r);padding:1.2rem 1.3rem;box-shadow:var(--sh);border:1.5px solid #f0eaff;margin-bottom:.9rem;}
+    .kd-card h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:.6rem;display:flex;align-items:center;gap:7px;}
+    .kd-card p{font-size:.84rem;color:var(--tm);line-height:1.6;}
+    .kdb{display:inline-block;background:var(--bl);color:var(--bd);font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:99px;margin-bottom:.45rem;}
+    .it{width:100%;border-collapse:collapse;font-size:.81rem;margin-top:.5rem;}
+    .it th{background:var(--pl);color:var(--pd);font-weight:700;font-size:.72rem;padding:7px 9px;text-align:left;border-bottom:1.5px solid #d8b4fe;}
+    .it td{padding:7px 9px;border-bottom:1px solid #f0eaff;color:var(--tm);vertical-align:top;}
+    .it tr:last-child td{border-bottom:none;}
+    .it tr:hover td{background:#faf5ff;}
+
+    /* ====== ALUR ====== */
+    .alur-card{background:#fff;border-radius:var(--r);padding:1.2rem 1.3rem;box-shadow:var(--sh);border:1.5px solid #f0eaff;}
+    .alur-steps{display:grid;gap:.75rem;margin-top:.8rem;}
+    .astep{display:flex;gap:12px;align-items:flex-start;}
+    .aiwrap{display:flex;flex-direction:column;align-items:center;}
+    .ai{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;}
+    .aline{width:2px;height:18px;background:var(--bdr);margin:2px 0;}
+    .acont{flex:1;padding-top:3px;}
+    .acont h4{font-family:'Poppins',sans-serif;font-weight:600;font-size:.86rem;margin-bottom:2px;}
+    .acont p{font-size:.79rem;color:var(--tm);line-height:1.5;}
+    .atag{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:99px;margin-top:.28rem;}
+
+    /* NAV BOTTOM */
+    .nav-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:.9rem;border-top:1.5px solid #f0eaff;flex-wrap:wrap;gap:9px;}
+    .bn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;text-decoration:none;transition:all .2s;}
+    .bb{background:#fff;color:var(--tm);border:1.5px solid var(--bdr);}
+    .bb:hover{border-color:var(--purple);color:var(--pd);}
+    .bfwd{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;border:none;box-shadow:0 3px 12px rgba(109,40,217,.22);}
+    .bfwd:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(109,40,217,.32);}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:#fff;padding:8px 18px;border-radius:99px;font-weight:600;font-size:.81rem;z-index:9999;transition:transform .3s ease;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
+    .toast.success{background:#10b981;}
+
+    @media(max-width:580px){.tab{font-size:.78rem;padding:8px 9px;}.tabs{gap:3px;}}
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="dashboard-siswa.html" class="tl">
+    <div class="tl-i">⚗️</div>
+    <span class="tl-t">ReaksiKu</span>
+  </a>
+  <div class="tr">
+    <span class="tb-b" id="tbNama">Siswa</span>
+    <a href="dashboard-siswa.html" class="btn-db">🏠 Dashboard</a>
+  </div>
+</div>
+
+<!-- PROGRESS NAV -->
+<div class="pnav">
+  <a class="ps" href="tujuan.html"><div class="psd active">🎯</div><span class="psl active">Tujuan</span></a>
+  <div class="pl"></div>
+  <a class="ps" href="materi.html"><div class="psd">📖</div><span class="psl">Materi</span></a>
+  <div class="pl"></div>
+  <a class="ps" href="lab-virtual.html"><div class="psd">🧪</div><span class="psl">Lab Virtual</span></a>
+  <div class="pl"></div>
+  <a class="ps" href="latihan-soal.html"><div class="psd">📝</div><span class="psl">Latihan Soal</span></a>
+  <div class="pl"></div>
+  <a class="ps" href="refleksi.html"><div class="psd">💭</div><span class="psl">Refleksi</span></a>
+</div>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- PAGE -->
+<div class="page">
+  <div class="shdr">
+    <div class="pill">📚 Modul 1 dari 5</div>
+    <h2>Tujuan Pembelajaran & Peta Konsep</h2>
+    <p>Sebelum mulai belajar, pahami dulu apa yang akan dipelajari dan bagaimana hubungan antar konsepnya!</p>
+  </div>
+
+  <div class="done-b" id="doneB">
+    <span style="font-size:1.2rem;">✅</span>
+    <p>Modul ini sudah kamu selesaikan! Kamu bisa melanjutkan ke Materi.</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" id="t-peta" onclick="stab('peta')">🗺️ Peta Konsep</button>
+    <button class="tab" id="t-tuj" onclick="stab('tuj')">🎯 Tujuan Pembelajaran</button>
+    <button class="tab" id="t-kd" onclick="stab('kd')">📋 KD & Indikator</button>
+    <button class="tab" id="t-alur" onclick="stab('alur')">🛤️ Alur Belajar</button>
+  </div>
+
+  <!-- ========= PETA KONSEP ========= -->
+  <div class="tp active" id="tp-peta">
+    <div class="peta-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.7rem;flex-wrap:wrap;gap:7px;">
+        <div>
+          <div style="font-family:'Poppins',sans-serif;font-weight:700;font-size:.93rem;">🗺️ Peta Konsep Laju Reaksi</div>
+          <p style="font-size:.75rem;color:var(--tm);">Klik setiap node untuk melihat penjelasan singkat</p>
+        </div>
+        <div class="legend">
+          <div class="li"><div class="ld" style="background:#7c3aed;"></div>Topik Utama</div>
+          <div class="li"><div class="ld" style="background:#c4b5fd;"></div>Sub Topik</div>
+          <div class="li"><div class="ld" style="background:#a7f3d0;"></div>Detail</div>
+          <div class="li"><div class="ld" style="background:#fde68a;"></div>Aplikasi</div>
+        </div>
+      </div>
+
+      <div class="svgwrap">
+        <svg viewBox="0 0 740 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+          <defs>
+            <marker id="a1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#a78bfa"/></marker>
+            <marker id="a2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#6ee7b7"/></marker>
+            <marker id="a3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#fbbf24"/></marker>
+            <filter id="sf"><feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="rgba(167,139,250,.16)"/></filter>
+          </defs>
+
+          <!-- ===== KONEKSI / GARIS ===== -->
+          <!-- Pusat ke sub topik -->
+          <line x1="270" y1="238" x2="160" y2="140" stroke="#a78bfa" stroke-width="1.8" marker-end="url(#a1)" stroke-dasharray="5,3"/>
+          <line x1="370" y1="215" x2="370" y2="148" stroke="#a78bfa" stroke-width="1.8" marker-end="url(#a1)"/>
+          <line x1="470" y1="238" x2="568" y2="140" stroke="#a78bfa" stroke-width="1.8" marker-end="url(#a1)" stroke-dasharray="5,3"/>
+          <line x1="370" y1="268" x2="370" y2="350" stroke="#a78bfa" stroke-width="1.8" marker-end="url(#a1)"/>
+
+          <!-- Faktor → sub faktor -->
+          <line x1="330" y1="115" x2="175" y2="52" stroke="#6ee7b7" stroke-width="1.4" marker-end="url(#a2)"/>
+          <line x1="360" y1="112" x2="300" y2="52" stroke="#6ee7b7" stroke-width="1.4" marker-end="url(#a2)"/>
+          <line x1="395" y1="112" x2="455" y2="52" stroke="#6ee7b7" stroke-width="1.4" marker-end="url(#a2)"/>
+          <line x1="420" y1="112" x2="590" y2="52" stroke="#6ee7b7" stroke-width="1.4" marker-end="url(#a2)"/>
+
+          <!-- Hukum laju → orde, k -->
+          <line x1="572" y1="140" x2="636" y2="198" stroke="#6ee7b7" stroke-width="1.4" marker-end="url(#a2)"/>
+          <line x1="580" y1="122" x2="648" y2="122" stroke="#6ee7b7" stroke-width="1.4" marker-end="url(#a2)"/>
+
+          <!-- Teori tumbukan → Ea, kompleks -->
+          <line x1="328" y1="372" x2="190" y2="412" stroke="#6ee7b7" stroke-width="1.4" marker-end="url(#a2)"/>
+          <line x1="412" y1="372" x2="548" y2="412" stroke="#6ee7b7" stroke-width="1.4" marker-end="url(#a2)"/>
+
+          <!-- Pengertian → Aplikasi -->
+          <line x1="152" y1="148" x2="96" y2="264" stroke="#fbbf24" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#a3)"/>
+
+          <!-- Label garis -->
+          <text x="228" y="192" font-size="8" fill="#9ca3af" font-family="Nunito,sans-serif" transform="rotate(-42,228,192)">mempengaruhi</text>
+          <text x="350" y="198" font-size="8" fill="#9ca3af" font-family="Nunito,sans-serif">menentukan</text>
+          <text x="370" y="322" font-size="8" fill="#9ca3af" font-family="Nunito,sans-serif" text-anchor="middle">didasarkan pada</text>
+
+          <!-- ===== NODE UTAMA: LAJU REAKSI ===== -->
+          <g style="cursor:pointer;" onclick="tip(event,'laju')">
+            <rect x="265" y="215" width="210" height="54" rx="13" fill="#6d28d9" filter="url(#sf)"/>
+            <rect x="267" y="217" width="206" height="50" rx="12" fill="#7c3aed"/>
+            <text x="370" y="240" font-family="Nunito,sans-serif" font-weight="800" font-size="13.5" fill="white" text-anchor="middle" dominant-baseline="middle">LAJU REAKSI</text>
+            <text x="370" y="256" font-family="Nunito,sans-serif" font-weight="600" font-size="9.5" fill="#ddd6fe" text-anchor="middle">v = Δ[C] / Δt</text>
+          </g>
+
+          <!-- Sub topik: PENGERTIAN -->
+          <g style="cursor:pointer;" onclick="tip(event,'pengertian')">
+            <rect x="72" y="110" width="158" height="46" rx="11" fill="#c4b5fd" filter="url(#sf)"/>
+            <text x="151" y="130" font-family="Nunito,sans-serif" font-weight="700" font-size="11" fill="#3730a3" text-anchor="middle">Pengertian</text>
+            <text x="151" y="146" font-family="Nunito,sans-serif" font-weight="600" font-size="9" fill="#4338ca" text-anchor="middle">Konsep Dasar</text>
+          </g>
+
+          <!-- Sub topik: FAKTOR-FAKTOR -->
+          <g style="cursor:pointer;" onclick="tip(event,'faktor')">
+            <rect x="276" y="110" width="188" height="46" rx="11" fill="#c4b5fd" filter="url(#sf)"/>
+            <text x="370" y="130" font-family="Nunito,sans-serif" font-weight="700" font-size="11" fill="#3730a3" text-anchor="middle">Faktor-Faktor</text>
+            <text x="370" y="146" font-family="Nunito,sans-serif" font-weight="600" font-size="9" fill="#4338ca" text-anchor="middle">yang Mempengaruhi</text>
+          </g>
+
+          <!-- Sub topik: HUKUM LAJU -->
+          <g style="cursor:pointer;" onclick="tip(event,'hukum')">
+            <rect x="490" y="110" width="162" height="46" rx="11" fill="#c4b5fd" filter="url(#sf)"/>
+            <text x="571" y="130" font-family="Nunito,sans-serif" font-weight="700" font-size="11" fill="#3730a3" text-anchor="middle">Hukum Laju</text>
+            <text x="571" y="146" font-family="Nunito,sans-serif" font-weight="600" font-size="9" fill="#4338ca" text-anchor="middle">r = k[A]ᵐ[B]ⁿ</text>
+          </g>
+
+          <!-- Sub topik: TEORI TUMBUKAN -->
+          <g style="cursor:pointer;" onclick="tip(event,'tumbukan')">
+            <rect x="274" y="350" width="192" height="46" rx="11" fill="#c4b5fd" filter="url(#sf)"/>
+            <text x="370" y="370" font-family="Nunito,sans-serif" font-weight="700" font-size="11" fill="#3730a3" text-anchor="middle">Teori Tumbukan</text>
+            <text x="370" y="386" font-family="Nunito,sans-serif" font-weight="600" font-size="9" fill="#4338ca" text-anchor="middle">Collision Theory</text>
+          </g>
+
+          <!-- Detail: KONSENTRASI -->
+          <g style="cursor:pointer;" onclick="tip(event,'konsentrasi')">
+            <rect x="82" y="14" width="140" height="34" rx="8" fill="#a7f3d0" filter="url(#sf)"/>
+            <text x="152" y="35" font-family="Nunito,sans-serif" font-weight="700" font-size="10.5" fill="#065f46" text-anchor="middle">Konsentrasi</text>
+          </g>
+
+          <!-- Detail: SUHU -->
+          <g style="cursor:pointer;" onclick="tip(event,'suhu')">
+            <rect x="236" y="14" width="126" height="34" rx="8" fill="#a7f3d0" filter="url(#sf)"/>
+            <text x="299" y="35" font-family="Nunito,sans-serif" font-weight="700" font-size="10.5" fill="#065f46" text-anchor="middle">Suhu (T)</text>
+          </g>
+
+          <!-- Detail: LUAS PERMUKAAN -->
+          <g style="cursor:pointer;" onclick="tip(event,'luas')">
+            <rect x="378" y="14" width="152" height="34" rx="8" fill="#a7f3d0" filter="url(#sf)"/>
+            <text x="454" y="35" font-family="Nunito,sans-serif" font-weight="700" font-size="10.5" fill="#065f46" text-anchor="middle">Luas Permukaan</text>
+          </g>
+
+          <!-- Detail: KATALIS -->
+          <g style="cursor:pointer;" onclick="tip(event,'katalis')">
+            <rect x="546" y="14" width="118" height="34" rx="8" fill="#a7f3d0" filter="url(#sf)"/>
+            <text x="605" y="35" font-family="Nunito,sans-serif" font-weight="700" font-size="10.5" fill="#065f46" text-anchor="middle">Katalis</text>
+          </g>
+
+          <!-- Detail: ORDE REAKSI -->
+          <g style="cursor:pointer;" onclick="tip(event,'orde')">
+            <rect x="604" y="192" width="128" height="34" rx="8" fill="#a7f3d0" filter="url(#sf)"/>
+            <text x="668" y="213" font-family="Nunito,sans-serif" font-weight="700" font-size="10" fill="#065f46" text-anchor="middle">Orde Reaksi</text>
+          </g>
+
+          <!-- Detail: TETAPAN k -->
+          <g style="cursor:pointer;" onclick="tip(event,'tetapan')">
+            <rect x="650" y="106" width="80" height="34" rx="8" fill="#a7f3d0" filter="url(#sf)"/>
+            <text x="690" y="127" font-family="Nunito,sans-serif" font-weight="700" font-size="10" fill="#065f46" text-anchor="middle">Tet. k</text>
+          </g>
+
+          <!-- Detail: ENERGI AKTIVASI -->
+          <g style="cursor:pointer;" onclick="tip(event,'ea')">
+            <rect x="58" y="400" width="156" height="34" rx="8" fill="#a7f3d0" filter="url(#sf)"/>
+            <text x="136" y="421" font-family="Nunito,sans-serif" font-weight="700" font-size="10" fill="#065f46" text-anchor="middle">Energi Aktivasi (Ea)</text>
+          </g>
+
+          <!-- Detail: KOMPLEKS AKTIF -->
+          <g style="cursor:pointer;" onclick="tip(event,'kompleks')">
+            <rect x="510" y="400" width="156" height="34" rx="8" fill="#a7f3d0" filter="url(#sf)"/>
+            <text x="588" y="421" font-family="Nunito,sans-serif" font-weight="700" font-size="10" fill="#065f46" text-anchor="middle">Kompleks Teraktivasi</text>
+          </g>
+
+          <!-- Aplikasi -->
+          <g style="cursor:pointer;" onclick="tip(event,'aplikasi')">
+            <rect x="14" y="254" width="156" height="46" rx="11" fill="#fde68a" filter="url(#sf)"/>
+            <text x="92" y="274" font-family="Nunito,sans-serif" font-weight="700" font-size="10" fill="#92400e" text-anchor="middle">Aplikasi dalam</text>
+            <text x="92" y="289" font-family="Nunito,sans-serif" font-weight="600" font-size="9" fill="#92400e" text-anchor="middle">Industri & Kehidupan</text>
+          </g>
+
+        </svg>
+      </div>
+
+      <div class="legend">
+        <div class="li"><div class="ld" style="background:#7c3aed;border-radius:50%;"></div>Topik Utama</div>
+        <div class="li"><div class="ld" style="background:#c4b5fd;"></div>Sub Topik Utama</div>
+        <div class="li"><div class="ld" style="background:#a7f3d0;"></div>Detail Konsep</div>
+        <div class="li"><div class="ld" style="background:#fde68a;"></div>Aplikasi</div>
+      </div>
+    </div>
+
+    <!-- Ringkasan 4 konsep -->
+    <div class="info-grid">
+      <div class="ic" style="border-color:var(--purple);">
+        <div class="ie">⚗️</div>
+        <h4>Laju Reaksi</h4>
+        <p>Perubahan konsentrasi reaktan/produk per satuan waktu. v = Δ[C]/Δt, satuan: M/s</p>
+      </div>
+      <div class="ic" style="border-color:var(--mint);">
+        <div class="ie">🌡️</div>
+        <h4>4 Faktor Utama</h4>
+        <p>Konsentrasi, suhu, luas permukaan, dan katalis memengaruhi kecepatan reaksi kimia.</p>
+      </div>
+      <div class="ic" style="border-color:var(--yellow);">
+        <div class="ie">📐</div>
+        <h4>Hukum Laju</h4>
+        <p>r = k[A]ᵐ[B]ⁿ. Orde m dan n ditentukan secara eksperimen, bukan dari koefisien reaksi!</p>
+      </div>
+      <div class="ic" style="border-color:var(--pink);">
+        <div class="ie">💥</div>
+        <h4>Teori Tumbukan</h4>
+        <p>Reaksi terjadi bila molekul bertumbukan dengan energi ≥ Ea dan orientasi yang tepat.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========= TUJUAN PEMBELAJARAN ========= -->
+  <div class="tp" id="tp-tuj">
+    <div class="tp-intro">
+      <h3>🎯 Tujuan Pembelajaran Laju Reaksi</h3>
+      <p>Setelah mengikuti pembelajaran dengan ReaksiKu, kamu diharapkan mampu mencapai tujuan-tujuan berikut secara bertahap — dari memahami konsep dasar hingga menganalisis dan mengevaluasi dalam konteks kehidupan nyata.</p>
+    </div>
+
+    <!-- Kognitif -->
+    <div class="dom-hdr" style="background:#faf5ff;border-color:var(--pd);">
+      <div class="de">🧠</div>
+      <div><h3 style="color:var(--pd);">Domain Kognitif (Pengetahuan)</h3><p>Memahami, menganalisis, dan mengevaluasi konsep laju reaksi</p></div>
+    </div>
+    <div class="tp-items">
+      <div class="tpi">
+        <div class="tpn" style="background:var(--pl);color:var(--pd);">C2</div>
+        <div><p><strong>Menjelaskan</strong> pengertian laju reaksi sebagai perubahan konsentrasi reaktan atau produk per satuan waktu dengan persamaan v = Δ[C]/Δt</p>
+        <span class="bloom" style="background:var(--bl);color:var(--bd);">C2 — Memahami</span></div>
+      </div>
+      <div class="tpi">
+        <div class="tpn" style="background:var(--pl);color:var(--pd);">C2</div>
+        <div><p><strong>Menjelaskan</strong> faktor-faktor yang mempengaruhi laju reaksi (konsentrasi, suhu, luas permukaan, katalis) berdasarkan teori tumbukan</p>
+        <span class="bloom" style="background:var(--bl);color:var(--bd);">C2 — Memahami</span></div>
+      </div>
+      <div class="tpi">
+        <div class="tpn" style="background:var(--pl);color:var(--pd);">C3</div>
+        <div><p><strong>Menentukan</strong> persamaan laju reaksi, orde reaksi, dan tetapan laju (k) berdasarkan data hasil percobaan</p>
+        <span class="bloom" style="background:var(--ml);color:var(--md);">C3 — Menerapkan</span></div>
+      </div>
+      <div class="tpi">
+        <div class="tpn" style="background:var(--pl);color:var(--pd);">C4</div>
+        <div><p><strong>Menganalisis</strong> data percobaan untuk menentukan orde reaksi terhadap masing-masing reaktan menggunakan metode perbandingan</p>
+        <span class="bloom" style="background:var(--yl);color:#92400e;">C4 — Menganalisis</span></div>
+      </div>
+      <div class="tpi">
+        <div class="tpn" style="background:var(--pl);color:var(--pd);">C5</div>
+        <div><p><strong>Mengevaluasi</strong> pengaruh faktor-faktor terhadap laju reaksi berdasarkan grafik dan data eksperimen virtual, serta menarik kesimpulan yang valid</p>
+        <span class="bloom" style="background:var(--ol);color:#c2410c;">C5 — Mengevaluasi</span></div>
+      </div>
+    </div>
+
+    <!-- Psikomotor -->
+    <div class="dom-hdr" style="background:#f0fdf4;border-color:var(--md);margin-top:1.4rem;">
+      <div class="de">🔬</div>
+      <div><h3 style="color:var(--md);">Domain Psikomotor (Keterampilan)</h3><p>Merancang, melakukan, dan menyajikan hasil percobaan</p></div>
+    </div>
+    <div class="tp-items">
+      <div class="tpi" style="border-color:#d1fae5;">
+        <div class="tpn" style="background:var(--ml);color:var(--md);">P1</div>
+        <div><p><strong>Merancang</strong> percobaan virtual dengan menentukan variabel bebas, terikat, dan kontrol untuk menyelidiki pengaruh faktor terhadap laju reaksi</p>
+        <span class="bloom" style="background:var(--ml);color:var(--md);">Merancang Percobaan</span></div>
+      </div>
+      <div class="tpi" style="border-color:#d1fae5;">
+        <div class="tpn" style="background:var(--ml);color:var(--md);">P2</div>
+        <div><p><strong>Mengumpulkan data</strong> percobaan secara sistematis ke dalam tabel pengamatan dan menyajikan dalam bentuk grafik yang sesuai</p>
+        <span class="bloom" style="background:var(--ml);color:var(--md);">Mengumpulkan & Menyajikan Data</span></div>
+      </div>
+      <div class="tpi" style="border-color:#d1fae5;">
+        <div class="tpn" style="background:var(--ml);color:var(--md);">P3</div>
+        <div><p><strong>Menyimpulkan</strong> hubungan antara faktor dengan laju reaksi berdasarkan interpretasi grafik dan membandingkannya dengan teori</p>
+        <span class="bloom" style="background:var(--ml);color:var(--md);">Menyimpulkan</span></div>
+      </div>
+    </div>
+
+    <!-- Afektif -->
+    <div class="dom-hdr" style="background:#fef9c3;border-color:#ca8a04;margin-top:1.4rem;">
+      <div class="de">💛</div>
+      <div><h3 style="color:#713f12;">Domain Afektif (Sikap)</h3><p>Menunjukkan sikap ilmiah selama pembelajaran</p></div>
+    </div>
+    <div class="tp-items">
+      <div class="tpi" style="border-color:#fef08a;">
+        <div class="tpn" style="background:#fef9c3;color:#713f12;">A1</div>
+        <div><p><strong>Menunjukkan rasa ingin tahu</strong> yang tinggi dalam menyelidiki fenomena laju reaksi melalui inkuiri terbimbing</p></div>
+      </div>
+      <div class="tpi" style="border-color:#fef08a;">
+        <div class="tpn" style="background:#fef9c3;color:#713f12;">A2</div>
+        <div><p><strong>Bersikap kritis dan objektif</strong> dalam menganalisis data percobaan dan memberikan argumentasi berbasis bukti ilmiah</p></div>
+      </div>
+      <div class="tpi" style="border-color:#fef08a;">
+        <div class="tpn" style="background:#fef9c3;color:#713f12;">A3</div>
+        <div><p><strong>Merefleksikan</strong> proses belajar dan mengidentifikasi kelebihan serta kekurangan pemahaman diri sendiri</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========= KD & INDIKATOR ========= -->
+  <div class="tp" id="tp-kd">
+    <div class="kd-card">
+      <div class="kdb">KD 3.7 — Pengetahuan</div>
+      <h4>📘 KD 3.7</h4>
+      <p>Menjelaskan faktor-faktor yang mempengaruhi laju reaksi menggunakan teori tumbukan.</p>
+      <table class="it" style="margin-top:.9rem;">
+        <thead><tr><th>Kode</th><th>Indikator Pencapaian Kompetensi</th><th>Level</th></tr></thead>
+        <tbody>
+          <tr><td>3.7.1</td><td>Menjelaskan pengertian laju reaksi dan menyatakan satuannya</td><td><span class="bloom" style="background:var(--bl);color:var(--bd);">C2</span></td></tr>
+          <tr><td>3.7.2</td><td>Menjelaskan hubungan konsentrasi dengan laju reaksi berdasarkan teori tumbukan</td><td><span class="bloom" style="background:var(--bl);color:var(--bd);">C2</span></td></tr>
+          <tr><td>3.7.3</td><td>Menjelaskan pengaruh suhu terhadap laju reaksi (teori tumbukan & Van't Hoff)</td><td><span class="bloom" style="background:var(--bl);color:var(--bd);">C2</span></td></tr>
+          <tr><td>3.7.4</td><td>Menjelaskan pengaruh luas permukaan terhadap laju reaksi</td><td><span class="bloom" style="background:var(--bl);color:var(--bd);">C2</span></td></tr>
+          <tr><td>3.7.5</td><td>Menjelaskan peran katalis dalam menurunkan energi aktivasi (Ea)</td><td><span class="bloom" style="background:var(--ml);color:var(--md);">C3</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="kd-card">
+      <div class="kdb">KD 3.8 — Pengetahuan</div>
+      <h4>📗 KD 3.8</h4>
+      <p>Menentukan orde reaksi dan tetapan laju reaksi berdasarkan data hasil percobaan.</p>
+      <table class="it" style="margin-top:.9rem;">
+        <thead><tr><th>Kode</th><th>Indikator Pencapaian Kompetensi</th><th>Level</th></tr></thead>
+        <tbody>
+          <tr><td>3.8.1</td><td>Menuliskan persamaan laju reaksi berdasarkan data percobaan</td><td><span class="bloom" style="background:var(--ml);color:var(--md);">C3</span></td></tr>
+          <tr><td>3.8.2</td><td>Menentukan orde reaksi tiap reaktan dengan metode perbandingan</td><td><span class="bloom" style="background:var(--yl);color:#92400e;">C4</span></td></tr>
+          <tr><td>3.8.3</td><td>Menghitung tetapan laju reaksi (k) beserta satuannya</td><td><span class="bloom" style="background:var(--ml);color:var(--md);">C3</span></td></tr>
+          <tr><td>3.8.4</td><td>Menganalisis grafik [C] vs t untuk menentukan orde reaksi</td><td><span class="bloom" style="background:var(--yl);color:#92400e;">C4</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="kd-card">
+      <div class="kdb" style="background:var(--ml);color:var(--md);">KD 4.7 — Keterampilan</div>
+      <h4>🔬 KD 4.7</h4>
+      <p>Merancang, melakukan, menyimpulkan, dan menyajikan hasil percobaan faktor-faktor yang mempengaruhi laju reaksi dan orde reaksi.</p>
+      <table class="it" style="margin-top:.9rem;">
+        <thead><tr><th>Kode</th><th>Indikator Pencapaian Kompetensi</th></tr></thead>
+        <tbody>
+          <tr><td>4.7.1</td><td>Merancang percobaan (merumuskan masalah, hipotesis, variabel) untuk menyelidiki faktor laju reaksi</td></tr>
+          <tr><td>4.7.2</td><td>Melakukan percobaan virtual dan mencatat data secara sistematis</td></tr>
+          <tr><td>4.7.3</td><td>Menyajikan data dalam tabel dan grafik yang sesuai</td></tr>
+          <tr><td>4.7.4</td><td>Menarik kesimpulan berbasis bukti dan membandingkan dengan teori</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========= ALUR BELAJAR ========= -->
+  <div class="tp" id="tp-alur">
+    <div class="alur-card">
+      <div style="font-family:'Poppins',sans-serif;font-weight:700;font-size:.93rem;margin-bottom:.25rem;">🛤️ Alur Belajar Inkuiri Terbimbing</div>
+      <p style="font-size:.8rem;color:var(--tm);margin-bottom:.8rem;">Media ini dirancang mengikuti 5 sintaks inkuiri terbimbing. Ikuti setiap tahapan secara berurutan!</p>
+      <div class="alur-steps">
+        <div class="astep">
+          <div class="aiwrap">
+            <div class="ai" style="background:var(--pl);">🎯</div>
+            <div class="aline"></div>
+          </div>
+          <div class="acont">
+            <h4>Tahap 1 — Orientasi</h4>
+            <p>Mempelajari tujuan dan peta konsep. Kamu diajak mengetahui apa yang akan dipelajari dan mengapa hal tersebut penting.</p>
+            <span class="atag" style="background:var(--pl);color:var(--pd);">📍 Kamu berada di sini</span>
+          </div>
+        </div>
+        <div class="astep">
+          <div class="aiwrap">
+            <div class="ai" style="background:var(--ml);">📖</div>
+            <div class="aline"></div>
+          </div>
+          <div class="acont">
+            <h4>Tahap 2 — Eksplorasi Konsep</h4>
+            <p>Mempelajari materi laju reaksi melalui teks, animasi faktor-faktor laju reaksi, dan video interaktif untuk membangun pemahaman awal.</p>
+            <span class="atag" style="background:var(--ml);color:var(--md);">Halaman Materi</span>
+          </div>
+        </div>
+        <div class="astep">
+          <div class="aiwrap">
+            <div class="ai" style="background:var(--yl);">🧪</div>
+            <div class="aline"></div>
+          </div>
+          <div class="acont">
+            <h4>Tahap 3 — Inkuiri Terbimbing</h4>
+            <p>Merumuskan masalah → menyusun hipotesis → merancang percobaan → mengumpulkan data → menganalisis dengan bimbingan scaffolding AI.</p>
+            <span class="atag" style="background:var(--yl);color:#92400e;">Lab Virtual Inkuiri</span>
+          </div>
+        </div>
+        <div class="astep">
+          <div class="aiwrap">
+            <div class="ai" style="background:var(--pkl);">📝</div>
+            <div class="aline"></div>
+          </div>
+          <div class="acont">
+            <h4>Tahap 4 — Penguatan & Evaluasi</h4>
+            <p>Mengerjakan soal HOTS pilgan dan uraian. Umpan balik AI membantu memahami letak kesalahan dan cara memperbaikinya.</p>
+            <span class="atag" style="background:var(--pkl);color:#be185d;">Latihan Soal + AI</span>
+          </div>
+        </div>
+        <div class="astep">
+          <div class="aiwrap">
+            <div class="ai" style="background:var(--bl);">💭</div>
+          </div>
+          <div class="acont">
+            <h4>Tahap 5 — Refleksi</h4>
+            <p>Merefleksikan pengalaman belajar, mengidentifikasi kekuatan & kelemahanmu, serta memberikan umpan balik untuk pengembangan media.</p>
+            <span class="atag" style="background:var(--bl);color:var(--bd);">Refleksi Diri</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--ml);border-radius:var(--r);padding:1rem 1.3rem;border-left:4px solid var(--mint);display:flex;gap:10px;align-items:flex-start;margin-top:1.1rem;">
+      <span style="font-size:1.15rem;">💡</span>
+      <div>
+        <div style="font-weight:700;font-size:.86rem;color:var(--md);margin-bottom:2px;">Catatan Penting</div>
+        <p style="font-size:.81rem;color:#065f46;line-height:1.5;">Selesaikan setiap modul sebelum melanjutkan ke modul berikutnya. Ini memastikan kamu membangun pemahaman yang kuat secara bertahap melalui inkuiri! 🚀</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV BOTTOM -->
+  <div class="nav-bottom">
+    <a href="dashboard-siswa.html" class="bn bb">← Kembali ke Dashboard</a>
+    <button class="bn bfwd" onclick="selesai()">Selesai & Lanjut ke Materi →</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Data siswa
+  const siswa = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+  document.getElementById('tbNama').textContent = (siswa.nama||'Siswa').split(' ')[0];
+  if(siswa.progres?.tujuan) document.getElementById('doneB').classList.add('show');
+
+  // TABS
+  const TABS = ['peta','tuj','kd','alur'];
+  function stab(id){
+    TABS.forEach(t=>{
+      document.getElementById('tp-'+t).classList.toggle('active', t===id);
+      document.getElementById('t-'+t).classList.toggle('active', t===id);
+    });
+  }
+
+  // TOOLTIP
+  const TIPS = {
+    laju: 'Laju reaksi = perubahan konsentrasi reaktan/produk per satuan waktu.\nv = −Δ[A]/Δt = +Δ[P]/Δt\nSatuan: mol/L·s (M/s)',
+    pengertian: 'Secara matematis: v = Δ[C]/Δt\nUntuk A → B:\nv = −Δ[A]/Δt = +Δ[B]/Δt',
+    faktor: '4 faktor yang mempengaruhi laju reaksi:\n① Konsentrasi ② Suhu\n③ Luas permukaan ④ Katalis',
+    hukum: 'Persamaan laju: r = k[A]ᵐ[B]ⁿ\nk = tetapan laju (bergantung suhu)\nm, n = orde reaksi (dari eksperimen!)',
+    tumbukan: 'Syarat reaksi terjadi:\n① Tumbukan dengan E ≥ Ea\n② Orientasi molekul yang tepat',
+    konsentrasi: 'Konsentrasi ↑ → partikel lebih rapat\n→ frekuensi tumbukan ↑ → laju ↑',
+    suhu: 'Suhu ↑ → energi kinetik ↑\n→ lebih banyak partikel ber-E ≥ Ea\nAturan Van\'t Hoff: T naik 10°C → laju ≈ 2×',
+    luas: 'Luas permukaan ↑ (serbuk > bongkahan)\n→ bidang kontak ↑ → tumbukan ↑ → laju ↑',
+    katalis: 'Katalis menurunkan Ea sehingga lebih banyak\npartikel yang berhasil bereaksi.\nContoh: Pt, Fe₂O₃, enzim',
+    orde: 'Orde reaksi = pangkat [konsentrasi] dalam persamaan laju.\nOrde total = m + n\nDITENTUKAN DARI EKSPERIMEN!',
+    tetapan: 'Tetapan laju (k): nilainya bergantung suhu.\nSemakin tinggi T → k semakin besar.\nSatuan k bergantung orde reaksi total.',
+    ea: 'Energi aktivasi (Ea) = energi minimum agar\ntumbukan menghasilkan reaksi.\nKatalis → menurunkan Ea.',
+    kompleks: 'Kompleks teraktivasi = keadaan transisi\nsingkat di puncak energi potensial,\nsebelum berubah menjadi produk.',
+    aplikasi: 'Contoh aplikasi:\n• Pengawet makanan (T rendah)\n• Panci presto (T & tekanan ↑)\n• Industri Haber-Bosch (katalis Fe)\n• Konverter katalitik mobil'
+  };
+
+  function tip(e, id){
+    const el = document.getElementById('tooltip');
+    el.textContent = TIPS[id]||'';
+    el.style.display = 'block';
+    el.style.left = (e.clientX + 14) + 'px';
+    el.style.top = (e.clientY - 8) + 'px';
+    clearTimeout(el._t);
+    el._t = setTimeout(()=>el.style.display='none', 4500);
+  }
+  document.addEventListener('click', e=>{
+    if(!e.target.closest('g')) document.getElementById('tooltip').style.display='none';
+  });
+
+  // SELESAI
+  function selesai(){
+    const s = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+    if(!s.progres) s.progres={};
+    s.progres.tujuan = true;
+    localStorage.setItem('reaksiku_siswa', JSON.stringify(s));
+    toast('✅ Modul Tujuan selesai! Menuju Materi...','success');
+    setTimeout(()=>window.location.href='materi.html', 1300);
+  }
+
+  function toast(msg, type=''){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.className='toast '+type;
+    setTimeout(()=>t.classList.add('show'),10);
+    setTimeout(()=>t.classList.remove('show'),3000);
+  }
+</script>
+</body>
+</html>

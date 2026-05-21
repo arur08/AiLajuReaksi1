@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReaksiKu — Lab Virtual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --pd:#6d28d9;--pm:#8b5cf6;--pl:#ede9fe;--pu:#a78bfa;
+      --md:#065f46;--ml:#d1fae5;--mn:#6ee7b7;
+      --ya:#d97706;--yl:#fffbeb;--ye:#fde68a;
+      --pkl:#fce7f3;--pk:#f9a8d4;
+      --bl:#dbeafe;--bd:#1e40af;--bn:#93c5fd;
+      --ol:#fff7ed;--or:#fdba74;
+      --re:#ef4444;--rl:#fee2e2;
+      --bg:#faf8ff;--wh:#fff;
+      --tx:#1e1b4b;--tm:#6b7280;
+      --br:#e5e7eb;
+      --r:16px;--rs:10px;
+      --sh:0 4px 24px rgba(167,139,250,.11);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;}
+
+    /* TOP */
+    .topbar{background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-bottom:1.5px solid #f0eaff;height:56px;padding:0 1.3rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .tl{display:flex;align-items:center;gap:8px;text-decoration:none;}
+    .tl-i{width:33px;height:33px;background:linear-gradient(135deg,var(--pd),var(--pm));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+    .tl-t{font-family:'Poppins',sans-serif;font-weight:700;font-size:.97rem;color:var(--pd);}
+    .tr-top{display:flex;align-items:center;gap:7px;}
+    .tb-b{background:var(--pl);color:var(--pd);font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:99px;}
+    .btn-db{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid var(--br);border-radius:8px;background:#fff;color:var(--tm);font-family:'Nunito',sans-serif;font-weight:700;font-size:.76rem;text-decoration:none;transition:all .2s;}
+    .btn-db:hover{border-color:var(--pu);color:var(--pd);}
+
+    /* PNAV */
+    .pnav{background:#fff;border-bottom:1.5px solid #f0eaff;padding:.55rem 1.3rem;display:flex;align-items:center;gap:0;overflow-x:auto;}
+    .ps{display:flex;align-items:center;gap:5px;flex-shrink:0;text-decoration:none;}
+    .psd{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;border:2px solid var(--br);background:#fff;color:var(--tm);}
+    .psd.done{background:var(--ml);border-color:var(--mn);color:var(--md);}
+    .psd.active{background:var(--pd);border-color:var(--pd);color:#fff;}
+    .psl{font-size:.68rem;font-weight:700;color:var(--tm);white-space:nowrap;}
+    .psl.active{color:var(--pd);}
+    .pline{width:20px;height:2px;background:var(--br);flex-shrink:0;margin:0 3px;}
+    .pline.done{background:var(--mn);}
+
+    /* SINTAKS BAR */
+    .sbar{background:#fff;border-bottom:1.5px solid #f0eaff;padding:.55rem 1.3rem;overflow-x:auto;}
+    .sbar-inner{display:flex;align-items:center;gap:0;min-width:560px;}
+    .stp{display:flex;align-items:center;gap:5px;flex-shrink:0;}
+    .sd{width:28px;height:28px;border-radius:50%;background:var(--pl);border:2px solid var(--pu);color:var(--pd);font-weight:700;font-size:.73rem;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+    .sd.active{background:var(--pd);color:#fff;border-color:var(--pd);box-shadow:0 0 0 3px rgba(109,40,217,.15);}
+    .sd.done{background:var(--ml);color:var(--md);border-color:var(--mn);}
+    .sl{font-size:.68rem;font-weight:700;color:var(--tm);white-space:nowrap;max-width:78px;text-align:center;line-height:1.2;}
+    .sl.active{color:var(--pd);}
+    .sline{width:26px;height:2px;background:var(--br);flex-shrink:0;margin:0 2px;}
+    .sline.done{background:var(--mn);}
+
+    /* PAGE */
+    .page{max-width:860px;margin:0 auto;padding:1.3rem 1.1rem 4rem;}
+    .sp{display:none;}
+    .sp.active{display:block;animation:fi .3s ease;}
+    @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    /* CARD */
+    .card{background:#fff;border-radius:var(--r);padding:1.2rem 1.3rem;box-shadow:var(--sh);border:1.5px solid #f0eaff;margin-bottom:1.1rem;}
+    .card h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:.94rem;margin-bottom:.65rem;display:flex;align-items:center;gap:7px;}
+    .card p{font-size:.86rem;color:var(--tm);line-height:1.68;margin-bottom:.55rem;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* HDR */
+    .shdr{margin-bottom:1.4rem;}
+    .pill{display:inline-flex;align-items:center;gap:5px;background:var(--pl);color:var(--pd);font-weight:700;font-size:.71rem;padding:3px 11px;border-radius:99px;margin-bottom:.55rem;}
+    .shdr h2{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.25rem;margin-bottom:.3rem;}
+    .shdr p{color:var(--tm);font-size:.85rem;line-height:1.6;}
+
+    /* FAKTOR GRID */
+    .fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.9rem;margin-bottom:1.1rem;}
+    .fc{background:#fff;border-radius:var(--r);padding:1.1rem;box-shadow:var(--sh);border:2px solid var(--br);cursor:pointer;transition:all .22s;text-align:center;}
+    .fc:hover{border-color:var(--pu);transform:translateY(-2px);}
+    .fc.sel{border-color:var(--pd);background:var(--pl);}
+    .fc .fci{font-size:2rem;margin-bottom:.45rem;}
+    .fc h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:.87rem;margin-bottom:.25rem;}
+    .fc p{font-size:.73rem;color:var(--tm);}
+
+    /* FIELDS */
+    .field{margin-bottom:.9rem;}
+    .field label{display:block;font-weight:700;font-size:.8rem;margin-bottom:4px;}
+    .field label span{color:var(--re);}
+    .txa{width:100%;padding:9px 12px;border:1.5px solid var(--br);border-radius:var(--rs);font-family:'Nunito',sans-serif;font-size:.84rem;resize:vertical;outline:none;transition:border-color .2s;min-height:66px;line-height:1.6;}
+    .txa:focus{border-color:var(--pm);box-shadow:0 0 0 3px rgba(139,92,246,.09);}
+    .inp{width:100%;padding:8px 11px;border:1.5px solid var(--br);border-radius:var(--rs);font-family:'Nunito',sans-serif;font-size:.84rem;outline:none;transition:border-color .2s;}
+    .inp:focus{border-color:var(--pm);box-shadow:0 0 0 3px rgba(139,92,246,.09);}
+
+    /* AI SCAFFOLD */
+    .scf{background:linear-gradient(135deg,#f5f3ff,var(--pl));border-radius:var(--rs);padding:.9rem 1rem;border-left:4px solid var(--pm);margin:.7rem 0;display:none;}
+    .scf.show{display:block;animation:fi .25s ease;}
+    .scf-hdr{display:flex;align-items:center;gap:6px;font-weight:700;font-size:.79rem;color:var(--pd);margin-bottom:.4rem;}
+    .scf p{font-size:.81rem;color:#4c1d95;line-height:1.62;white-space:pre-line;}
+
+    /* SIMULASI */
+    .simbox{background:#f0f9ff;border-radius:var(--r);padding:1.1rem;border:1.5px solid #bae6fd;margin-bottom:1.1rem;}
+    .simbox h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:.75rem;color:var(--bd);}
+    .simctrl{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:.85rem;}
+    .scitem{display:flex;flex-direction:column;gap:3px;flex:1;min-width:110px;}
+    .scitem label{font-size:.72rem;font-weight:700;color:var(--tm);}
+    .sim-sl{-webkit-appearance:none;width:100%;height:5px;border-radius:99px;background:#dde6ed;outline:none;cursor:pointer;}
+    .sim-sl::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--pd);cursor:pointer;}
+    .sim-vrow{display:flex;justify-content:space-between;font-size:.68rem;color:var(--tm);}
+    .btn-run{display:inline-flex;align-items:center;gap:5px;padding:8px 18px;background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;border:none;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:700;font-size:.84rem;cursor:pointer;transition:all .2s;flex-shrink:0;}
+    .btn-run:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(109,40,217,.25);}
+    .bkwrap{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;margin:.7rem 0;}
+    .bkitem{text-align:center;transition:opacity .3s;}
+    .bksvg{width:80px;height:115px;}
+    .sim-res{display:none;background:var(--ml);border-radius:var(--rs);padding:.75rem 1rem;margin-top:.7rem;text-align:center;}
+    .sim-res .sr-rate{font-weight:800;font-size:1.05rem;color:var(--md);}
+    .sim-res .sr-waktu{font-size:.76rem;color:var(--md);margin-top:2px;}
+
+    /* DATA TABLE */
+    .dt-wrap{overflow-x:auto;}
+    .dt{width:100%;border-collapse:collapse;font-size:.8rem;min-width:460px;}
+    .dt th{background:var(--pl);color:var(--pd);font-weight:700;font-size:.72rem;padding:7px 9px;text-align:center;border-bottom:1.5px solid #d8b4fe;}
+    .dt td{padding:7px 9px;border-bottom:1px solid #f0eaff;text-align:center;color:var(--tm);}
+    .dt tr:hover td{background:#faf5ff;}
+    .dt tr:last-child td{border-bottom:none;}
+
+    /* CANVAS */
+    canvas{border-radius:var(--rs);border:1px solid #f0eaff;max-width:100%;}
+
+    /* ORDE BOX */
+    .orde-box{background:var(--pl);border-radius:var(--rs);padding:.9rem 1rem;margin:.65rem 0;}
+
+    /* BUTTONS */
+    .bn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:700;font-size:.86rem;cursor:pointer;text-decoration:none;transition:all .2s;border:none;}
+    .bb{background:#fff;color:var(--tm);border:1.5px solid var(--br)!important;}
+    .bb:hover{border-color:var(--pu)!important;color:var(--pd);}
+    .bfwd{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;box-shadow:0 3px 11px rgba(109,40,217,.22);}
+    .bfwd:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(109,40,217,.3);}
+    .bsm{font-size:.78rem;padding:6px 13px;}
+    .bgreen{background:var(--ml);color:var(--md);border:1.5px solid var(--mn)!important;}
+    .bred{background:var(--rl);color:var(--re);border:1.5px solid var(--re)!important;}
+
+    /* NAV BOTTOM */
+    .navbot{display:flex;justify-content:space-between;align-items:center;padding-top:.85rem;border-top:1.5px solid #f0eaff;flex-wrap:wrap;gap:8px;margin-top:1.8rem;}
+
+    /* INKUIRI BADGE */
+    .ibadge{background:linear-gradient(135deg,var(--pd),var(--pm));color:#fff;border-radius:var(--rs);padding:.65rem .9rem;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:.9rem;}
+
+    /* INFO BOX */
+    .ibox{border-radius:var(--rs);padding:.8rem 1rem;display:flex;gap:9px;align-items:flex-start;margin:.8rem 0;}
+    .ibox p{font-size:.82rem;line-height:1.6;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--tx);color:#fff;padding:7px 17px;border-radius:99px;font-weight:600;font-size:.79rem;z-index:9999;transition:transform .3s ease;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
+    .toast.success{background:#10b981;}
+    .toast.error{background:var(--re);}
+
+    @media(max-width:580px){
+      .fgrid{grid-template-columns:1fr 1fr;}
+      .bksvg{width:62px;height:92px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="dashboard-siswa.html" class="tl">
+    <div class="tl-i">🧪</div><span class="tl-t">ReaksiKu</span>
+  </a>
+  <div class="tr-top">
+    <span class="tb-b" id="tbNama">Siswa</span>
+    <a href="dashboard-siswa.html" class="btn-db">🏠 Dashboard</a>
+  </div>
+</div>
+
+<!-- PNAV -->
+<div class="pnav">
+  <a class="ps" href="tujuan.html"><div class="psd done">🎯</div><span class="psl">Tujuan</span></a>
+  <div class="pline done"></div>
+  <a class="ps" href="materi.html"><div class="psd done">📖</div><span class="psl">Materi</span></a>
+  <div class="pline done"></div>
+  <a class="ps"><div class="psd active">🧪</div><span class="psl active">Lab Virtual</span></a>
+  <div class="pline"></div>
+  <a class="ps" href="latihan-soal.html"><div class="psd">📝</div><span class="psl">Latihan Soal</span></a>
+  <div class="pline"></div>
+  <a class="ps" href="refleksi.html"><div class="psd">💭</div><span class="psl">Refleksi</span></a>
+</div>
+
+<!-- SINTAKS BAR -->
+<div class="sbar">
+  <div class="sbar-inner">
+    <div class="stp"><div class="sd active" id="sd1">1</div><div class="sl active" id="sl1">Orientasi Masalah</div></div>
+    <div class="sline" id="sln1"></div>
+    <div class="stp"><div class="sd" id="sd2">2</div><div class="sl" id="sl2">Rumusan & Hipotesis</div></div>
+    <div class="sline" id="sln2"></div>
+    <div class="stp"><div class="sd" id="sd3">3</div><div class="sl" id="sl3">Rancangan Percobaan</div></div>
+    <div class="sline" id="sln3"></div>
+    <div class="stp"><div class="sd" id="sd4">4</div><div class="sl" id="sl4">Simulasi & Data</div></div>
+    <div class="sline" id="sln4"></div>
+    <div class="stp"><div class="sd" id="sd5">5</div><div class="sl" id="sl5">Analisis & Kesimpulan</div></div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ====== STEP 1: ORIENTASI ====== -->
+<div class="sp active" id="sp1">
+  <div class="shdr">
+    <div class="pill">🔬 Lab Virtual Inkuiri • Tahap 1/5</div>
+    <h2>Orientasi Masalah</h2>
+    <p>Selamat datang di Lab Virtual! Kamu akan melakukan inkuiri terbimbing untuk menyelidiki faktor-faktor laju reaksi.</p>
+  </div>
+
+  <div class="card" style="border-top:4px solid var(--pd);">
+    <h3>🎬 Fenomena Pemantik</h3>
+    <p>Perhatikan fenomena berikut ini: <strong>Mengapa antasida serbuk lebih cepat bereaksi dengan asam lambung dibanding antasida tablet?</strong> Mengapa makanan lebih awet di kulkas? Bagaimana industri Haber-Bosch bisa memproduksi amonia jutaan ton per tahun?</p>
+    <div class="ibox" style="background:var(--yl);border-left:4px solid var(--ye);">
+      <span style="font-size:1.1rem;">💡</span>
+      <p style="color:var(--ya);font-weight:700;">Semua fenomena ini berkaitan dengan <em>laju reaksi</em> dan faktor-faktor yang mempengaruhinya!</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚗️ Reaksi yang Digunakan</h3>
+    <p>Lab virtual ini menggunakan reaksi <strong>Na₂S₂O₃ + HCl</strong>:</p>
+    <div style="background:var(--pl);border-radius:var(--rs);padding:.85rem;text-align:center;margin:.65rem 0;">
+      <div style="font-family:'Poppins',sans-serif;font-weight:700;font-size:.97rem;color:var(--pd);">Na₂S₂O₃(aq) + 2HCl(aq) → 2NaCl(aq) + SO₂(g) + S(s) + H₂O(l)</div>
+      <div style="font-size:.76rem;color:var(--pm);margin-top:.3rem;">Endapan S (kuning) mengaburkan tanda × di bawah gelas → waktu diukur</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📦 Pilih Faktor yang Ingin Kamu Selidiki</h3>
+    <p>Pilih <strong>satu faktor</strong> untuk percobaanmu:</p>
+    <div class="fgrid">
+      <div class="fc" id="fc-k" onclick="pilihFaktor('k')"><div class="fci">💧</div><h4>Konsentrasi</h4><p>Pengaruh [Na₂S₂O₃] terhadap laju reaksi</p></div>
+      <div class="fc" id="fc-s" onclick="pilihFaktor('s')"><div class="fci">🌡️</div><h4>Suhu</h4><p>Pengaruh suhu larutan terhadap laju reaksi</p></div>
+      <div class="fc" id="fc-l" onclick="pilihFaktor('l')"><div class="fci">📦</div><h4>Luas Permukaan</h4><p>Pengaruh ukuran partikel CaCO₃</p></div>
+      <div class="fc" id="fc-c" onclick="pilihFaktor('c')"><div class="fci">⚡</div><h4>Katalis</h4><p>Pengaruh MnO₂ sebagai katalis</p></div>
+    </div>
+    <p id="fwarn" style="color:var(--re);font-size:.8rem;display:none;">⚠️ Pilih salah satu faktor!</p>
+  </div>
+
+  <div class="navbot">
+    <a href="materi.html" class="bn bb">← Kembali ke Materi</a>
+    <button class="bn bfwd" onclick="goStep(1,2)">Lanjut: Rumusan Masalah →</button>
+  </div>
+</div>
+
+<!-- ====== STEP 2: RUMUSAN & HIPOTESIS ====== -->
+<div class="sp" id="sp2">
+  <div class="shdr">
+    <div class="pill">🔬 Lab Virtual Inkuiri • Tahap 2/5</div>
+    <h2>Rumusan Masalah & Hipotesis</h2>
+    <p>Berdasarkan faktor yang dipilih, tuliskan rumusan masalah dan hipotesismu!</p>
+  </div>
+  <div class="ibadge">🤖 Scaffolding AI aktif — klik "Minta Bantuan AI" jika kamu membutuhkan petunjuk</div>
+
+  <div class="card">
+    <h3>❓ Rumusan Masalah</h3>
+    <p>Format: <em>"Bagaimana pengaruh [variabel bebas] terhadap [variabel terikat]?"</em></p>
+    <div class="field" style="margin-top:.7rem;">
+      <label>Rumusan Masalah <span>*</span></label>
+      <textarea class="txa" id="inp-rm" rows="2" placeholder="Tulis rumusan masalahmu di sini..."></textarea>
+    </div>
+    <button class="bn bsm" style="background:var(--pl);color:var(--pd);border:1.5px solid var(--pu)!important;" onclick="showScf('rm')">🤖 Minta Bantuan AI</button>
+    <div class="scf" id="scf-rm"><div class="scf-hdr"><span>🤖</span>Scaffolding AI</div><p id="scf-rm-t"></p></div>
+  </div>
+
+  <div class="card">
+    <h3>💡 Hipotesis</h3>
+    <p>Format: <em>"Jika [variabel bebas] ditingkatkan, maka [variabel terikat] akan... karena..."</em></p>
+    <div class="field" style="margin-top:.7rem;">
+      <label>Hipotesis <span>*</span></label>
+      <textarea class="txa" id="inp-hi" rows="3" placeholder="Tulis hipotesismu beserta alasan ilmiahnya..."></textarea>
+    </div>
+    <button class="bn bsm" style="background:var(--pl);color:var(--pd);border:1.5px solid var(--pu)!important;" onclick="showScf('hi')">🤖 Minta Bantuan AI</button>
+    <div class="scf" id="scf-hi"><div class="scf-hdr"><span>🤖</span>Scaffolding AI</div><p id="scf-hi-t"></p></div>
+  </div>
+
+  <div class="navbot">
+    <button class="bn bb" onclick="goStep(2,1)">← Kembali</button>
+    <button class="bn bfwd" onclick="goStep(2,3)">Lanjut: Rancangan Percobaan →</button>
+  </div>
+</div>
+
+<!-- ====== STEP 3: RANCANGAN ====== -->
+<div class="sp" id="sp3">
+  <div class="shdr">
+    <div class="pill">🔬 Lab Virtual Inkuiri • Tahap 3/5</div>
+    <h2>Rancangan Percobaan</h2>
+    <p>Tentukan variabel percobaan dan tuliskan prosedur!</p>
+  </div>
+
+  <div class="card">
+    <h3>📋 Identifikasi Variabel</h3>
+    <div class="field">
+      <label>Variabel Bebas (yang diubah-ubah) <span>*</span></label>
+      <input type="text" class="inp" id="inp-vb" placeholder="Contoh: Konsentrasi Na₂S₂O₃ (0,1 M; 0,2 M; 0,3 M; 0,4 M; 0,5 M)"/>
+    </div>
+    <div class="field">
+      <label>Variabel Terikat (yang diukur) <span>*</span></label>
+      <input type="text" class="inp" id="inp-vt" placeholder="Contoh: Waktu reaksi (s) hingga tanda × tidak terlihat"/>
+    </div>
+    <div class="field">
+      <label>Variabel Kontrol (yang dibuat tetap)</label>
+      <textarea class="txa" id="inp-vk" rows="2" placeholder="Contoh: Suhu (25°C), volume larutan (25 mL), konsentrasi HCl (1 M)"></textarea>
+    </div>
+    <button class="bn bsm" style="background:var(--pl);color:var(--pd);border:1.5px solid var(--pu)!important;" onclick="showScf('var')">🤖 Bantuan Identifikasi Variabel</button>
+    <div class="scf" id="scf-var"><div class="scf-hdr"><span>🤖</span>Scaffolding AI</div><p id="scf-var-t"></p></div>
+  </div>
+
+  <div class="card">
+    <h3>🔧 Alat dan Bahan</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div><div style="font-weight:700;font-size:.81rem;margin-bottom:.35rem;color:var(--pd);">🔬 Alat:</div><ul id="ul-alat" style="font-size:.8rem;color:var(--tm);padding-left:1.1rem;line-height:1.85;"></ul></div>
+      <div><div style="font-weight:700;font-size:.81rem;margin-bottom:.35rem;color:var(--pd);">🧪 Bahan:</div><ul id="ul-bahan" style="font-size:.8rem;color:var(--tm);padding-left:1.1rem;line-height:1.85;"></ul></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📝 Prosedur Percobaan</h3>
+    <div class="field">
+      <label>Langkah-langkah percobaan (singkat & sistematis)</label>
+      <textarea class="txa" id="inp-pros" rows="5" placeholder="1. ...\n2. ...\n3. ..."></textarea>
+    </div>
+  </div>
+
+  <div class="navbot">
+    <button class="bn bb" onclick="goStep(3,2)">← Kembali</button>
+    <button class="bn bfwd" onclick="goStep(3,4)">Lanjut: Simulasi Percobaan →</button>
+  </div>
+</div>
+
+<!-- ====== STEP 4: SIMULASI & DATA ====== -->
+<div class="sp" id="sp4">
+  <div class="shdr">
+    <div class="pill">🔬 Lab Virtual Inkuiri • Tahap 4/5</div>
+    <h2>Simulasi & Pengumpulan Data</h2>
+    <p>Jalankan simulasi percobaan untuk setiap variasi, lalu catat hasilnya!</p>
+  </div>
+
+  <div class="simbox">
+    <h4 id="sim-title">⚗️ Simulasi Percobaan</h4>
+    <div id="sim-ctrl"></div>
+    <div class="bkwrap" id="bkwrap"></div>
+    <div class="sim-res" id="sim-res">
+      <div class="sr-rate" id="sr-rate">Laju = —</div>
+      <div class="sr-waktu" id="sr-waktu">Waktu = —</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📊 Tabel Pengamatan</h3>
+    <div class="dt-wrap"><table class="dt"><thead id="dt-head"></thead><tbody id="dt-body"><tr><td colspan="6" style="padding:1rem;text-align:center;color:var(--tm);">Jalankan simulasi lalu klik "+ Tambah ke Tabel"</td></tr></tbody></table></div>
+    <div style="display:flex;gap:7px;margin-top:.7rem;flex-wrap:wrap;">
+      <button class="bn bsm bgreen" onclick="tambahData()">➕ Tambah ke Tabel</button>
+      <button class="bn bsm bred" onclick="clearData()">🗑️ Hapus</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📝 Catatan Pengamatan</h3>
+    <div class="field">
+      <label>Tuliskan pengamatan kualitatif selama simulasi</label>
+      <textarea class="txa" id="inp-ctt" rows="3" placeholder="Contoh: Pada konsentrasi rendah, larutan lebih lama menjadi keruh. Pada konsentrasi tinggi, kekeruhan terjadi jauh lebih cepat..."></textarea>
+    </div>
+  </div>
+
+  <div class="navbot">
+    <button class="bn bb" onclick="goStep(4,3)">← Kembali</button>
+    <button class="bn bfwd" onclick="goStep(4,5)">Lanjut: Analisis & Kesimpulan →</button>
+  </div>
+</div>
+
+<!-- ====== STEP 5: ANALISIS ====== -->
+<div class="sp" id="sp5">
+  <div class="shdr">
+    <div class="pill">🔬 Lab Virtual Inkuiri • Tahap 5/5</div>
+    <h2>Analisis Data & Kesimpulan</h2>
+    <p>Buat grafik, tentukan orde reaksi, dan tarik kesimpulan dari data percobaanmu!</p>
+  </div>
+
+  <div class="card">
+    <h3>📈 Grafik Hasil Percobaan</h3>
+    <div style="overflow-x:auto;"><canvas id="gCanvas" width="680" height="280"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h3>🔍 Analisis Data</h3>
+    <div class="field">
+      <label>Bagaimana hubungan antara <span id="lbl-vb">variabel bebas</span> dengan laju reaksi? <span>*</span></label>
+      <textarea class="txa" id="inp-anal" rows="4" placeholder="Deskripsikan pola/tren yang kamu temukan dari data dan grafik..."></textarea>
+    </div>
+    <button class="bn bsm" style="background:var(--pl);color:var(--pd);border:1.5px solid var(--pu)!important;" onclick="showScf('anal')">🤖 Bantuan Analisis AI</button>
+    <div class="scf" id="scf-anal"><div class="scf-hdr"><span>🤖</span>Scaffolding AI</div><p id="scf-anal-t"></p></div>
+  </div>
+
+  <div class="card">
+    <h3>📐 Penentuan Orde Reaksi</h3>
+    <div class="orde-box" id="orde-box"><div style="font-size:.82rem;color:var(--pd);">Lengkapi tabel data terlebih dahulu...</div></div>
+    <div class="field" style="margin-top:.8rem;">
+      <label>Jelaskan cara kamu menentukan orde reaksi dari data:</label>
+      <textarea class="txa" id="inp-orde" rows="3" placeholder="Contoh: Dari percobaan 1 ke 2, konsentrasi naik 2× dan laju naik 2×. Berarti orde reaksi = 1..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✍️ Kesimpulan</h3>
+    <div class="field">
+      <label>Tuliskan kesimpulan percobaanmu secara lengkap <span>*</span></label>
+      <textarea class="txa" id="inp-kes" rows="5" placeholder="Berdasarkan hasil percobaan dapat disimpulkan bahwa..."></textarea>
+    </div>
+    <button class="bn bsm" style="background:var(--pl);color:var(--pd);border:1.5px solid var(--pu)!important;" onclick="showScf('kes')">🤖 Bantuan Kesimpulan AI</button>
+    <div class="scf" id="scf-kes"><div class="scf-hdr"><span>🤖</span>Scaffolding AI</div><p id="scf-kes-t"></p></div>
+  </div>
+
+  <div class="card">
+    <h3>💬 Pertanyaan Diskusi</h3>
+    <div class="field"><label>1. Apakah hasil percobaan sesuai hipotesismu? Jelaskan!</label><textarea class="txa" id="inp-d1" rows="2" placeholder="Tulis jawabanmu..."></textarea></div>
+    <div class="field"><label>2. Berikan satu contoh penerapan faktor ini dalam kehidupan/industri!</label><textarea class="txa" id="inp-d2" rows="2" placeholder="Tulis jawabanmu..."></textarea></div>
+    <div class="field"><label>3. Apa yang terjadi jika faktor yang diselidiki dikurangi hingga minimum?</label><textarea class="txa" id="inp-d3" rows="2" placeholder="Tulis jawabanmu..."></textarea></div>
+  </div>
+
+  <div class="ibox" style="background:var(--yl);border-left:4px solid var(--ye);margin-bottom:1.1rem;">
+    <span style="font-size:1.05rem;">📤</span>
+    <p style="color:var(--ya);">Semua jawaban dan data akan disimpan ke profil akunmu dan dapat diakses guru melalui dashboard monitoring.</p>
+  </div>
+
+  <div class="navbot">
+    <button class="bn bb" onclick="goStep(5,4)">← Kembali</button>
+    <button class="bn bfwd" onclick="selesaiLab()">✅ Simpan & Selesai →</button>
+  </div>
+</div>
+
+</div><!-- end page -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const siswa = JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+  document.getElementById('tbNama').textContent = (siswa.nama||'Siswa').split(' ')[0];
+
+  let faktor = localStorage.getItem('lab_f')||'';
+  let tableData = JSON.parse(localStorage.getItem('lab_td')||'[]');
+  let curSimVal = null;
+  let curStep = 1;
+
+  // FAKTOR CONFIG
+  const FC = {
+    k:{lbl:'Konsentrasi Na₂S₂O₃',unit:'M',
+       vals:[0.1,0.2,0.3,0.4,0.5],
+       wFn:v=>Math.round(50/(v*10)),
+       alat:['Gelas beker 100 mL (5 buah)','Gelas ukur 25 mL','Stopwatch','Kertas tanda ×','Pengaduk'],
+       bahan:['Na₂S₂O₃ berbagai konsentrasi','HCl 1 M','Akuades'],
+       thead:['Perc.','[Na₂S₂O₃] (M)','[HCl] (M)','Waktu (s)','Laju 1/t (s⁻¹)','Suhu (°C)']},
+    s:{lbl:'Suhu Larutan',unit:'°C',
+       vals:[25,35,45,55,65],
+       wFn:v=>Math.round(100/Math.pow(2,(v-25)/10)),
+       alat:['Gelas beker 100 mL (5)','Termometer','Water bath','Stopwatch','Kertas tanda ×'],
+       bahan:['Na₂S₂O₃ 0,2 M','HCl 1 M','Air panas / es batu'],
+       thead:['Perc.','[Na₂S₂O₃] (M)','Suhu (°C)','Waktu (s)','Laju 1/t (s⁻¹)','Ket.']},
+    l:{lbl:'Ukuran Partikel CaCO₃',unit:'',
+       vals:['Bongkahan Besar','Bongkahan Kecil','Serbuk Kasar','Serbuk Halus','Serbuk Sangat Halus'],
+       wFn:(v,i)=>[90,60,35,18,8][i],
+       alat:['Erlenmeyer 250 mL (5)','Balon karet','Neraca analitik','Stopwatch','Mortar pestle'],
+       bahan:['CaCO₃ berbagai ukuran','HCl 1 M 50 mL'],
+       thead:['Perc.','Ukuran CaCO₃','Massa (g)','Waktu (s)','Laju 1/t (s⁻¹)','Ket.']},
+    c:{lbl:'Massa Katalis MnO₂',unit:'g',
+       vals:[0,0.1,0.3,0.5,1.0],
+       wFn:v=>v===0?120:Math.round(120/(1+v*8)),
+       alat:['Erlenmeyer 250 mL (5)','Neraca analitik','Stopwatch','Gelas ukur','Buret gas'],
+       bahan:['H₂O₂ 3% 50 mL','MnO₂ berbagai massa','Akuades'],
+       thead:['Perc.','Massa MnO₂ (g)','Vol O₂ (mL)','Waktu (s)','Laju (mL/s)','Suhu (°C)']}
+  };
+
+  // SCAFFOLD DATA
+  const SD = {
+    rm:{k:'Rumusan yang baik:\n"Bagaimana pengaruh konsentrasi Na₂S₂O₃ terhadap laju reaksi Na₂S₂O₃ dengan HCl?"\n\nPastikan memuat: variabel bebas, variabel terikat, dan zat yang bereaksi.',
+        s:'Rumusan yang baik:\n"Bagaimana pengaruh suhu larutan terhadap laju reaksi Na₂S₂O₃ dengan HCl?"\n\nVariabel bebas = suhu (°C), variabel terikat = laju reaksi (1/t).',
+        l:'Rumusan yang baik:\n"Bagaimana pengaruh ukuran partikel CaCO₃ terhadap laju reaksinya dengan HCl?"\n\nVariabel bebas = ukuran partikel, variabel terikat = waktu/laju reaksi.',
+        c:'Rumusan yang baik:\n"Bagaimana pengaruh massa katalis MnO₂ terhadap laju penguraian H₂O₂?"\n\nVariabel bebas = massa MnO₂, variabel terikat = laju reaksi.'},
+    hi:{k:'Hipotesis yang baik:\n"Jika konsentrasi Na₂S₂O₃ ditingkatkan, maka laju reaksi akan semakin cepat (waktu reaksi lebih singkat), karena jumlah partikel per satuan volume meningkat sehingga frekuensi tumbukan efektif meningkat (Teori Tumbukan)."\n\n💡 Hipotesis = prediksi + alasan ilmiah!',
+        s:'Hipotesis yang baik:\n"Jika suhu larutan ditingkatkan, maka laju reaksi akan semakin cepat, karena energi kinetik partikel meningkat sehingga lebih banyak partikel yang memiliki energi ≥ Ea."\n\nIngat: setiap naik 10°C → laju ≈ 2× (Van\'t Hoff)!',
+        l:'Hipotesis yang baik:\n"Jika ukuran partikel CaCO₃ diperkecil, maka laju reaksi akan semakin cepat, karena luas bidang sentuh semakin besar, meningkatkan frekuensi tumbukan efektif."',
+        c:'Hipotesis yang baik:\n"Jika massa katalis MnO₂ ditingkatkan, maka laju penguraian H₂O₂ akan semakin cepat, karena MnO₂ menyediakan jalur reaksi dengan Ea lebih rendah."'},
+    var:{k:'✅ V. Bebas: Konsentrasi Na₂S₂O₃ (0,1; 0,2; 0,3; 0,4; 0,5 M)\n✅ V. Terikat: Waktu reaksi (s) & Laju = 1/t (s⁻¹)\n✅ V. Kontrol: Suhu (25°C), [HCl] = 1 M, volume 25 mL',
+         s:'✅ V. Bebas: Suhu (25; 35; 45; 55; 65°C)\n✅ V. Terikat: Waktu reaksi (s) & Laju = 1/t\n✅ V. Kontrol: [Na₂S₂O₃] = 0,2 M, [HCl] = 1 M, volume 25 mL',
+         l:'✅ V. Bebas: Ukuran partikel CaCO₃ (bongkahan besar → serbuk sangat halus)\n✅ V. Terikat: Waktu reaksi (s)\n✅ V. Kontrol: Massa CaCO₃ = 2 g, [HCl] = 1 M, suhu 25°C',
+         c:'✅ V. Bebas: Massa MnO₂ (0; 0,1; 0,3; 0,5; 1,0 g)\n✅ V. Terikat: Vol O₂ per waktu; Laju reaksi\n✅ V. Kontrol: Vol H₂O₂ = 50 mL, [H₂O₂] = 3%, suhu 25°C'},
+    anal:{k:'💡 Panduan:\n1. Saat [Na₂S₂O₃] naik → laju bagaimana?\n2. Jika [C] naik 2×, laju naik berapa kali?\n3. Hubungkan dengan teori tumbukan\n4. Cocokkan dengan r = k[Na₂S₂O₃]ᵐ',
+          s:'💡 Panduan:\n1. Setiap T naik 10°C → laju naik berapa kali?\n2. Apakah sesuai aturan Van\'t Hoff?\n3. Hubungkan dengan distribusi Maxwell-Boltzmann',
+          l:'💡 Panduan:\n1. Bandingkan waktu tiap ukuran partikel\n2. Partikel lebih kecil → laju lebih cepat → mengapa?\n3. Hubungkan dengan luas bidang sentuh',
+          c:'💡 Panduan:\n1. Bandingkan laju dengan/tanpa katalis\n2. Penambahan massa katalis → laju bagaimana?\n3. Hubungkan dengan diagram energi aktivasi'},
+    kes:{k:'✍️ Template:\n"Berdasarkan hasil percobaan, terbukti bahwa konsentrasi Na₂S₂O₃ berpengaruh positif terhadap laju reaksi. Semakin tinggi konsentrasi, semakin cepat laju reaksi. Hal ini sesuai teori tumbukan karena... Orde reaksi yang diperoleh adalah..."',
+         s:'✍️ Template:\n"...suhu larutan berpengaruh terhadap laju reaksi. Peningkatan suhu 10°C mempercepat laju ≈2× sesuai aturan Van\'t Hoff, karena energi kinetik partikel meningkat..."',
+         l:'✍️ Template:\n"...ukuran partikel berpengaruh terhadap laju reaksi. Semakin kecil partikel, semakin besar luas permukaan bidang sentuh, semakin tinggi frekuensi tumbukan..."',
+         c:'✍️ Template:\n"...katalis MnO₂ mempercepat laju penguraian H₂O₂ dengan menurunkan energi aktivasi, sehingga lebih banyak partikel yang dapat bereaksi..."'}
+  };
+
+  function pilihFaktor(f){
+    faktor=f; localStorage.setItem('lab_f',f);
+    document.querySelectorAll('.fc').forEach(c=>c.classList.remove('sel'));
+    document.getElementById('fc-'+f).classList.add('sel');
+    document.getElementById('fwarn').style.display='none';
+    toast('✅ Faktor dipilih: '+FC[f].lbl,'success');
+  }
+
+  function showScf(type){
+    const f=faktor||'k';
+    const txt=SD[type]?.[f]||'Coba rujuk kembali materi yang sudah dipelajari!';
+    document.getElementById('scf-'+type+'-t').textContent=txt;
+    document.getElementById('scf-'+type).classList.add('show');
+  }
+
+  function buildSim(){
+    if(!faktor)return;
+    const cfg=FC[faktor];
+    document.getElementById('sim-title').textContent='⚗️ Simulasi: Pengaruh '+cfg.lbl;
+    document.getElementById('lbl-vb').textContent=cfg.lbl;
+    const ctrlDiv=document.getElementById('sim-ctrl');
+    if(faktor==='l'){
+      ctrlDiv.innerHTML=`<div class="simctrl"><div class="scitem" style="flex:2;"><label>Ukuran Partikel:</label>
+        <select id="sl-l" class="inp" style="padding:7px 10px;">${cfg.vals.map((v,i)=>`<option value="${i}">${v}</option>`).join('')}</select></div>
+        <button class="btn-run" onclick="runSim()">▶ Jalankan</button></div>`;
+    } else {
+      ctrlDiv.innerHTML=`<div class="simctrl"><div class="scitem"><label>${cfg.lbl}: <strong id="sl-val">${cfg.vals[2]}${cfg.unit}</strong></label>
+        <input type="range" class="sim-sl" id="sl-main" min="0" max="4" step="1" value="2" oninput="document.getElementById('sl-val').textContent=FC[faktor].vals[this.value]+FC[faktor].unit"/>
+        <div class="sim-vrow"><span>${cfg.vals[0]}${cfg.unit}</span><span>${cfg.vals[4]}${cfg.unit}</span></div></div>
+        <button class="btn-run" onclick="runSim()">▶ Jalankan</button></div>`;
+    }
+    buildBeakers(); buildThead(); renderTable(); setupCanvas();
+  }
+
+  function buildBeakers(){
+    const cfg=FC[faktor];
+    const colors=['#c4b5fd','#a78bfa','#8b5cf6','#7c3aed','#6d28d9'];
+    document.getElementById('bkwrap').innerHTML=cfg.vals.map((v,i)=>`
+      <div class="bkitem" id="bk${i}" style="opacity:.45;">
+        <svg class="bksvg" viewBox="0 0 80 115" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="18" width="60" height="78" rx="3" fill="#f0f9ff" stroke="#93c5fd" stroke-width="1.5"/>
+          <rect x="10" y="18" width="60" height="${18+i*11}" fill="${colors[i]}" opacity=".55"/>
+          <rect x="5" y="13" width="70" height="9" rx="3" fill="#93c5fd"/>
+          <text x="40" y="108" text-anchor="middle" font-size="8" fill="#1e1b4b" font-family="Nunito,sans-serif" font-weight="700">${typeof v==='string'?v.substring(0,5):v+cfg.unit}</text>
+          <text x="40" y="72" text-anchor="middle" font-size="7.5" fill="#1e40af" font-family="Nunito,sans-serif" id="bkt${i}">—</text>
+        </svg>
+      </div>`).join('');
+  }
+
+  function buildThead(){
+    const cfg=FC[faktor];
+    document.getElementById('dt-head').innerHTML='<tr>'+cfg.thead.map(h=>`<th>${h}</th>`).join('')+'</tr>';
+  }
+
+  function runSim(){
+    if(!faktor)return;
+    const cfg=FC[faktor];
+    let idx,val,waktu,laju;
+    if(faktor==='l'){idx=parseInt(document.getElementById('sl-l').value);val=cfg.vals[idx];waktu=cfg.wFn(val,idx);}
+    else{idx=parseInt(document.getElementById('sl-main').value);val=cfg.vals[idx];waktu=cfg.wFn(val);}
+    laju=(1/waktu).toFixed(4);
+    curSimVal={idx,val,waktu,laju};
+    document.querySelectorAll('.bkitem').forEach(b=>b.style.opacity='0.3');
+    document.getElementById('bk'+idx).style.opacity='1';
+    const res=document.getElementById('sim-res');
+    res.style.display='block';
+    let t=Math.min(waktu,20); // tampilkan countdown max 20 detik
+    const scale=waktu/Math.max(t,1);
+    document.getElementById('sr-rate').textContent='⏱ Reaksi berlangsung...';
+    document.getElementById('sr-waktu').textContent=`Sisa: ${t}s (simulasi dipercepat)`;
+    const iv=setInterval(()=>{
+      t=Math.max(0,t-1);
+      document.getElementById('sr-waktu').textContent=t>0?`Sisa: ${t}s...`:'✅ Reaksi selesai!';
+      if(t<=0){
+        clearInterval(iv);
+        document.getElementById('sr-rate').textContent=`Laju = 1/${waktu} = ${laju} s⁻¹`;
+        document.getElementById('sr-waktu').textContent=`⏱ Waktu reaksi = ${waktu} detik`;
+        document.getElementById('bkt'+idx).textContent=waktu+'s';
+      }
+    },1000);
+  }
+
+  function tambahData(){
+    if(!curSimVal){toast('⚠️ Jalankan simulasi dulu!','error');return;}
+    const cfg=FC[faktor];
+    const {idx,val,waktu,laju}=curSimVal;
+    const no=tableData.length+1;
+    let row;
+    if(faktor==='k') row=[no,val,'1,0',waktu,laju,'25'];
+    else if(faktor==='s') row=[no,'0,2',val,waktu,laju,val<35?'Dingin':val<50?'Normal':'Panas'];
+    else if(faktor==='l') row=[no,val,'2,0',waktu,laju,''];
+    else row=[no,val,Math.round(15+idx*12),waktu,(Math.round(15+idx*12)/waktu).toFixed(3),'25'];
+    const dupKey=faktor==='l'?row[1]:parseFloat(row[1]);
+    if(tableData.find(r=>(faktor==='l'?r[1]:parseFloat(r[1]))===dupKey)){toast('⚠️ Data ini sudah ada!','error');return;}
+    tableData.push(row);
+    localStorage.setItem('lab_td',JSON.stringify(tableData));
+    renderTable(); buatGrafik(); hitungOrde();
+    toast('✅ Data ditambahkan!','success');
+  }
+
+  function clearData(){
+    if(!confirm('Hapus semua data?'))return;
+    tableData=[];localStorage.removeItem('lab_td');renderTable();
+    document.getElementById('sim-res').style.display='none';
+    curSimVal=null;
+    document.querySelectorAll('.bkitem').forEach(b=>b.style.opacity='0.45');
+    toast('🗑️ Tabel dihapus');
+  }
+
+  function renderTable(){
+    const tb=document.getElementById('dt-body');
+    if(!tableData.length){tb.innerHTML='<tr><td colspan="6" style="padding:.9rem;text-align:center;color:var(--tm);">Belum ada data. Jalankan simulasi dan klik "+ Tambah ke Tabel".</td></tr>';return;}
+    tb.innerHTML=tableData.map(row=>'<tr>'+row.map((c,i)=>`<td style="${i===0?'font-weight:700':''};">${c}</td>`).join('')+'</tr>').join('');
+  }
+
+  function setupCanvas(){
+    const canvas=document.getElementById('gCanvas');
+    if(!canvas)return;
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#faf8ff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#9ca3af';ctx.font='12px Nunito,sans-serif';ctx.textAlign='center';
+    ctx.fillText('Grafik akan muncul setelah data ditambahkan',canvas.width/2,canvas.height/2);
+  }
+
+  function buatGrafik(){
+    if(!tableData.length||!faktor)return;
+    const canvas=document.getElementById('gCanvas');
+    const ctx=canvas.getContext('2d');
+    const W=canvas.width,H=canvas.height;
+    const p={l:62,r:28,t:38,b:56};
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#faf8ff';ctx.fillRect(0,0,W,H);
+    const cfg=FC[faktor];
+    const xRaw=tableData.map((_,i)=>i+1);
+    const yRaw=tableData.map(r=>parseFloat(r[4]));
+    const xLbls=tableData.map(r=>faktor==='l'?r[1]:r[1]);
+    const yMax=Math.max(...yRaw)*1.35;
+    const toX=v=>p.l+(v-1)/(Math.max(xRaw.length-1,1))*(W-p.l-p.r);
+    const toY=v=>H-p.b-(v/yMax)*(H-p.t-p.b);
+    // Grid
+    ctx.strokeStyle='#f0eaff';ctx.lineWidth=1;
+    for(let i=0;i<=5;i++){const y=p.t+i*(H-p.t-p.b)/5;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(W-p.r,y);ctx.stroke();}
+    // Axes
+    ctx.strokeStyle='#374151';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(p.l,p.t);ctx.lineTo(p.l,H-p.b);ctx.lineTo(W-p.r,H-p.b);ctx.stroke();
+    // Labels
+    ctx.fillStyle='#6b7280';ctx.font='10px Nunito,sans-serif';ctx.textAlign='center';
+    ctx.fillText(cfg.lbl+(cfg.unit?' ('+cfg.unit+')':''),W/2,H-6);
+    ctx.save();ctx.translate(13,H/2);ctx.rotate(-Math.PI/2);ctx.fillText('Laju (s⁻¹)',0,0);ctx.restore();
+    tableData.forEach((_,i)=>{ctx.textAlign='center';ctx.fillStyle='#6b7280';ctx.font='9px Nunito';ctx.fillText(faktor==='l'?i+1:tableData[i][1],toX(i+1),H-p.b+14);});
+    for(let i=0;i<=4;i++){const v=yMax*i/4;ctx.textAlign='right';ctx.fillStyle='#9ca3af';ctx.font='9px Nunito';ctx.fillText(v.toFixed(4),p.l-4,toY(v)+3);}
+    // Line
+    if(tableData.length>1){ctx.strokeStyle='#8b5cf6';ctx.lineWidth=2.2;ctx.beginPath();tableData.forEach((_,i)=>{i===0?ctx.moveTo(toX(i+1),toY(yRaw[i])):ctx.lineTo(toX(i+1),toY(yRaw[i]));});ctx.stroke();}
+    // Points
+    tableData.forEach((_,i)=>{
+      ctx.beginPath();ctx.arc(toX(i+1),toY(yRaw[i]),5,0,Math.PI*2);
+      ctx.fillStyle='#6d28d9';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.fillStyle='#6d28d9';ctx.font='9px Nunito';ctx.textAlign='center';
+      ctx.fillText(yRaw[i].toFixed(4),toX(i+1),toY(yRaw[i])-8);
+    });
+    // Title
+    ctx.fillStyle='#1e1b4b';ctx.font='bold 11px Poppins,sans-serif';ctx.textAlign='center';
+    ctx.fillText('Grafik Laju Reaksi vs '+cfg.lbl,W/2,18);
+  }
+
+  function hitungOrde(){
+    const el=document.getElementById('orde-box');
+    if(!faktor||tableData.length<2){el.innerHTML='<div style="font-size:.81rem;color:var(--pd);">Tambahkan minimal 2 data untuk menentukan orde reaksi.</div>';return;}
+    if(faktor==='l'){el.innerHTML='<div style="font-size:.81rem;color:var(--pd);">Luas permukaan = variabel kategori → orde tidak dihitung numerik, namun tren menunjukkan: ukuran partikel ↓ → laju ↑</div>';return;}
+    const x=tableData.map(r=>Math.log(parseFloat(r[1])));
+    const y=tableData.map(r=>Math.log(parseFloat(r[4])));
+    const n=x.length,sx=x.reduce((a,b)=>a+b,0),sy=y.reduce((a,b)=>a+b,0);
+    const sxy=x.reduce((a,b,i)=>a+b*y[i],0),sx2=x.reduce((a,b)=>a+b*b,0);
+    const m=(n*sxy-sx*sy)/(n*sx2-sx*sx);
+    const orde=Math.round(m*10)/10;
+    const lbl=orde<0.5?'Orde Nol':orde<1.5?'Orde Satu':orde<2.5?'Orde Dua':'Orde '+orde;
+    const clr=orde<0.5?'#9ca3af':orde<1.5?'#10b981':orde<2.5?'#f59e0b':'#ef4444';
+    el.innerHTML=`<div style="font-size:.83rem;color:var(--pd);margin-bottom:.4rem;">Hasil regresi ln(laju) vs ln(variabel bebas):</div>
+      <div style="font-size:1.05rem;font-weight:800;color:${clr};">Orde Reaksi ≈ ${orde.toFixed(1)} → ${lbl}</div>
+      <div style="font-size:.76rem;color:var(--tm);margin-top:.3rem;">Persamaan laju: r = k [${FC[faktor].lbl}]^${orde.toFixed(1)}</div>`;
+  }
+
+  function updateAlatBahan(){
+    if(!faktor)return;
+    const cfg=FC[faktor];
+    document.getElementById('ul-alat').innerHTML=cfg.alat.map(a=>`<li>${a}</li>`).join('');
+    document.getElementById('ul-bahan').innerHTML=cfg.bahan.map(b=>`<li>${b}</li>`).join('');
+  }
+
+  function saveAll(){
+    const data={
+      faktor,rm:v('inp-rm'),hi:v('inp-hi'),vb:v('inp-vb'),vt:v('inp-vt'),vk:v('inp-vk'),
+      pros:v('inp-pros'),ctt:v('inp-ctt'),anal:v('inp-anal'),orde:v('inp-orde'),
+      kes:v('inp-kes'),d1:v('inp-d1'),d2:v('inp-d2'),d3:v('inp-d3'),tableData,
+      savedAt:new Date().toISOString()
+    };
+    localStorage.setItem('lab_data',JSON.stringify(data));
+    const s=JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+    s.dataLab={faktor,variabel:data.vb,data:JSON.stringify(tableData),kesimpulan:data.kes};
+    localStorage.setItem('reaksiku_siswa',JSON.stringify(s));
+  }
+  function v(id){return document.getElementById(id)?.value||'';}
+
+  function goStep(from,to){
+    if(from===1&&!faktor){document.getElementById('fwarn').style.display='block';toast('⚠️ Pilih faktor terlebih dahulu!','error');return;}
+    if(from===2){const rm=v('inp-rm'),hi=v('inp-hi');if(!rm||!hi){toast('⚠️ Isi rumusan masalah dan hipotesis!','error');return;}}
+    saveAll();
+    document.getElementById('sp'+from).classList.remove('active');
+    document.getElementById('sp'+to).classList.add('active');
+    curStep=to;
+    // Update sintaks bar
+    for(let i=1;i<=5;i++){
+      document.getElementById('sd'+i).className='sd'+(i<to?' done':i===to?' active':'');
+      document.getElementById('sl'+i).className='sl'+(i===to?' active':'');
+      if(i<5)document.getElementById('sln'+i).className='sline'+(i<to?' done':'');
+    }
+    if(to===3)updateAlatBahan();
+    if(to===4){buildSim();if(tableData.length){renderTable();}}
+    if(to===5){buatGrafik();hitungOrde();}
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function selesaiLab(){
+    if(!v('inp-kes')){toast('⚠️ Tulis kesimpulan terlebih dahulu!','error');return;}
+    saveAll();
+    const s=JSON.parse(localStorage.getItem('reaksiku_siswa')||'{}');
+    if(!s.progres)s.progres={};
+    s.progres.labVirtual=true;
+    localStorage.setItem('reaksiku_siswa',JSON.stringify(s));
+    toast('✅ Lab Virtual selesai! Menuju Latihan Soal...','success');
+    setTimeout(()=>window.location.href='latihan-soal.html',1400);
+  }
+
+  function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type;setTimeout(()=>t.classList.add('show'),10);setTimeout(()=>t.classList.remove('show'),3200);}
+
+  // Restore saved
+  if(faktor)document.getElementById('fc-'+faktor)?.classList.add('sel');
+  const saved=JSON.parse(localStorage.getItem('lab_data')||'null');
+  if(saved){setTimeout(()=>{
+    ['inp-rm','inp-hi','inp-vb','inp-vt','inp-vk','inp-pros','inp-ctt','inp-anal','inp-orde','inp-kes','inp-d1','inp-d2','inp-d3'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){const key=id.replace('inp-','');const val=saved[key]||saved[key.replace('-','')]||'';el.value=val;}
+    });
+  },200);}
+</script>
+</body>
+</html>
