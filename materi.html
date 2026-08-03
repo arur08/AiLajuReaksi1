@@ -703,42 +703,42 @@
 
       <!-- Grafik perbandingan orde -->
       <div class="cc">
-        <h3>📈 Grafik Identifikasi Orde Reaksi</h3>
+<h3>📈 Grafik Hubungan Laju Reaksi (r) terhadap Konsentrasi [A]</h3>
         <div class="anim-box">
           <svg viewBox="0 0 520 170" xmlns="http://www.w3.org/2000/svg">
-            <text x="260" y="12" text-anchor="middle" font-size="10" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Cara Menentukan Orde dari Grafik (lihat kurva yang linier!)</text>
-            <!-- Orde 0: [A] vs t linear -->
+            <text x="260" y="12" text-anchor="middle" font-size="10" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Bentuk kurva r vs [A] berbeda-beda sesuai orde reaksi</text>
+            <!-- Orde 0: garis datar -->
             <g transform="translate(10,25)">
               <rect x="0" y="0" width="148" height="120" rx="6" fill="#f8f6ff" stroke="#e5e7eb" stroke-width="1"/>
-              <text x="74" y="13" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Orde 0: [A] vs t</text>
+              <text x="74" y="13" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Orde Nol</text>
               <line x1="15" y1="18" x2="15" y2="108" stroke="#374151" stroke-width="1.2"/>
               <line x1="15" y1="108" x2="138" y2="108" stroke="#374151" stroke-width="1.2"/>
-              <text x="8" y="22" font-size="7" fill="#374151" font-family="Nunito,sans-serif">[A]</text>
-              <text x="118" y="115" font-size="7" fill="#374151" font-family="Nunito,sans-serif">t</text>
-              <line x1="20" y1="25" x2="130" y2="100" stroke="#6d28d9" stroke-width="2"/>
-              <text x="74" y="128" text-anchor="middle" font-size="8" fill="#10b981" font-family="Nunito,sans-serif" font-weight="700">✓ Garis lurus!</text>
+              <text x="8" y="22" font-size="7" fill="#374151" font-family="Nunito,sans-serif">r</text>
+              <text x="118" y="115" font-size="7" fill="#374151" font-family="Nunito,sans-serif">[A]</text>
+              <line x1="20" y1="40" x2="130" y2="40" stroke="#6d28d9" stroke-width="2.2"/>
+              <text x="74" y="128" text-anchor="middle" font-size="8" fill="#6d28d9" font-family="Nunito,sans-serif" font-weight="700">Garis mendatar</text>
             </g>
-            <!-- Orde 1: ln[A] vs t linear -->
+            <!-- Orde 1: garis lurus diagonal -->
             <g transform="translate(186,25)">
               <rect x="0" y="0" width="148" height="120" rx="6" fill="#f8f6ff" stroke="#e5e7eb" stroke-width="1"/>
-              <text x="74" y="13" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Orde 1: ln[A] vs t</text>
+              <text x="74" y="13" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Orde Satu</text>
               <line x1="15" y1="18" x2="15" y2="108" stroke="#374151" stroke-width="1.2"/>
               <line x1="15" y1="108" x2="138" y2="108" stroke="#374151" stroke-width="1.2"/>
-              <text x="4" y="22" font-size="7" fill="#374151" font-family="Nunito,sans-serif">ln[A]</text>
-              <text x="118" y="115" font-size="7" fill="#374151" font-family="Nunito,sans-serif">t</text>
-              <line x1="20" y1="25" x2="130" y2="100" stroke="#10b981" stroke-width="2"/>
-              <text x="74" y="128" text-anchor="middle" font-size="8" fill="#10b981" font-family="Nunito,sans-serif" font-weight="700">✓ Garis lurus!</text>
+              <text x="8" y="22" font-size="7" fill="#374151" font-family="Nunito,sans-serif">r</text>
+              <text x="118" y="115" font-size="7" fill="#374151" font-family="Nunito,sans-serif">[A]</text>
+              <line x1="20" y1="100" x2="130" y2="25" stroke="#10b981" stroke-width="2.2"/>
+              <text x="74" y="128" text-anchor="middle" font-size="8" fill="#10b981" font-family="Nunito,sans-serif" font-weight="700">Garis lurus diagonal</text>
             </g>
-            <!-- Orde 2: 1/[A] vs t linear -->
+            <!-- Orde 2: kurva melengkung naik -->
             <g transform="translate(362,25)">
               <rect x="0" y="0" width="148" height="120" rx="6" fill="#f8f6ff" stroke="#e5e7eb" stroke-width="1"/>
-              <text x="74" y="13" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Orde 2: 1/[A] vs t</text>
+              <text x="74" y="13" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif" font-weight="700">Orde Dua</text>
               <line x1="15" y1="18" x2="15" y2="108" stroke="#374151" stroke-width="1.2"/>
               <line x1="15" y1="108" x2="138" y2="108" stroke="#374151" stroke-width="1.2"/>
-              <text x="4" y="22" font-size="7" fill="#374151" font-family="Nunito,sans-serif">1/[A]</text>
-              <text x="118" y="115" font-size="7" fill="#374151" font-family="Nunito,sans-serif">t</text>
-              <line x1="20" y1="95" x2="130" y2="25" stroke="#ef4444" stroke-width="2"/>
-              <text x="74" y="128" text-anchor="middle" font-size="8" fill="#10b981" font-family="Nunito,sans-serif" font-weight="700">✓ Garis lurus!</text>
+              <text x="8" y="22" font-size="7" fill="#374151" font-family="Nunito,sans-serif">r</text>
+              <text x="118" y="115" font-size="7" fill="#374151" font-family="Nunito,sans-serif">[A]</text>
+              <path d="M20,102 C55,100 95,80 130,25" fill="none" stroke="#ef4444" stroke-width="2.2"/>
+              <text x="74" y="128" text-anchor="middle" font-size="8" fill="#ef4444" font-family="Nunito,sans-serif" font-weight="700">Kurva melengkung naik</text>
             </g>
           </svg>
         </div>
