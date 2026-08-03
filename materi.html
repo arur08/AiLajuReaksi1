@@ -84,6 +84,9 @@
     .formula{background:linear-gradient(135deg,var(--pl),#f5f3ff);border:1.5px solid var(--purple);border-radius:var(--rs);padding:1rem 1.3rem;margin:1rem 0;text-align:center;}
     .formula .f-main{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.2rem;color:var(--pd);margin-bottom:.3rem;}
     .formula .f-sub{font-size:.8rem;color:var(--pm);}
+    .frac{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;vertical-align:middle;margin:0 5px;line-height:1.15;position:relative;top:2px;}
+    .frac .num{padding:0 4px 2px;border-bottom:2px solid currentColor;}
+    .frac .den{padding:2px 4px 0;}
 
     /* HIGHLIGHT BOX */
     .hbox{border-radius:var(--rs);padding:.9rem 1.1rem;display:flex;gap:10px;align-items:flex-start;margin:1rem 0;}
@@ -265,7 +268,7 @@
         <p>Laju reaksi adalah <strong>perubahan konsentrasi reaktan atau produk per satuan waktu</strong>. Dengan kata lain, laju reaksi menggambarkan seberapa cepat suatu zat dikonsumsi (reaktan) atau dihasilkan (produk) dalam suatu reaksi kimia.</p>
         <p>Untuk reaksi umum <strong>A → B</strong>, laju reaksi dapat dinyatakan sebagai:</p>
         <div class="formula">
-          <div class="f-main">r = −Δ[A]/Δt = +Δ[B]/Δt</div>
+          <div class="f-main">r = <span class="frac"><span class="num">−Δ[A]</span><span class="den">Δt</span></span> atau r = <span class="frac"><span class="num">+Δ[B]</span><span class="den">Δt</span></span></div>
           <div class="f-sub">r = laju reaksi (mol/L·s) | [A] = konsentrasi A (mol/L) | Δt = selang waktu (s)</div>
         </div>
         <p>Tanda negatif (−) untuk reaktan menunjukkan bahwa konsentrasi reaktan <strong>berkurang</strong> seiring waktu, sedangkan tanda positif (+) untuk produk menunjukkan konsentrasi produk <strong>bertambah</strong>.</p>
@@ -275,7 +278,10 @@
         <h3>🔢 Laju Reaksi untuk Reaksi Umum</h3>
         <p>Untuk reaksi: <strong>aA + bB → cC + dD</strong></p>
         <div class="formula">
-          <div class="f-main">r = −(1/a)Δ[A]/Δt = −(1/b)Δ[B]/Δt = +(1/c)Δ[C]/Δt = +(1/d)Δ[D]/Δt</div>
+          <div class="f-main" style="font-size:1rem;line-height:2.4;">
+            r = −<span class="frac"><span class="num">1</span><span class="den">a</span></span><span class="frac"><span class="num">Δ[A]</span><span class="den">Δt</span></span> atau r = −<span class="frac"><span class="num">1</span><span class="den">b</span></span><span class="frac"><span class="num">Δ[B]</span><span class="den">Δt</span></span><br>
+            r = +<span class="frac"><span class="num">1</span><span class="den">c</span></span><span class="frac"><span class="num">Δ[C]</span><span class="den">Δt</span></span> atau r = +<span class="frac"><span class="num">1</span><span class="den">d</span></span><span class="frac"><span class="num">Δ[D]</span><span class="den">Δt</span></span>
+          </div>
           <div class="f-sub">a, b, c, d = koefisien stoikiometri dalam persamaan reaksi setara</div>
         </div>
       </div>
