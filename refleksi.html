@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ReaksiKu — Refleksi Diri</title>
+  <title>LajuLab — Refleksi Diri</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -172,7 +172,7 @@
 <div class="topbar">
   <a href="dashboard-siswa.html" class="tl">
     <div class="tl-i">⚗️</div>
-    <span class="tl-t">ReaksiKu</span>
+    <span class="tl-t">LajuLab</span>
   </a>
   <div class="tr">
     <span class="tb-b" id="tbNama">Siswa</span>
@@ -198,7 +198,7 @@
 
   <div class="hero">
     <h2>Refleksi Diri 💭</h2>
-    <p>Selamat telah menyelesaikan seluruh pembelajaran! Bagikan pengalamanmu — pendapatmu sangat berharga untuk pengembangan ReaksiKu. 💜</p>
+    <p>Selamat telah menyelesaikan seluruh pembelajaran! Bagikan pengalamanmu — pendapatmu sangat berharga untuk pengembangan LajuLab. 💜</p>
   </div>
 
   <!-- 1. RINGKASAN -->
@@ -215,7 +215,7 @@
   <!-- 2. MOOD -->
   <div class="card">
     <h3>😊 Bagaimana Suasana Hatimu Setelah Belajar?</h3>
-    <p>Pilih emoji yang paling menggambarkan perasaanmu setelah menggunakan ReaksiKu!</p>
+    <p>Pilih emoji yang paling menggambarkan perasaanmu setelah menggunakan LajuLab!</p>
     <div class="mood-grid" id="moodGrid">
       <div class="mood-it" onclick="pickMood(this,'antusias','Sangat Antusias')"><span class="me">🤩</span><div class="ml">Sangat<br>Antusias</div></div>
       <div class="mood-it" onclick="pickMood(this,'senang','Senang')"><span class="me">😄</span><div class="ml">Senang</div></div>
@@ -228,7 +228,7 @@
 
   <!-- 3. BINTANG -->
   <div class="card">
-    <h3>⭐ Penilaian untuk ReaksiKu</h3>
+    <h3>⭐ Penilaian untuk LajuLab</h3>
     <p>Seberapa puas kamu secara keseluruhan?</p>
     <div class="star-row">
       <span class="star" id="st1" onclick="setStar(1)">★</span>
@@ -255,12 +255,12 @@
   <div class="card">
     <h3>📊 Perubahan Pemahamanmu (Skala 1–10)</h3>
     <div style="margin-bottom:.9rem;">
-      <div style="font-weight:700;font-size:.82rem;margin-bottom:.35rem;">Sebelum menggunakan ReaksiKu:</div>
+      <div style="font-weight:700;font-size:.82rem;margin-bottom:.35rem;">Sebelum menggunakan LajuLab:</div>
       <div class="skala-row" id="skBefore"></div>
       <div class="sk-lbl"><span>Tidak paham</span><span>Sangat paham</span></div>
     </div>
     <div>
-      <div style="font-weight:700;font-size:.82rem;margin-bottom:.35rem;">Sesudah menggunakan ReaksiKu:</div>
+      <div style="font-weight:700;font-size:.82rem;margin-bottom:.35rem;">Sesudah menggunakan LajuLab:</div>
       <div class="skala-row" id="skAfter"></div>
       <div class="sk-lbl"><span>Tidak paham</span><span>Sangat paham</span></div>
     </div>
@@ -271,7 +271,7 @@
   <div class="card">
     <h3>💬 Kesan & Pesan</h3>
     <div class="field">
-      <label>Apa kesan terbaikmu selama belajar dengan ReaksiKu? <span class="req">*</span></label>
+      <label>Apa kesan terbaikmu selama belajar dengan LajuLab? <span class="req">*</span></label>
       <textarea id="kesan" rows="3" placeholder="Contoh: Belajar kimia jadi lebih menyenangkan karena ada animasi yang membantu saya memahami konsep teori tumbukan dengan lebih jelas..."></textarea>
       <div class="hint">💡 Ceritakan pengalaman yang paling berkesan bagimu!</div>
     </div>
@@ -280,7 +280,7 @@
       <textarea id="sulit" rows="2" placeholder="Contoh: Penentuan orde reaksi dari data percobaan masih membingungkan karena..."></textarea>
     </div>
     <div class="field">
-      <label>Apakah ada materi laju reaksi yang belum dijelaskan di ReaksiKu?</label>
+      <label>Apakah ada materi laju reaksi yang belum dijelaskan di LajuLab?</label>
       <textarea id="belumAda" rows="2" placeholder="Contoh: Saya ingin ada penjelasan lebih lanjut tentang persamaan Arrhenius..."></textarea>
     </div>
   </div>
@@ -299,7 +299,7 @@
     </div>
     <div class="field">
       <label>Saran lainnya:</label>
-      <textarea id="saranLain" rows="3" placeholder="Tuliskan saran atau ide pengembangan ReaksiKu yang lebih baik..."></textarea>
+      <textarea id="saranLain" rows="3" placeholder="Tuliskan saran atau ide pengembangan LajuLab yang lebih baik..."></textarea>
     </div>
   </div>
 
@@ -314,7 +314,7 @@
 
   <div class="card" style="background:linear-gradient(135deg,var(--pl),#f5f3ff);border-color:var(--purple);">
     <h3>💪 Komitmen Belajarku</h3>
-    <p>Setelah belajar laju reaksi dengan ReaksiKu, satu hal yang akan aku lakukan adalah...</p>
+    <p>Setelah belajar laju reaksi dengan LajuLab, satu hal yang akan aku lakukan adalah...</p>
     <div class="field" style="margin-top:.5rem;">
       <textarea id="komitmen" rows="2" placeholder="Contoh: Saya akan mengerjakan soal-soal tambahan tentang orde reaksi dan mencoba menjelaskan konsep ini kepada teman saya..."></textarea>
     </div>
@@ -336,7 +336,7 @@
     <div class="sel-wrap">
       <span class="sel-icon">🎊</span>
       <h2>Selamat, <span id="selNama">Kamu</span>!</h2>
-      <p class="sel-sub">Kamu telah menyelesaikan <strong>seluruh modul pembelajaran Laju Reaksi</strong> bersama ReaksiKu! Terima kasih sudah belajar dengan penuh semangat. Refleksimu sangat berharga. 💜</p>
+      <p class="sel-sub">Kamu telah menyelesaikan <strong>seluruh modul pembelajaran Laju Reaksi</strong> bersama LajuLab! Terima kasih sudah belajar dengan penuh semangat. Refleksimu sangat berharga. 💜</p>
 
       <div class="badges">
         <div class="badge-it">🎯 Tujuan Selesai</div>
