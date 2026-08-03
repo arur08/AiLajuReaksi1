@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ReaksiKu — Materi Laju Reaksi</title>
+  <title>LajuLab — Materi Laju Reaksi</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -205,7 +205,7 @@
 <div class="topbar">
   <a href="dashboard-siswa.html" class="tl">
     <div class="tl-i">⚗️</div>
-    <span class="tl-t">ReaksiKu</span>
+    <span class="tl-t">LajuLab</span>
   </a>
   <div class="tr">
     <span class="tb-b" id="tbNama">Siswa</span>
@@ -265,8 +265,8 @@
         <p>Laju reaksi adalah <strong>perubahan konsentrasi reaktan atau produk per satuan waktu</strong>. Dengan kata lain, laju reaksi menggambarkan seberapa cepat suatu zat dikonsumsi (reaktan) atau dihasilkan (produk) dalam suatu reaksi kimia.</p>
         <p>Untuk reaksi umum <strong>A → B</strong>, laju reaksi dapat dinyatakan sebagai:</p>
         <div class="formula">
-          <div class="f-main">v = −Δ[A]/Δt = +Δ[B]/Δt</div>
-          <div class="f-sub">v = laju reaksi (mol/L·s) | [A] = konsentrasi A (mol/L) | Δt = selang waktu (s)</div>
+          <div class="f-main">r = −Δ[A]/Δt = +Δ[B]/Δt</div>
+          <div class="f-sub">r = laju reaksi (mol/L·s) | [A] = konsentrasi A (mol/L) | Δt = selang waktu (s)</div>
         </div>
         <p>Tanda negatif (−) untuk reaktan menunjukkan bahwa konsentrasi reaktan <strong>berkurang</strong> seiring waktu, sedangkan tanda positif (+) untuk produk menunjukkan konsentrasi produk <strong>bertambah</strong>.</p>
       </div>
@@ -275,7 +275,7 @@
         <h3>🔢 Laju Reaksi untuk Reaksi Umum</h3>
         <p>Untuk reaksi: <strong>aA + bB → cC + dD</strong></p>
         <div class="formula">
-          <div class="f-main">v = −(1/a)Δ[A]/Δt = −(1/b)Δ[B]/Δt = +(1/c)Δ[C]/Δt = +(1/d)Δ[D]/Δt</div>
+          <div class="f-main">r = −(1/a)Δ[A]/Δt = −(1/b)Δ[B]/Δt = +(1/c)Δ[C]/Δt = +(1/d)Δ[D]/Δt</div>
           <div class="f-sub">a, b, c, d = koefisien stoikiometri dalam persamaan reaksi setara</div>
         </div>
       </div>
@@ -333,7 +333,7 @@
 
       <div class="cc">
         <h3>🔬 Laju Sesaat vs Laju Rata-Rata</h3>
-        <p><strong>Laju rata-rata</strong> adalah perubahan konsentrasi dibagi selang waktu tertentu: v̄ = Δ[C]/Δt</p>
+        <p><strong>Laju rata-rata</strong> adalah perubahan konsentrasi dibagi selang waktu tertentu: r̄ = Δ[C]/Δt</p>
         <p><strong>Laju sesaat</strong> adalah laju pada saat tertentu, merupakan turunan dari fungsi konsentrasi terhadap waktu: v = d[C]/dt</p>
         <div class="hbox" style="background:var(--yl);border-left:4px solid var(--yellow);">
           <div class="hi">📐</div>
@@ -577,37 +577,6 @@
             <div><p><strong>Syarat 2: Orientasi Tepat</strong><br/>Partikel harus bertumbukan dengan orientasi (arah) yang benar agar ikatan dapat terbentuk.</p></div>
           </div>
         </div>
-      </div>
-
-      <div class="cc">
-        <h3>📊 Distribusi Energi Maxwell-Boltzmann</h3>
-        <p>Tidak semua partikel dalam suatu zat memiliki energi yang sama. Distribusi energi digambarkan dengan kurva Maxwell-Boltzmann:</p>
-        <!-- SVG distribusi energi -->
-        <div class="anim-box" style="margin-top:.8rem;">
-          <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
-            <!-- Sumbu -->
-            <line x1="40" y1="20" x2="40" y2="170" stroke="#374151" stroke-width="1.5"/>
-            <line x1="40" y1="170" x2="480" y2="170" stroke="#374151" stroke-width="1.5"/>
-            <text x="15" y="100" font-size="9" fill="#374151" font-family="Nunito,sans-serif" transform="rotate(-90,15,100)">Jumlah Partikel</text>
-            <text x="270" y="188" text-anchor="middle" font-size="9" fill="#374151" font-family="Nunito,sans-serif">Energi Kinetik →</text>
-            <!-- Kurva suhu rendah (biru) -->
-            <path d="M50,165 Q80,165 110,120 Q140,70 170,55 Q200,45 230,60 Q260,80 290,120 Q320,150 360,165 Q400,165 460,165" stroke="#3b82f6" stroke-width="2.5" fill="rgba(59,130,246,.12)"/>
-            <!-- Kurva suhu tinggi (merah) -->
-            <path d="M50,165 Q90,165 130,140 Q170,110 200,90 Q230,75 270,75 Q310,78 350,105 Q390,140 440,165" stroke="#ef4444" stroke-width="2.5" fill="rgba(239,68,68,.08)" stroke-dasharray="6,3"/>
-            <!-- Ea line -->
-            <line x1="290" y1="20" x2="290" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3"/>
-            <text x="292" y="35" font-size="8.5" fill="#d97706" font-family="Nunito,sans-serif" font-weight="700">Ea</text>
-            <!-- Shaded area (partikel yang punya E≥Ea) -->
-            <path d="M290,120 Q320,80 380,165 L290,165 Z" fill="rgba(239,68,68,.2)"/>
-            <path d="M290,165 Q350,165 420,165 Q400,100 370,80 Q340,65 310,78 L290,120 Z" fill="rgba(239,68,68,.15)"/>
-            <!-- Labels -->
-            <text x="200" y="40" font-size="9" fill="#1d4ed8" font-family="Nunito,sans-serif">Suhu Rendah (T₁)</text>
-            <text x="340" y="68" font-size="9" fill="#ef4444" font-family="Nunito,sans-serif" font-style="italic">Suhu Tinggi (T₂)</text>
-            <text x="380" y="140" font-size="8.5" fill="#ef4444" font-family="Nunito,sans-serif">Partikel dengan</text>
-            <text x="380" y="152" font-size="8.5" fill="#ef4444" font-family="Nunito,sans-serif">E ≥ Ea (lebih banyak)</text>
-          </svg>
-        </div>
-        <p style="font-size:.82rem;color:var(--tm);text-align:center;margin-top:.4rem;">Pada suhu tinggi (T₂), kurva bergeser ke kanan → lebih banyak partikel dengan E ≥ Ea</p>
       </div>
 
       <div class="nav-bottom">
